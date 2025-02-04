@@ -305,7 +305,7 @@ export function RedeemButton() {
       <DialogContent className="sm:max-w-[425px] p-0 bg-white max-h-[90vh] flex flex-col fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] shadow-lg z-50">
         <div className="overflow-y-auto flex-grow">
           <DialogHeader className="p-4">
-            <DialogTitle className="text-xl font-bold mb-4">
+            <DialogTitle className="text-xl font-bold mb-4 text-center">
               {isSubmitted ? "Obrigado!" : currentStep === 1 ? "Dados pessoais" : "Perfil"}
             </DialogTitle>
             <ProgressBar currentStep={currentStep - 1} onStepClick={handleStepClick} isSubmitted={isSubmitted} />
