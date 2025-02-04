@@ -6,27 +6,48 @@ import translations from "../utils/translations"
 
 const mediaItems = [
   {
-    title: "Shark Tank Brasil",
-    logo: "https://cdn.vnda.com.br/200x/vistobio/2022/09/05/18_9_9_940_SharkTank.png?v=1700682967",
+    title: "SHARK TANK BRASIL",
     link: "https://www.visto.bio/m/blog/635fc78a047e333fba0b9d12/shark-tank-veja-react-completo-casimiro-e-renan-serrano",
   },
   {
-    title: "Fantástico",
-    logo: "https://cdn.vnda.com.br/200x/vistobio/2022/09/05/18_9_6_615_Globo.png?v=1700682967",
+    title: "FANTÁSTICO",
     link: "https://www.visto.bio/m/blog/6340a5d071dc3323d0535c38/globo-doutor-suvaco-estuda-odores-corporais-e-desenvolve-produto-amigo-das-bacterias-boas",
   },
   {
-    title: "Uol",
-    logo: "https://cdn.vnda.com.br/200x/vistobio/2022/09/05/18_9_8_807_uol.png?v=1700682967",
+    title: "UOL",
     link: "https://www.visto.bio/m/blog/635fcb418457657222400ba9/desodorante-sem-aluminio-vale-a-pena-entrar-nessa-onda",
   },
   {
-    title: "Capricho",
+    title: "CAPRICHO",
     link: "https://www.visto.bio/m/blog/635fc92ee7a9b063bc7dd001/devemos-abandonar-os-desodorantes-veja-dicas-sobre-esse-assunto",
   },
   {
-    title: "Forbes",
+    title: "FORBES",
     link: "https://www.visto.bio/m/blog/635fce2b79c0387ba50f15e0/pedro-scooby-e-o-novo-socio-da-visto-bio-startup-que-criou-um-super-desodorante",
+  },
+  {
+    title: "VICE",
+    link: "https://www.youtube.com/watch?v=OuR552j1gto&list=PL5Y8ABzJHPrsbLSwdG5j3TorCQH1z7r4U&index=9",
+  },
+  {
+    title: "TEDX",
+    link: "https://www.ted.com/talks/renan_serrano_open_innovation_for_fashion_and_a_new_relationship_with_clothes/up-next",
+  },
+  {
+    title: "VOGUE",
+    link: "https://vogue.globo.com/lifestyle/noticia/2016/11/conheca-empresas-vencedoras-do-premio-ecoera-que-aconteceu-na-casa-vogue-experience.html",
+  },
+  {
+    title: "SXSW",
+    link: "https://cnnespanol.cnn.com/video/cnnee-en-marcha-innovacion-sxsw-austin-texas/",
+  },
+  {
+    title: "CNN",
+    link: "https://cnnespanol.cnn.com/video/cnnee-en-marcha-innovacion-sxsw-austin-texas/",
+  },
+  {
+    title: "SINGULARITY UNIVERSITY",
+    link: "https://blog.singularityubrazil.com/blog/a-startup-brasileira-que-ficou-entre-as-cinco-melhores-solucoes-do-mundo-pelo-pandemic-challenge-da-singularity-university/",
   },
 ]
 
@@ -49,26 +70,18 @@ export default function Hero() {
             allowFullScreen
           />
         </div>
-        <div className="flex items-center justify-between w-full max-w-[calc(100%+2rem)] mx-auto px-4 sm:px-8">
+        <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 sm:gap-x-3 w-full max-w-6xl mx-auto px-4">
           {mediaItems.map((item, index) => (
-            <a key={index} href={item.link} target="_blank" rel="noopener noreferrer">
-              {item.logo ? (
-                <div className="relative h-8 sm:h-10 md:h-12 lg:h-14">
-                  <Image
-                    src={item.logo || "/placeholder.svg"}
-                    alt={item.title}
-                    width={200}
-                    height={48}
-                    className="h-full w-auto object-contain"
-                  />
-                </div>
-              ) : (
-                <div className="text-center">
-                  <span className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-800">
-                    {item.title}
-                  </span>
-                </div>
-              )}
+            <a
+              key={index}
+              href={item.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <span className="text-[9px] leading-[2] sm:text-[11px] font-bold text-gray-800 whitespace-nowrap">
+                {item.title}
+              </span>
             </a>
           ))}
         </div>

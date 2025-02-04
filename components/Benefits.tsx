@@ -35,7 +35,7 @@ export default function Benefits() {
   }
 
   return (
-    <section className="bg-[rgb(255,244,240)] overflow-hidden mt-2 mb-12 sm:mt-2 mb-12">
+    <section className="bg-[rgb(255,244,240)] overflow-hidden mt-12 mb-12 sm:mt-12 mb-12">
       <div 
         className="whitespace-nowrap" 
         onTouchStart={handleTouchStart}
