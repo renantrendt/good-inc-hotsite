@@ -72,13 +72,14 @@ export default function Hero() {
         </div>
         <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 sm:gap-x-3 w-full max-w-6xl mx-auto px-4">
           {mediaItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:opacity-80 transition-opacity"
-            >
+<a
+  key={`${item.title}-${item.link}`}
+  href={item.link}
+  target="_blank"
+  rel="noopener noreferrer nofollow"
+  className="hover:opacity-80 transition-opacity"
+  aria-label={`Visit ${item.title} article`}
+>
               <span className="text-[9px] leading-[2] sm:text-[11px] font-bold text-gray-800 whitespace-nowrap">
                 {item.title}
               </span>
