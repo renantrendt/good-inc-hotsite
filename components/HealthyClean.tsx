@@ -49,7 +49,7 @@ export default function HealthyClean() {
   return (
     <section className="pt-12 pb-12 sm:pt-20 sm:pb-20 bg-white">
                 <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-            {language === "en" ? "All your hygiene needs in one complete system" : "Todas as suas necessidades de higiene em um sistema completo"}
+            {t.title}
           </h2>
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Desktop View */}

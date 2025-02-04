@@ -3,6 +3,9 @@ const translations = {
     hero: {
       title: "PERSONAL CARE SYSTEM MORE THAN CLEAN — HEALTHY",
     },
+    productShowcase: {
+      title: "ALL YOUR HYGIENE NEEDS IN ONE COMPLETE SYSTEM"
+    },
     benefits: {
       title: "Benefits",
       items: [
@@ -166,7 +169,7 @@ const translations = {
       }
     },
     healthyClean: {
-      title: "Healthy Clean",
+      title: "ALL YOUR HYGIENE NEEDS IN ONE COMPLETE SYSTEM",
       cards: [
         {
           title: "Aluminum-free formulation",
@@ -197,6 +200,9 @@ const translations = {
   pt: {
     hero: {
       title: "SISTEMA DE CUIDADOS PESSOAIS MAIS DO QUE LIMPO — SAUDÁVEL",
+    },
+    productShowcase: {
+      title: "TODAS AS SUAS NECESSIDADES DE HIGIENE EM UM SISTEMA COMPLETO"
     },
     benefits: {
       title: "Benefícios",
@@ -311,6 +317,20 @@ const translations = {
       address: "São Paulo: Rua Finisterre, 159, Riviera - SP, 04928030, CNPJ 32.761.719/0001-31",
     },
     redeemButton: {
+      modal: {
+        form: {
+          firstName: "Nome",
+          lastName: "Sobrenome",
+          email: "E-mail",
+          phone: "Telefone",
+          cpf: "CPF"
+        },
+        titles: {
+          thanks: "Obrigado!",
+          personalData: "Dados pessoais",
+          profile: "Perfil"
+        }
+      },
       text: "Resgate o Primeiro Mês Grátis",
       price: "A partir do 2º mês R$299/mês",
       thankYou: "Obrigado!",
@@ -326,7 +346,7 @@ const translations = {
       close: "Fechar",
     },
     healthyClean: {
-      title: "Limpeza Saudável",
+      title: "TODAS AS SUAS NECESSIDADES DE HIGIENE EM UM SISTEMA COMPLETO",
       cards: [
         {
           title: "Formulação livre de alumínio",
