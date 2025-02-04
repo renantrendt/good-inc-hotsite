@@ -113,7 +113,7 @@ const translations = {
       contact: "Contact",
       paymentMethods: "Payment Methods",
       copyright: "© 2025, Patent Pending. Visto.bio.",
-      address: "Rua Tonelero, 1248 - SP, 05056-001, CNPJ 32.761.719/0001-31",
+      address: "1007 N Orange St. 4th Floor, Wilmington, DE 19801, USA.",
     },
     redeemButton: {
       text: "Redeem First Month Free",
@@ -195,7 +195,7 @@ const translations = {
         faqTitle: "O que há de errado com meu sistema?",
       },
       cleanser: {
-        name: "LIMPADOR",
+        name: "Sabonete",
         volume: "177mL (6 FL OZ)",
         description: "NO BANHO",
         why: "Quebra as células mortas da pele, mantém os poros limpos e equilibra o pH da pele, melhorando assim a função dos receptores sensoriais da pele e ajudando a reduzir o suor.",
@@ -276,8 +276,8 @@ const translations = {
       address: "São Paulo: Rua Finisterre, 159, Riviera - SP, 04928030, CNPJ 32.761.719/0001-31",
     },
     redeemButton: {
-      text: "Resgate o Primeiro Mês Grátis",
-      price: "R$39,99/mês após",
+      text: "Resgate o Primeiro Mês Gratis",
+      price: "A partir do 2º mês R$299/mês",
       thankYou: "Obrigado!",
       redeemTitle: "Resgate Seu Sistema",
       processingMessage: "Seu pedido está sendo processado. Você receberá mais informações por e-mail em breve.",

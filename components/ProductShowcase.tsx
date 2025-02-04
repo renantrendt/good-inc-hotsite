@@ -91,7 +91,7 @@ export default function ProductShowcase() {
       ],
     },
     {
-      name: language === "en" ? "CLEANSER" : "LIMPADOR",
+      name: language === "en" ? "CLEANSER" : "SABONETE",
       volume: language === "en" ? "6 FL OZ (177mL)" : "250mL",
       description: language === "en" ? "IN THE SHOWER" : "NO BANHO",
       why: t.products.cleanser.why,

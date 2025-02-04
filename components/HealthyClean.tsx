@@ -7,7 +7,7 @@ import translations from "../utils/translations"
 
 const icons = [
   { icon: CheckCircle, className: "w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4" },
-  { icon: Globe, className: "w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mb-4" },
+  { icon: Globe, className: "w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4" },
   { icon: Recycle, className: "w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4" },
 ]
 
