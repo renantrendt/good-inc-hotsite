@@ -49,7 +49,12 @@ export default function HealthyClean() {
   return (
     <section className="pt-12 pb-12 sm:pt-20 sm:pb-20 bg-white">
                 <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-            {t.title}
+import DOMPurify from 'dompurify';
+
+// In the component:
+<h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+  {typeof t.title === 'string' ? DOMPurify.sanitize(t.title) : ''}
+</h2>
           </h2>
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Desktop View */}
