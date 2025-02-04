@@ -3,6 +3,9 @@ const translations = {
     hero: {
       title: "PERSONAL CARE SYSTEM MORE THAN CLEAN — HEALTHY",
     },
+    productShowcase: {
+      title: "ALL YOUR HYGIENE NEEDS IN ONE COMPLETE SYSTEM"
+    },
     benefits: {
       title: "Benefits",
       items: [
@@ -118,20 +121,55 @@ const translations = {
     redeemButton: {
       text: "Redeem First Month Free",
       price: "$39.99/month thereafter",
-      thankYou: "Thank You!",
-      redeemTitle: "Redeem Your System",
-      processingMessage: "Your request is being processed. You will receive more information via email soon.",
-      enterDetails: "Please enter your details to redeem your system.",
-      firstName: "First Name",
-      lastName: "Last Name",
-      address: "Address",
-      phone: "Phone",
-      email: "Email",
-      submit: "Redeem",
-      close: "Close",
+      modal: {
+        titles: {
+          personalData: "Personal Data",
+          profile: "Profile",
+          thanks: "Thank you!"
+        },
+        form: {
+          firstName: "First Name",
+          lastName: "Last Name",
+          email: "E-mail",
+          phone: "Phone",
+          cpf: "CPF",
+          confirmData: "Confirm Data",
+          finishOrder: "Finish Order"
+        },
+        questions: [
+          {
+            id: "clothes_odor",
+            question: "Do you notice that some clothes smell worse than others?",
+            options: [
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" }
+            ]
+          },
+          {
+            id: "product_understanding",
+            question: "Do you understand that the most important part of preserving your health is in the continued use of products that treat and protect fabrics?",
+            options: [
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" }
+            ]
+          },
+          {
+            id: "main_focus",
+            question: "Is your focus on longevity or solving an odor/sweat problem?",
+            options: [
+              { value: "longevity", label: "Longevity" },
+              { value: "problem_solving", label: "Solve Problem" }
+            ]
+          }
+        ],
+        success: {
+          message: "Your order has been successfully received. Our team will contact you soon via the registered email with more information.",
+          close: "Close"
+        }
+      }
     },
     healthyClean: {
-      title: "Healthy Clean",
+      title: "ALL YOUR HYGIENE NEEDS IN ONE COMPLETE SYSTEM",
       cards: [
         {
           title: "Aluminum-free formulation",
@@ -162,6 +200,9 @@ const translations = {
   pt: {
     hero: {
       title: "SISTEMA DE CUIDADOS PESSOAIS MAIS DO QUE LIMPO — SAUDÁVEL",
+    },
+    productShowcase: {
+      title: "TODAS AS SUAS NECESSIDADES DE HIGIENE EM UM SISTEMA COMPLETO"
     },
     benefits: {
       title: "Benefícios",
@@ -276,6 +317,20 @@ const translations = {
       address: "São Paulo: Rua Finisterre, 159, Riviera - SP, 04928030, CNPJ 32.761.719/0001-31",
     },
     redeemButton: {
+      modal: {
+        form: {
+          firstName: "Nome",
+          lastName: "Sobrenome",
+          email: "E-mail",
+          phone: "Telefone",
+          cpf: "CPF"
+        },
+        titles: {
+          thanks: "Obrigado!",
+          personalData: "Dados pessoais",
+          profile: "Perfil"
+        }
+      },
       text: "Resgate o Primeiro Mês Grátis",
       price: "A partir do 2º mês R$299/mês",
       thankYou: "Obrigado!",
@@ -291,7 +346,7 @@ const translations = {
       close: "Fechar",
     },
     healthyClean: {
-      title: "Limpeza Saudável",
+      title: "TODAS AS SUAS NECESSIDADES DE HIGIENE EM UM SISTEMA COMPLETO",
       cards: [
         {
           title: "Formulação livre de alumínio",

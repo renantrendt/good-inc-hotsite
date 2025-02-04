@@ -206,6 +206,9 @@ export default function ProductShowcase() {
     >
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+            {t.productShowcase.title}
+          </h2>
           <div className="flex flex-col items-center mb-8 sm:mb-16">
             <div className="inline-flex items-center justify-center bg-[rgb(255,244,240)] w-full">
               {products.map((product, index) => (
