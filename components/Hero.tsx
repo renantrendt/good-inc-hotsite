@@ -51,9 +51,9 @@ export default function Hero() {
         </div>
         <div className="flex items-center justify-between w-full max-w-[calc(100%+2rem)] mx-auto px-4 sm:px-8">
           {mediaItems.map((item, index) => (
-            <a key={index} href={item.link} target="_blank" rel="noopener noreferrer" className="group">
+            <a key={index} href={item.link} target="_blank" rel="noopener noreferrer">
               {item.logo ? (
-                <div className="relative h-8 sm:h-10 md:h-12 lg:h-14 transition-transform duration-300 group-hover:scale-110">
+                <div className="relative h-8 sm:h-10 md:h-12 lg:h-14">
                   <Image
                     src={item.logo || "/placeholder.svg"}
                     alt={item.title}
@@ -63,7 +63,7 @@ export default function Hero() {
                   />
                 </div>
               ) : (
-                <div className="text-center transition-transform duration-300 group-hover:scale-110">
+                <div className="text-center">
                   <span className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-800">
                     {item.title}
                   </span>

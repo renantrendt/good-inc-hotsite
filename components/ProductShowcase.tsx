@@ -214,7 +214,7 @@ export default function ProductShowcase() {
                   onClick={() => setActiveProduct(index)}
                   className={`flex-1 px-2 sm:px-4 py-2 sm:py-3 transition-all text-xs sm:text-sm whitespace-nowrap ${
                     activeProduct === index
-                      ? "bg-black text-white hover:bg-gray-800 rounded-md"
+                      ? "bg-black text-white rounded-md"
                       : "bg-[rgb(255,244,240)] text-gray-600"
                   }`}
                 >

@@ -221,7 +221,7 @@ export function RedeemButton() {
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
-          className="w-full p-4 text-lg font-medium bg-black hover:bg-gray-800 text-white rounded-lg"
+          className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
         >
           Confirmar dados
         </Button>
@@ -247,7 +247,7 @@ export function RedeemButton() {
                   <Label
                     htmlFor={`${q.id}-${option.value}`}
                     className={cn(
-                      "radio-group-item transition-colors hover:bg-muted/50",
+                      "radio-group-item transition-colors",
                       "peer-data-[state=checked]:bg-black peer-data-[state=checked]:text-white",
                     )}
                   >
@@ -262,7 +262,7 @@ export function RedeemButton() {
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
-          className="w-full p-4 text-lg font-medium bg-black hover:bg-gray-800 text-white rounded-lg"
+          className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
           disabled={Object.keys(profileAnswers).length !== profileQuestions.length}
         >
           Finalizar pedido
@@ -279,7 +279,7 @@ export function RedeemButton() {
       </p>
       <Button
         onClick={() => setIsOpen(false)}
-        className="w-full p-4 text-lg font-medium bg-black hover:bg-gray-800 text-white rounded-lg"
+        className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
       >
         Fechar
       </Button>
@@ -296,7 +296,7 @@ export function RedeemButton() {
       )}
       <DialogTrigger asChild>
         <div className="flex flex-col items-center">
-          <Button className="w-full sm:w-auto px-6 py-3 bg-black hover:bg-gray-800 text-white text-sm sm:text-base font-medium whitespace-nowrap rounded-md uppercase">
+          <Button className="w-full sm:w-auto px-6 py-3 bg-black text-white text-sm sm:text-base font-medium whitespace-nowrap rounded-md uppercase">
             {t.redeemButton.text}
           </Button>
           <p className="mt-2 text-xs sm:text-sm text-gray-600">{t.redeemButton.price}</p>
