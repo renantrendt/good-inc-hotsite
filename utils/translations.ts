@@ -276,7 +276,7 @@ const translations = {
       address: "São Paulo: Rua Finisterre, 159, Riviera - SP, 04928030, CNPJ 32.761.719/0001-31",
     },
     redeemButton: {
-      text: "Resgate o Primeiro Mês Gratis",
+      text: "Resgate o Primeiro Mês Grátis",
       price: "A partir do 2º mês R$299/mês",
       thankYou: "Obrigado!",
       redeemTitle: "Resgate Seu Sistema",

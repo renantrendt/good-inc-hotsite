@@ -62,42 +62,33 @@ function FloatingLabelInput({
   )
 }
 
-function ProgressBar({ currentStep }: { currentStep: number }) {
+function ProgressBar({
+  currentStep,
+  onStepClick,
+  isSubmitted,
+}: { currentStep: number; onStepClick: (step: number) => void; isSubmitted?: boolean }) {
   const steps = ["Dados Pessoais", "Perfil"]
 
   return (
     <div className="w-full">
-      <div className="flex justify-between mb-4">
-        {steps.map((step, index) => (
-          <div
-            key={step}
-            className={cn(
-              "text-sm whitespace-nowrap absolute -top-6",
-              "left-1/2 transform -translate-x-1/2",
-              index < currentStep ? "text-black font-medium" : index === currentStep ? "text-black" : "text-gray-400",
-            )}
-          >
-            {step}
-          </div>
-        ))}
-      </div>
       <div className="flex justify-between items-center">
         {steps.map((step, index) => (
           <div key={step} className="flex items-center flex-1">
             <div className="relative flex items-center justify-center flex-1">
-              <div className={cn("w-full h-[2px]", index <= currentStep ? "bg-black" : "bg-gray-200")} />
-              <div
+              <div className={cn("w-full h-[2px]", index <= currentStep || isSubmitted ? "bg-black" : "bg-gray-200")} />
+              <button
+                onClick={() => onStepClick(index)}
                 className={cn(
-                  "absolute flex items-center justify-center w-8 h-8 rounded-full border-2",
-                  index < currentStep
+                  "absolute flex items-center justify-center w-8 h-8 rounded-full border-2 cursor-pointer",
+                  isSubmitted || index < currentStep
                     ? "bg-black border-black text-white"
                     : index === currentStep
                       ? "border-black bg-white text-black"
                       : "border-gray-200 bg-white text-gray-400",
                 )}
               >
-                {index < currentStep ? <Check className="w-5 h-5" /> : <span>{index + 1}</span>}
-              </div>
+                {isSubmitted || index < currentStep ? <Check className="w-5 h-5" /> : <span>{index + 1}</span>}
+              </button>
             </div>
           </div>
         ))}
@@ -184,8 +175,14 @@ export function RedeemButton() {
     setIsSubmitted(true)
   }
 
+  const handleStepClick = (step: number) => {
+    if (step < currentStep) {
+      setCurrentStep(step + 1)
+    }
+  }
+
   const renderPersonalDataForm = () => (
-    <form onSubmit={handleNextStep} className="p-6 space-y-6">
+    <form onSubmit={handleNextStep} className="p-6 space-y-4 pb-32 relative">
       <FloatingLabelInput
         id="firstName"
         name="firstName"
@@ -221,7 +218,7 @@ export function RedeemButton() {
         required
       />
       <FloatingLabelInput id="cpf" name="cpf" value={formData.cpf} onChange={handleInputChange} label="CPF" required />
-      <div className="pt-6 border-t">
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
           className="w-full p-4 text-lg font-medium bg-black hover:bg-gray-800 text-white rounded-lg"
@@ -233,21 +230,27 @@ export function RedeemButton() {
   )
 
   const renderProfileForm = () => (
-    <form onSubmit={handleSubmit} className="p-6">
-      <div className="space-y-12 mb-8">
+    <form onSubmit={handleSubmit} className="p-6 pb-20 relative">
+      <div className="space-y-6 mb-4">
         {profileQuestions.map((q) => (
           <div key={q.id} className="space-y-4">
             <p className="text-base font-medium">{q.question}</p>
             <RadioGroup
               onValueChange={(value) => handleProfileChange(q.id, value)}
               value={profileAnswers[q.id]}
-              className="flex flex-col space-y-4"
+              className="grid grid-cols-2 gap-2 w-full"
               required
             >
-              {q.options.map((option) => (
-                <div key={option.value} className="flex items-center space-x-3">
-                  <RadioGroupItem value={option.value} id={`${q.id}-${option.value}`} className="w-5 h-5" />
-                  <Label htmlFor={`${q.id}-${option.value}`} className="text-base cursor-pointer">
+              {q.options.map((option, index) => (
+                <div key={option.value}>
+                  <RadioGroupItem value={option.value} id={`${q.id}-${option.value}`} className="peer sr-only" />
+                  <Label
+                    htmlFor={`${q.id}-${option.value}`}
+                    className={cn(
+                      "radio-group-item transition-colors hover:bg-muted/50",
+                      "peer-data-[state=checked]:bg-black peer-data-[state=checked]:text-white",
+                    )}
+                  >
                     {option.label}
                   </Label>
                 </div>
@@ -256,7 +259,7 @@ export function RedeemButton() {
           </div>
         ))}
       </div>
-      <div className="pt-6 border-t">
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
           className="w-full p-4 text-lg font-medium bg-black hover:bg-gray-800 text-white rounded-lg"
@@ -293,14 +296,16 @@ export function RedeemButton() {
           <p className="mt-2 text-xs sm:text-sm text-gray-600">{t.redeemButton.price}</p>
         </div>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] p-0 bg-white">
-        <DialogHeader className="p-6 border-b">
-          <DialogTitle className="text-2xl font-bold mb-8">
-            {currentStep === 1 ? "Dados pessoais" : "Obrigado"}
-          </DialogTitle>
-          <ProgressBar currentStep={currentStep} />
-        </DialogHeader>
-        {isSubmitted ? renderSuccessMessage() : currentStep === 1 ? renderPersonalDataForm() : renderProfileForm()}
+      <DialogContent className="sm:max-w-[425px] p-0 bg-white max-h-[90vh] flex flex-col">
+        <div className="overflow-y-auto flex-grow">
+          <DialogHeader className="p-4">
+            <DialogTitle className="text-xl font-bold mb-4">
+              {isSubmitted ? "Obrigado!" : currentStep === 1 ? "Dados pessoais" : "Perfil"}
+            </DialogTitle>
+            <ProgressBar currentStep={currentStep - 1} onStepClick={handleStepClick} isSubmitted={isSubmitted} />
+          </DialogHeader>
+          {isSubmitted ? renderSuccessMessage() : currentStep === 1 ? renderPersonalDataForm() : renderProfileForm()}
+        </div>
       </DialogContent>
     </Dialog>
   )
