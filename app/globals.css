@@ -69,3 +69,12 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
+/* Adicione isso junto com os outros estilos */
+
+@layer utilities {
+  input:focus ~ label,
+  input:not(:placeholder-shown) ~ label {
+    @apply transform -translate-y-2 scale-75 top-2;
+  }
+}
+
