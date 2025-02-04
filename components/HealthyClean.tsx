@@ -15,6 +15,28 @@ export default function HealthyClean() {
   const { language } = useLanguage()
   const t = translations[language].healthyClean
   const [activeIndex, setActiveIndex] = useState(0)
+  const [touchStart, setTouchStart] = useState(0)
+  const [touchEnd, setTouchEnd] = useState(0)
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > 75) {
+      // Swipe left
+      setActiveIndex((prev) => (prev + 1) % t.cards.length)
+    }
+
+    if (touchStart - touchEnd < -75) {
+      // Swipe right
+      setActiveIndex((prev) => (prev - 1 + t.cards.length) % t.cards.length)
+    }
+  }
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -49,6 +71,9 @@ export default function HealthyClean() {
           <div className="relative overflow-hidden">
             <div
               className="flex transition-transform duration-300 ease-in-out"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
               style={{ transform: `translateX(-${activeIndex * 100}%)` }}
             >
               {t.cards.map((card, index) => {
