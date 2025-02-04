@@ -103,33 +103,7 @@ interface ProfileQuestion {
   options: { value: string; label: string }[]
 }
 
-const profileQuestions: ProfileQuestion[] = [
-  {
-    id: "clothes_odor",
-    question: "Você percebe que algumas roupas dão mais mau cheiro que outras?",
-    options: [
-      { value: "yes", label: "Sim" },
-      { value: "no", label: "Não" },
-    ],
-  },
-  {
-    id: "product_understanding",
-    question:
-      "Você entendeu que a parte mais importante para preservar sua saúde está no uso continuado dos produtos que tratam e protegem tecidos?",
-    options: [
-      { value: "yes", label: "Sim" },
-      { value: "no", label: "Não" },
-    ],
-  },
-  {
-    id: "main_focus",
-    question: "Seu foco está em longevidade ou resolver um problema de odor/suor?",
-    options: [
-      { value: "longevity", label: "Longevidade" },
-      { value: "problem_solving", label: "Resolver problema" },
-    ],
-  },
-]
+
 
 export function RedeemButton() {
   const { language } = useLanguage()
@@ -168,7 +142,7 @@ export function RedeemButton() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (Object.keys(profileAnswers).length !== profileQuestions.length) {
+    if (Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length) {
       return // Prevent submission if not all questions are answered
     }
     console.log("Form submitted:", { ...formData, profileAnswers })
@@ -188,7 +162,7 @@ export function RedeemButton() {
         name="firstName"
         value={formData.firstName}
         onChange={handleInputChange}
-        label="Nome"
+        label={t.redeemButton.modal.form.firstName}
         required
       />
       <FloatingLabelInput
@@ -196,7 +170,7 @@ export function RedeemButton() {
         name="lastName"
         value={formData.lastName}
         onChange={handleInputChange}
-        label="Sobrenome"
+        label={t.redeemButton.modal.form.lastName}
         required
       />
       <FloatingLabelInput
@@ -204,7 +178,7 @@ export function RedeemButton() {
         name="email"
         value={formData.email}
         onChange={handleInputChange}
-        label="E-mail"
+        label={t.redeemButton.modal.form.email}
         type="email"
         required
       />
@@ -213,17 +187,17 @@ export function RedeemButton() {
         name="phone"
         value={formData.phone}
         onChange={handleInputChange}
-        label="Telefone"
+        label={t.redeemButton.modal.form.phone}
         type="tel"
         required
       />
-      <FloatingLabelInput id="cpf" name="cpf" value={formData.cpf} onChange={handleInputChange} label="CPF" required />
+      <FloatingLabelInput id="cpf" name="cpf" value={formData.cpf} onChange={handleInputChange} label={t.redeemButton.modal.form.cpf} required />
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
           className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
         >
-          Confirmar dados
+          {t.redeemButton.modal.form.confirmData}
         </Button>
       </div>
     </form>
@@ -232,7 +206,7 @@ export function RedeemButton() {
   const renderProfileForm = () => (
     <form onSubmit={handleSubmit} className="p-6 pb-20 relative">
       <div className="space-y-6 mb-4">
-        {profileQuestions.map((q) => (
+        {t.redeemButton.modal.questions.map((q) => (
           <div key={q.id} className="space-y-4">
             <p className="text-base font-medium">{q.question}</p>
             <RadioGroup
@@ -263,9 +237,9 @@ export function RedeemButton() {
         <Button
           type="submit"
           className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
-          disabled={Object.keys(profileAnswers).length !== profileQuestions.length}
+          disabled={Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length}
         >
-          Finalizar pedido
+          {t.redeemButton.modal.form.finishOrder}
         </Button>
       </div>
     </form>
@@ -274,14 +248,13 @@ export function RedeemButton() {
   const renderSuccessMessage = () => (
     <div className="p-6 text-center space-y-4">
       <p className="text-gray-600 mb-8">
-        Seu pedido foi recebido com sucesso. Em breve nossa equipe entrará em contato através do e-mail cadastrado com
-        mais informações.
+        {t.redeemButton.modal.success.message}
       </p>
       <Button
         onClick={() => setIsOpen(false)}
         className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
       >
-        Fechar
+        {t.redeemButton.modal.success.close}
       </Button>
     </div>
   )
@@ -306,7 +279,7 @@ export function RedeemButton() {
         <div className="overflow-y-auto flex-grow">
           <DialogHeader className="p-4">
             <DialogTitle className="text-xl font-bold mb-4 text-center">
-              {isSubmitted ? "Obrigado!" : currentStep === 1 ? "Dados pessoais" : "Perfil"}
+              {isSubmitted ? t.redeemButton.modal.titles.thanks : currentStep === 1 ? t.redeemButton.modal.titles.personalData : t.redeemButton.modal.titles.profile}
             </DialogTitle>
             <ProgressBar currentStep={currentStep - 1} onStepClick={handleStepClick} isSubmitted={isSubmitted} />
           </DialogHeader>

@@ -118,17 +118,52 @@ const translations = {
     redeemButton: {
       text: "Redeem First Month Free",
       price: "$39.99/month thereafter",
-      thankYou: "Thank You!",
-      redeemTitle: "Redeem Your System",
-      processingMessage: "Your request is being processed. You will receive more information via email soon.",
-      enterDetails: "Please enter your details to redeem your system.",
-      firstName: "First Name",
-      lastName: "Last Name",
-      address: "Address",
-      phone: "Phone",
-      email: "Email",
-      submit: "Redeem",
-      close: "Close",
+      modal: {
+        titles: {
+          personalData: "Personal Data",
+          profile: "Profile",
+          thanks: "Thank you!"
+        },
+        form: {
+          firstName: "First Name",
+          lastName: "Last Name",
+          email: "E-mail",
+          phone: "Phone",
+          cpf: "CPF",
+          confirmData: "Confirm Data",
+          finishOrder: "Finish Order"
+        },
+        questions: [
+          {
+            id: "clothes_odor",
+            question: "Do you notice that some clothes smell worse than others?",
+            options: [
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" }
+            ]
+          },
+          {
+            id: "product_understanding",
+            question: "Do you understand that the most important part of preserving your health is in the continued use of products that treat and protect fabrics?",
+            options: [
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" }
+            ]
+          },
+          {
+            id: "main_focus",
+            question: "Is your focus on longevity or solving an odor/sweat problem?",
+            options: [
+              { value: "longevity", label: "Longevity" },
+              { value: "problem_solving", label: "Solve Problem" }
+            ]
+          }
+        ],
+        success: {
+          message: "Your order has been successfully received. Our team will contact you soon via the registered email with more information.",
+          close: "Close"
+        }
+      }
     },
     healthyClean: {
       title: "Healthy Clean",
