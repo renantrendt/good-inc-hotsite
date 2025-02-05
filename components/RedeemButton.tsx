@@ -148,22 +148,39 @@ export function RedeemButton() {
   })
 
   useEffect(() => {
-    // Função para obter o código do país baseado no IP
-    const getCountryCode = async () => {
+    // Função para obter informações de localização baseadas no IP
+    const getLocationInfo = async () => {
       try {
         const response = await fetch('https://ipapi.co/json/')
         const data = await response.json()
-        const countryCode = `+${data.country_calling_code.replace(/\+/g, '')}`
-        setFormData(prev => ({ ...prev, countryCode }))
+        
+        // Atualiza o código do país e endereço
+        setFormData(prev => ({
+          ...prev,
+          countryCode: `+${data.country_calling_code.replace(/\+/g, '')}`,
+          address: {
+            ...prev.address,
+            state: data.region || '',
+            country: data.country_name || '',
+          }
+        }))
       } catch (error) {
-        console.error('Error getting country code:', error)
+        console.error('Error getting location info:', error)
         // Fallback para o código padrão baseado na língua
-        setFormData(prev => ({ ...prev, countryCode: language === 'pt' ? '+55' : '+1' }))
+        setFormData(prev => ({
+          ...prev,
+          countryCode: language === 'pt' ? '+55' : '+1',
+          address: {
+            ...prev.address,
+            state: language === 'pt' ? 'São Paulo' : 'California',
+            country: language === 'pt' ? 'Brazil' : 'United States'
+          }
+        }))
       }
     }
 
-    getCountryCode()
-  }, [])
+    getLocationInfo()
+  }, [language])
   const [profileAnswers, setProfileAnswers] = useState<Record<string, string>>({})
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
