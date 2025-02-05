@@ -1,7 +1,7 @@
 const translations = {
   en: {
     countrySelector: {
-      label: "Country Code",
+      label: "Code",
       defaultCountry: "+1",
       search: "Search country"
     },
@@ -135,11 +135,7 @@ const translations = {
           lastName: "Last Name",
           email: "E-mail",
           phone: "Phone",
-<<<<<<< HEAD
           cpf: "CPF",
-          confirmData: "Confirm Data",
-          finishOrder: "Finish Order"
-=======
           confirmData: "Next",
           finishOrder: "Finish Order",
           street: "Street Address",
@@ -148,8 +144,8 @@ const translations = {
           neighborhood: "Neighborhood",
           city: "City",
           state: "State",
-          zipCode: "ZIP Code"
->>>>>>> 53a424b (shipping)
+          zipCode: "ZIP Code",
+          country: "Country"
         },
         questions: [
           {
@@ -237,7 +233,8 @@ const translations = {
           neighborhood: "Bairro",
           city: "Cidade",
           state: "Estado",
-          zipCode: "CEP"
+          zipCode: "CEP",
+          country: "País"
         },
         questions: [
           {
@@ -272,7 +269,7 @@ const translations = {
       }
     },
     countrySelector: {
-      label: "Código do País",
+      label: "DDD",
       defaultCountry: "+55",
       search: "Buscar país"
     },
