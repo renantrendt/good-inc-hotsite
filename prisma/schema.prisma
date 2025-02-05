@@ -25,6 +25,16 @@ model LeadRegistration {
   phone     String
   cpf       String? // Optional for non-Brazilian users
 
+  // Shipping Address
+  street       String
+  number       String
+  complement   String?
+  neighborhood String?
+  city         String
+  state        String
+  country      String
+  zipCode      String
+
   // Profile Questions
   clothesOdor           String // yes/no
   productUnderstanding  String // yes/no
