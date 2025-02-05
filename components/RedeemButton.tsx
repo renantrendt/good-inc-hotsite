@@ -156,7 +156,7 @@ export function RedeemButton() {
   }
 
   const renderPersonalDataForm = () => (
-    <form onSubmit={handleNextStep} className="p-6 space-y-4 pb-32 relative">
+    <form onSubmit={handleNextStep} className="p-4 sm:p-6 space-y-4 pb-28 sm:pb-32 relative">
       <FloatingLabelInput
         id="firstName"
         name="firstName"
@@ -204,7 +204,7 @@ export function RedeemButton() {
   )
 
   const renderProfileForm = () => (
-    <form onSubmit={handleSubmit} className="p-6 pb-20 relative">
+    <form onSubmit={handleSubmit} className="p-4 sm:p-6 pb-20 relative">
       <div className="space-y-6 mb-4">
         {t.redeemButton.modal.questions.map((q) => (
           <div key={q.id} className="space-y-4">
@@ -270,12 +270,12 @@ export function RedeemButton() {
       <DialogTrigger asChild>
         <div className="flex flex-col items-center">
           <Button className="w-full sm:w-auto px-6 py-3 bg-black text-white text-sm sm:text-base font-medium whitespace-nowrap rounded-md uppercase">
-            {t.redeemButton.text}
+            {t.redeemButton.text || 'RESGATAR'}
           </Button>
           <p className="mt-2 text-xs sm:text-sm text-gray-600">{t.redeemButton.price}</p>
         </div>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] p-0 bg-white max-h-[90vh] flex flex-col fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] shadow-lg z-50">
+      <DialogContent className="sm:max-w-[425px] p-0 bg-white max-h-[85vh] flex flex-col fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] shadow-lg z-50 w-[90vw] sm:w-full">
         <div className="overflow-y-auto flex-grow">
           <DialogHeader className="p-4">
             <DialogTitle className="text-xl font-bold mb-4 text-center">
