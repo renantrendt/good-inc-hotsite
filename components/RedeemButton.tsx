@@ -137,7 +137,16 @@ export function RedeemButton() {
 
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault()
-    setCurrentStep(2)
+    // Verifica se todos os campos obrigatórios estão preenchidos
+    const requiredFields = ['firstName', 'lastName', 'email', 'phone']
+    if (language === 'pt') {
+      requiredFields.push('cpf')
+    }
+    
+    const isValid = requiredFields.every(field => formData[field])
+    if (isValid) {
+      setCurrentStep(2)
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -156,7 +165,7 @@ export function RedeemButton() {
   }
 
   const renderPersonalDataForm = () => (
-    <form onSubmit={handleNextStep} className="p-4 sm:p-6 space-y-4 pb-28 sm:pb-32 relative">
+    <form onSubmit={handleNextStep} className="p-4 sm:p-6 space-y-4 pb-24 sm:pb-32 relative">
       <FloatingLabelInput
         id="firstName"
         name="firstName"
@@ -191,7 +200,9 @@ export function RedeemButton() {
         type="tel"
         required
       />
-      <FloatingLabelInput id="cpf" name="cpf" value={formData.cpf} onChange={handleInputChange} label={t.redeemButton.modal.form.cpf} required />
+      {language === 'pt' && (
+        <FloatingLabelInput id="cpf" name="cpf" value={formData.cpf} onChange={handleInputChange} label={t.redeemButton.modal.form.cpf} required />
+      )}
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
@@ -204,28 +215,31 @@ export function RedeemButton() {
   )
 
   const renderProfileForm = () => (
-    <form onSubmit={handleSubmit} className="p-4 sm:p-6 pb-20 relative">
-      <div className="space-y-6 mb-4">
+    <form onSubmit={handleSubmit} className="p-4 sm:p-6 pb-24 relative">
+      <div className="space-y-8 mb-12 sm:mb-24">
         {t.redeemButton.modal.questions.map((q) => (
           <div key={q.id} className="space-y-4">
             <p className="text-base font-medium">{q.question}</p>
             <RadioGroup
               onValueChange={(value) => handleProfileChange(q.id, value)}
               value={profileAnswers[q.id]}
-              className="grid grid-cols-2 gap-2 w-full"
+              className="grid grid-cols-2 gap-0 w-full"
               required
             >
               {q.options.map((option, index) => (
                 <div key={option.value}>
-                  <RadioGroupItem value={option.value} id={`${q.id}-${option.value}`} className="peer sr-only" />
                   <Label
                     htmlFor={`${q.id}-${option.value}`}
-                    className={cn(
-                      "radio-group-item transition-colors",
-                      "peer-data-[state=checked]:bg-black peer-data-[state=checked]:text-white",
-                    )}
+                    className="relative block w-full cursor-pointer"
                   >
-                    {option.label}
+                    <RadioGroupItem value={option.value} id={`${q.id}-${option.value}`} className="absolute opacity-0" />
+                    <div className={cn(
+                      "flex flex-col items-center justify-center w-full p-4 text-gray-500 border border-gray-200 min-h-[60px] transition-all duration-200 whitespace-nowrap",
+                      index % 2 === 0 ? "rounded-l-lg" : "rounded-r-lg",
+                      profileAnswers[q.id] === option.value ? "bg-black text-white border-black" : "hover:text-gray-600 hover:bg-gray-100"
+                    )}>
+                      {option.label}
+                    </div>
                   </Label>
                 </div>
               ))}

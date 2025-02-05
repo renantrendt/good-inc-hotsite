@@ -129,7 +129,6 @@ const translations = {
           lastName: "Last Name",
           email: "E-mail",
           phone: "Phone",
-          cpf: "CPF",
           confirmData: "Confirm Data",
           finishOrder: "Finish Order"
         },
@@ -144,7 +143,7 @@ const translations = {
           },
           {
             id: "product_understanding",
-            question: "Do you understand that the most important part of preserving your health is in the continued use of products that treat and protect fabrics?",
+            question: "Do you understand that treating fabrics is key to your health?",
             options: [
               { value: "yes", label: "Yes" },
               { value: "no", label: "No" }
@@ -152,10 +151,10 @@ const translations = {
           },
           {
             id: "main_focus",
-            question: "Is your focus on longevity or solving an odor/sweat problem?",
+            question: "What is your main focus?",
             options: [
               { value: "longevity", label: "Longevity" },
-              { value: "problem_solving", label: "Solve Problem" }
+              { value: "problem_solving", label: "Odor/Sweat Problem" }
             ]
           }
         ],
@@ -317,12 +316,44 @@ const translations = {
           lastName: "Sobrenome",
           email: "E-mail",
           phone: "Telefone",
-          cpf: "CPF"
+          cpf: "CPF",
+          confirmData: "Confirmar dados",
+          finishOrder: "Finalizar pedido"
         },
+        questions: [
+          {
+            id: "clothes_odor",
+            question: "Você percebe que algumas roupas têm cheiro pior que outras?",
+            options: [
+              { value: "yes", label: "Sim" },
+              { value: "no", label: "Não" }
+            ]
+          },
+          {
+            id: "product_understanding",
+            question: "Você entende que tratar os tecidos é essencial para sua saúde?",
+            options: [
+              { value: "yes", label: "Sim" },
+              { value: "no", label: "Não" }
+            ]
+          },
+          {
+            id: "main_focus",
+            question: "Qual é seu foco principal?",
+            options: [
+              { value: "longevity", label: "Longevidade" },
+              { value: "problem_solving", label: "Problema Odor/Suor" }
+            ]
+          }
+        ],
         titles: {
           thanks: "Obrigado!",
           personalData: "Dados pessoais",
           profile: "Perfil"
+        },
+        success: {
+          message: "Seu pedido foi recebido com sucesso. Nossa equipe entrará em contato em breve através do e-mail cadastrado com mais informações.",
+          close: "Fechar"
         }
       },
       text: "Resgate o Primeiro Mês Grátis",
