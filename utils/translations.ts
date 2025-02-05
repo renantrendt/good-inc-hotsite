@@ -1,5 +1,10 @@
 const translations = {
   en: {
+    countrySelector: {
+      label: "Country Code",
+      defaultCountry: "+1",
+      search: "Search country"
+    },
     hero: {
       title: "PERSONAL CARE SYSTEM MORE THAN CLEAN — HEALTHY",
     },
@@ -121,6 +126,7 @@ const translations = {
       modal: {
         titles: {
           personalData: "Personal Data",
+          shippingAddress: "Shipping Address",
           profile: "Profile",
           thanks: "Thank you!"
         },
@@ -129,9 +135,21 @@ const translations = {
           lastName: "Last Name",
           email: "E-mail",
           phone: "Phone",
+<<<<<<< HEAD
           cpf: "CPF",
           confirmData: "Confirm Data",
           finishOrder: "Finish Order"
+=======
+          confirmData: "Next",
+          finishOrder: "Finish Order",
+          street: "Street Address",
+          number: "Number",
+          complement: "Apartment, suite, etc.",
+          neighborhood: "Neighborhood",
+          city: "City",
+          state: "State",
+          zipCode: "ZIP Code"
+>>>>>>> 53a424b (shipping)
         },
         questions: [
           {
@@ -195,6 +213,69 @@ const translations = {
     },
   },
   pt: {
+    redeemButton: {
+      text: "Primeiro Mês Grátis",
+      price: "R$ 199,90/mês depois",
+      modal: {
+        titles: {
+          personalData: "Dados Pessoais",
+          shippingAddress: "Endereço de Entrega",
+          profile: "Perfil",
+          thanks: "Obrigado!"
+        },
+        form: {
+          firstName: "Nome",
+          lastName: "Sobrenome",
+          email: "E-mail",
+          phone: "Telefone",
+          cpf: "CPF",
+          confirmData: "Próximo",
+          finishOrder: "Finalizar Pedido",
+          street: "Endereço",
+          number: "Número",
+          complement: "Apartamento, complemento, etc.",
+          neighborhood: "Bairro",
+          city: "Cidade",
+          state: "Estado",
+          zipCode: "CEP"
+        },
+        questions: [
+          {
+            id: "clothes_odor",
+            question: "Você percebe que algumas roupas exalam mais odor que outras?",
+            options: [
+              { value: "yes", label: "Sim" },
+              { value: "no", label: "Não" }
+            ]
+          },
+          {
+            id: "product_understanding",
+            question: "Você entende que tratar os tecidos é fundamental para sua saúde?",
+            options: [
+              { value: "yes", label: "Sim" },
+              { value: "no", label: "Não" }
+            ]
+          },
+          {
+            id: "main_focus",
+            question: "Qual é seu foco principal?",
+            options: [
+              { value: "longevity", label: "Longevidade" },
+              { value: "problem_solving", label: "Problema de Odor/Suor" }
+            ]
+          }
+        ],
+        success: {
+          message: "Seu pedido foi recebido com sucesso. Nossa equipe entrará em contato em breve através do e-mail cadastrado com mais informações.",
+          close: "Fechar"
+        }
+      }
+    },
+    countrySelector: {
+      label: "Código do País",
+      defaultCountry: "+55",
+      search: "Buscar país"
+    },
     hero: {
       title: "SISTEMA DE CUIDADOS PESSOAIS MAIS DO QUE LIMPO — SAUDÁVEL",
     },

@@ -66,8 +66,18 @@ function ProgressBar({
   currentStep,
   onStepClick,
   isSubmitted,
-}: { currentStep: number; onStepClick: (step: number) => void; isSubmitted?: boolean }) {
-  const steps = ["Dados Pessoais", "Perfil"]
+  titles
+}: { 
+  currentStep: number; 
+  onStepClick: (step: number) => void; 
+  isSubmitted?: boolean;
+  titles: {
+    personalData: string;
+    shippingAddress: string;
+    profile: string;
+  };
+}) {
+  const steps = [titles.personalData, titles.shippingAddress, titles.profile]
 
   return (
     <div className="w-full">
@@ -122,8 +132,18 @@ export function RedeemButton() {
     firstName: "",
     lastName: "",
     phone: "",
+    countryCode: language === 'pt' ? '+55' : '+1',
     cpf: "",
     email: "",
+    address: {
+      street: "",
+      number: "",
+      complement: "",
+      neighborhood: "",
+      city: "",
+      state: "",
+      zipCode: ""
+    }
   })
   const [profileAnswers, setProfileAnswers] = useState<Record<string, string>>({})
 
@@ -152,7 +172,15 @@ export function RedeemButton() {
     
     const isValid = requiredFields.every(field => formData[field])
     if (isValid) {
-      setCurrentStep(2)
+      if (currentStep === 1) {
+        setCurrentStep(2)
+      } else if (currentStep === 2) {
+        const addressFields = ['street', 'number', 'city', 'state', 'zipCode']
+        const isAddressValid = addressFields.every(field => formData.address[field])
+        if (isAddressValid) {
+          setCurrentStep(3)
+        }
+      }
     }
   }
 
@@ -226,18 +254,117 @@ export function RedeemButton() {
         type="email"
         required
       />
-      <FloatingLabelInput
-        id="phone"
-        name="phone"
-        value={formData.phone}
-        onChange={handleInputChange}
-        label={t.redeemButton.modal.form.phone}
-        type="tel"
-        required
-      />
+      <div className="flex gap-2">
+        <div className="w-1/4">
+          <select
+            value={formData.countryCode}
+            onChange={(e) => setFormData(prev => ({ ...prev, countryCode: e.target.value }))}
+            className="block w-full h-16 px-4 pt-5 text-lg border border-gray-300 rounded-lg transition-all duration-200 bg-white"
+            aria-label={t.countrySelector.label}
+          >
+            <option value="+55">+55</option>
+            <option value="+1">+1</option>
+            <option value="+44">+44</option>
+            <option value="+33">+33</option>
+            <option value="+49">+49</option>
+            <option value="+81">+81</option>
+            <option value="+86">+86</option>
+          </select>
+        </div>
+        <div className="flex-1">
+          <FloatingLabelInput
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleInputChange}
+            label={t.redeemButton.modal.form.phone}
+            type="tel"
+            required
+          />
+        </div>
+      </div>
       {language === 'pt' && (
         <FloatingLabelInput id="cpf" name="cpf" value={formData.cpf} onChange={handleInputChange} label={t.redeemButton.modal.form.cpf} required />
       )}
+      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
+        <Button
+          type="submit"
+          className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
+        >
+          {t.redeemButton.modal.form.confirmData}
+        </Button>
+      </div>
+    </form>
+  )
+
+  const renderAddressForm = () => (
+    <form onSubmit={handleNextStep} className="p-4 sm:p-6 space-y-4 pb-28 sm:pb-32 relative">
+      <FloatingLabelInput
+        id="street"
+        name="address.street"
+        value={formData.address.street}
+        onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, street: e.target.value } }))}
+        label={t.redeemButton.modal.form.street}
+        required
+      />
+      <div className="flex gap-4">
+        <div className="w-1/3">
+          <FloatingLabelInput
+            id="number"
+            name="address.number"
+            value={formData.address.number}
+            onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, number: e.target.value } }))}
+            label={t.redeemButton.modal.form.number}
+            required
+          />
+        </div>
+        <div className="flex-1">
+          <FloatingLabelInput
+            id="complement"
+            name="address.complement"
+            value={formData.address.complement}
+            onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, complement: e.target.value } }))}
+            label={t.redeemButton.modal.form.complement}
+          />
+        </div>
+      </div>
+      <FloatingLabelInput
+        id="neighborhood"
+        name="address.neighborhood"
+        value={formData.address.neighborhood}
+        onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, neighborhood: e.target.value } }))}
+        label={t.redeemButton.modal.form.neighborhood}
+      />
+      <div className="flex gap-4">
+        <div className="flex-1">
+          <FloatingLabelInput
+            id="city"
+            name="address.city"
+            value={formData.address.city}
+            onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, city: e.target.value } }))}
+            label={t.redeemButton.modal.form.city}
+            required
+          />
+        </div>
+        <div className="w-1/3">
+          <FloatingLabelInput
+            id="state"
+            name="address.state"
+            value={formData.address.state}
+            onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, state: e.target.value } }))}
+            label={t.redeemButton.modal.form.state}
+            required
+          />
+        </div>
+      </div>
+      <FloatingLabelInput
+        id="zipCode"
+        name="address.zipCode"
+        value={formData.address.zipCode}
+        onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, zipCode: e.target.value } }))}
+        label={t.redeemButton.modal.form.zipCode}
+        required
+      />
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
@@ -328,11 +455,20 @@ export function RedeemButton() {
         <div className="overflow-y-auto flex-grow">
           <DialogHeader className="p-4">
             <DialogTitle className="text-xl font-bold mb-4 text-center">
-              {isSubmitted ? t.redeemButton.modal.titles.thanks : currentStep === 1 ? t.redeemButton.modal.titles.personalData : t.redeemButton.modal.titles.profile}
+              {isSubmitted ? t.redeemButton.modal.titles.thanks : currentStep === 1 ? t.redeemButton.modal.titles.personalData : currentStep === 2 ? t.redeemButton.modal.titles.shippingAddress : t.redeemButton.modal.titles.profile}
             </DialogTitle>
-            <ProgressBar currentStep={currentStep - 1} onStepClick={handleStepClick} isSubmitted={isSubmitted} />
+            <ProgressBar 
+              currentStep={currentStep - 1} 
+              onStepClick={handleStepClick} 
+              isSubmitted={isSubmitted}
+              titles={{
+                personalData: t.redeemButton.modal.titles.personalData,
+                shippingAddress: t.redeemButton.modal.titles.shippingAddress,
+                profile: t.redeemButton.modal.titles.profile
+              }}
+            />
           </DialogHeader>
-          {isSubmitted ? renderSuccessMessage() : currentStep === 1 ? renderPersonalDataForm() : renderProfileForm()}
+          {isSubmitted ? renderSuccessMessage() : currentStep === 1 ? renderPersonalDataForm() : currentStep === 2 ? renderAddressForm() : renderProfileForm()}
         </div>
       </DialogContent>
     </Dialog>
