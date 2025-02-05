@@ -135,11 +135,7 @@ const translations = {
           lastName: "Last Name",
           email: "E-mail",
           phone: "Phone",
-<<<<<<< HEAD
           cpf: "CPF",
-          confirmData: "Confirm Data",
-          finishOrder: "Finish Order"
-=======
           confirmData: "Next",
           finishOrder: "Finish Order",
           street: "Street Address",
@@ -148,8 +144,8 @@ const translations = {
           neighborhood: "Neighborhood",
           city: "City",
           state: "State",
-          zipCode: "ZIP Code"
->>>>>>> 53a424b (shipping)
+          zipCode: "ZIP Code",
+          country: "Country"
         },
         questions: [
           {
