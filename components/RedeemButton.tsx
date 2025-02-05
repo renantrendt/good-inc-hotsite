@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Check } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
@@ -132,7 +132,7 @@ export function RedeemButton() {
     firstName: "",
     lastName: "",
     phone: "",
-    countryCode: language === 'pt' ? '+55' : '+1',
+    countryCode: "",
     cpf: "",
     email: "",
     address: {
@@ -142,9 +142,28 @@ export function RedeemButton() {
       neighborhood: "",
       city: "",
       state: "",
+      country: "",
       zipCode: ""
     }
   })
+
+  useEffect(() => {
+    // Função para obter o código do país baseado no IP
+    const getCountryCode = async () => {
+      try {
+        const response = await fetch('https://ipapi.co/json/')
+        const data = await response.json()
+        const countryCode = `+${data.country_calling_code.replace(/\+/g, '')}`
+        setFormData(prev => ({ ...prev, countryCode }))
+      } catch (error) {
+        console.error('Error getting country code:', error)
+        // Fallback para o código padrão baseado na língua
+        setFormData(prev => ({ ...prev, countryCode: language === 'pt' ? '+55' : '+1' }))
+      }
+    }
+
+    getCountryCode()
+  }, [])
   const [profileAnswers, setProfileAnswers] = useState<Record<string, string>>({})
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,26 +206,55 @@ export function RedeemButton() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length) {
-      return // Prevent submission if not all questions are answered
-    }
-
     try {
+      // Verificar se todas as perguntas foram respondidas
+      const allQuestionsAnswered = t.redeemButton.modal.questions.every(q => profileAnswers[q.id])
+      if (!allQuestionsAnswered) {
+        throw new Error('Please answer all questions')
+      }
+
+      // Verificar se todos os campos obrigatórios estão preenchidos
+      const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'countryCode']
+      if (language === 'pt') {
+        requiredFields.push('cpf')
+      }
+      const personalDataValid = requiredFields.every(field => formData[field])
+
+      const addressFields = ['street', 'number', 'city', 'state', 'zipCode', 'country']
+      const addressValid = addressFields.every(field => formData.address[field])
+
+      if (!personalDataValid || !addressValid) {
+        throw new Error('Please fill in all required fields')
+      }
+
+      const payload = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.countryCode + formData.phone,
+        countryCode: formData.countryCode,
+        cpf: formData.cpf || null,
+        street: formData.address.street,
+        number: formData.address.number,
+        complement: formData.address.complement || null,
+        neighborhood: formData.address.neighborhood || null,
+        city: formData.address.city,
+        state: formData.address.state,
+        country: formData.address.country,
+        zipCode: formData.address.zipCode,
+        clothesOdor: profileAnswers.clothes_odor,
+        productUnderstanding: profileAnswers.product_understanding,
+        mainFocus: profileAnswers.main_focus,
+      }
+
+      console.log('Submitting form with data:', payload) // Log para debug
+
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          cpf: formData.cpf || null,
-          clothesOdor: profileAnswers.clothes_odor,
-          productUnderstanding: profileAnswers.product_understanding,
-          mainFocus: profileAnswers.main_focus,
-        }),
+        body: JSON.stringify(payload),
       })
 
       if (!response.ok) {
@@ -255,21 +303,24 @@ export function RedeemButton() {
         required
       />
       <div className="flex gap-2">
-        <div className="w-1/4">
-          <select
-            value={formData.countryCode}
-            onChange={(e) => setFormData(prev => ({ ...prev, countryCode: e.target.value }))}
-            className="block w-full h-16 px-4 pt-5 text-lg border border-gray-300 rounded-lg transition-all duration-200 bg-white"
-            aria-label={t.countrySelector.label}
-          >
-            <option value="+55">+55</option>
-            <option value="+1">+1</option>
-            <option value="+44">+44</option>
-            <option value="+33">+33</option>
-            <option value="+49">+49</option>
-            <option value="+81">+81</option>
-            <option value="+86">+86</option>
-          </select>
+        <div className="w-20">
+          <div className="relative">
+            <input
+              id="countryCode"
+              name="countryCode"
+              type="text"
+              value={formData.countryCode}
+              onChange={(e) => setFormData(prev => ({ ...prev, countryCode: e.target.value }))}
+              className="block w-full h-16 px-2 pt-5 text-lg border border-gray-300 rounded-lg transition-all duration-200 bg-white focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              required
+            />
+            <label
+              htmlFor="countryCode"
+              className="absolute left-2 text-xs text-gray-500 transform -translate-y-3 scale-75 origin-left top-1/2 -translate-y-1/2"
+            >
+              {t.countrySelector.label}
+            </label>
+          </div>
         </div>
         <div className="flex-1">
           <FloatingLabelInput
@@ -363,6 +414,14 @@ export function RedeemButton() {
         value={formData.address.zipCode}
         onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, zipCode: e.target.value } }))}
         label={t.redeemButton.modal.form.zipCode}
+        required
+      />
+      <FloatingLabelInput
+        id="country"
+        name="address.country"
+        value={formData.address.country}
+        onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, country: e.target.value } }))}
+        label={t.redeemButton.modal.form.country}
         required
       />
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">

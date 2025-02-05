@@ -19,11 +19,12 @@ model LeadRegistration {
   updatedAt DateTime @updatedAt
 
   // Personal Information
-  firstName String
-  lastName  String
-  email     String
-  phone     String
-  cpf       String? // Optional for non-Brazilian users
+  firstName   String
+  lastName    String
+  email       String
+  phone       String
+  countryCode String  // Added country code field
+  cpf         String? // Optional for non-Brazilian users
 
   // Shipping Address
   street       String

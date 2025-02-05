@@ -1,7 +1,7 @@
 const translations = {
   en: {
     countrySelector: {
-      label: "Country Code",
+      label: "Code*",
       defaultCountry: "+1",
       search: "Search country"
     },
@@ -268,7 +268,7 @@ const translations = {
       }
     },
     countrySelector: {
-      label: "Código do País",
+      label: "DDD*",
       defaultCountry: "+55",
       search: "Buscar país"
     },
