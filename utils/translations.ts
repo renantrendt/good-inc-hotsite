@@ -135,7 +135,7 @@ const translations = {
         questions: [
           {
             id: "clothes_odor",
-            question: "Do you notice that some clothes smell worse than others?",
+            question: "Do you notice that some clothes give off more odor than others?",
             options: [
               { value: "yes", label: "Yes" },
               { value: "no", label: "No" }
@@ -323,7 +323,7 @@ const translations = {
         questions: [
           {
             id: "clothes_odor",
-            question: "Você percebe que algumas roupas têm cheiro pior que outras?",
+            question: "Você percebe que algumas roupas dão mais mau cheiro que outras?",
             options: [
               { value: "yes", label: "Sim" },
               { value: "no", label: "Não" }
