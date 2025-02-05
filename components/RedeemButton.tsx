@@ -165,7 +165,7 @@ export function RedeemButton() {
   }
 
   const renderPersonalDataForm = () => (
-    <form onSubmit={handleNextStep} className="p-4 sm:p-6 space-y-4 pb-24 sm:pb-32 relative">
+    <form onSubmit={handleNextStep} className="p-4 sm:p-6 space-y-4 pb-28 sm:pb-32 relative">
       <FloatingLabelInput
         id="firstName"
         name="firstName"
@@ -215,7 +215,7 @@ export function RedeemButton() {
   )
 
   const renderProfileForm = () => (
-    <form onSubmit={handleSubmit} className="p-4 sm:p-6 pb-24 relative">
+    <form onSubmit={handleSubmit} className="p-4 sm:p-6 pb-16  relative">
       <div className="space-y-8 mb-12 sm:mb-24">
         {t.redeemButton.modal.questions.map((q) => (
           <div key={q.id} className="space-y-4">
