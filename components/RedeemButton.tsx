@@ -103,7 +103,14 @@ interface ProfileQuestion {
   options: { value: string; label: string }[]
 }
 
-
+interface FormData {
+  [key: string]: string
+  firstName: string
+  lastName: string
+  phone: string
+  cpf: string
+  email: string
+}
 
 export function RedeemButton() {
   const { language } = useLanguage()
@@ -111,7 +118,7 @@ export function RedeemButton() {
   const [isOpen, setIsOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     phone: "",
@@ -149,13 +156,41 @@ export function RedeemButton() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
     if (Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length) {
       return // Prevent submission if not all questions are answered
     }
-    console.log("Form submitted:", { ...formData, profileAnswers })
-    setIsSubmitted(true)
+
+    try {
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          cpf: formData.cpf || null,
+          clothesOdor: profileAnswers.clothes_odor,
+          productUnderstanding: profileAnswers.product_understanding,
+          mainFocus: profileAnswers.main_focus,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form')
+      }
+
+      // If successful, show success message
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      // Show error message to user
+    }
   }
 
   const handleStepClick = (step: number) => {

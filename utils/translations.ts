@@ -129,6 +129,7 @@ const translations = {
           lastName: "Last Name",
           email: "E-mail",
           phone: "Phone",
+          cpf: "CPF",
           confirmData: "Confirm Data",
           finishOrder: "Finish Order"
         },
