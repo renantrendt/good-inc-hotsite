@@ -23,5 +23,9 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "dependencies": {
+    "date-fns": "^3.0.0",
+    "react-day-picker": "8.10.1"
+  }
 }
