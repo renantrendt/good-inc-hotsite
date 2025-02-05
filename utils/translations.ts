@@ -3,9 +3,6 @@ const translations = {
     hero: {
       title: "PERSONAL CARE SYSTEM MORE THAN CLEAN — HEALTHY",
     },
-    productShowcase: {
-      title: "ALL YOUR HYGIENE NEEDS IN ONE COMPLETE SYSTEM"
-    },
     benefits: {
       title: "Benefits",
       items: [
@@ -200,9 +197,6 @@ const translations = {
   pt: {
     hero: {
       title: "SISTEMA DE CUIDADOS PESSOAIS MAIS DO QUE LIMPO — SAUDÁVEL",
-    },
-    productShowcase: {
-      title: "TODAS AS SUAS NECESSIDADES DE HIGIENE EM UM SISTEMA COMPLETO"
     },
     benefits: {
       title: "Benefícios",
