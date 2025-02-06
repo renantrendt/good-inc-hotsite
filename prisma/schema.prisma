@@ -24,6 +24,17 @@ model LeadRegistration {
   email     String
   phone     String
   cpf       String? // Optional for non-Brazilian users
+  countryCode String @default("+55") // Default to Brazil
+
+  // Address Information
+  street      String
+  number      String
+  complement  String?
+  neighborhood String
+  city        String
+  state       String
+  zipCode     String
+  country     String @default("Brasil") // Default to Brazil
 
   // Profile Questions
   clothesOdor           String // yes/no
