@@ -249,18 +249,12 @@ export function RedeemButton() {
         setIsLoadingAddress(false)
 
         if (address) {
-          const newLockedFields: Record<string, boolean> = {}
-          Object.entries(address).forEach(([key, value]) => {
-            if (value && value.trim() !== '') {
-              newLockedFields[key] = true
-            }
-          })
-          
-          setLockedFields(newLockedFields)
           setFormData(prev => ({ 
             ...prev,
             ...address,
-            number: prev.number
+            number: prev.number,
+            country: prev.country,
+            phoneCode: prev.phoneCode
           }))
           setIsCEPValid(true)
           setIsAddressLocked(true)
@@ -329,6 +323,7 @@ export function RedeemButton() {
           lastName: formData.lastName,
           email: formData.email,
           phone: formData.phone,
+          phoneCode: formData.phoneCode,
           cpf: formData.cpf || null,
           address: {
             street: formData.street,
@@ -337,7 +332,8 @@ export function RedeemButton() {
             neighborhood: formData.neighborhood,
             city: formData.city,
             state: formData.state,
-            zipCode: formData.zipCode
+            zipCode: formData.zipCode,
+            country: formData.country
           },
           clothesOdor: profileAnswers.clothes_odor,
           productUnderstanding: profileAnswers.product_understanding,
@@ -495,7 +491,7 @@ export function RedeemButton() {
             onChange={handleInputChange}
             label={language === 'pt' ? "Endereço" : "Street"}
             required
-            disabled={language === 'pt' && lockedFields.street}
+            disabled={false}
           />
           {addressErrors.street && (
             <p className="text-sm text-red-500 mt-1">{addressErrors.street}</p>
@@ -535,7 +531,7 @@ export function RedeemButton() {
             value={formData.neighborhood}
             onChange={handleInputChange}
             label={language === 'pt' ? "Bairro" : "Neighborhood"}
-            disabled={language === 'pt' && lockedFields.neighborhood}
+            disabled={false}
           />
           {addressErrors.neighborhood && (
             <p className="text-sm text-red-500 mt-1">{addressErrors.neighborhood}</p>
@@ -550,7 +546,7 @@ export function RedeemButton() {
             onChange={handleInputChange}
             label={language === 'pt' ? "Cidade" : "City"}
             required
-            disabled={language === 'pt' && lockedFields.city}
+            disabled={false}
           />
           {addressErrors.city && (
             <p className="text-sm text-red-500 mt-1">{addressErrors.city}</p>
@@ -565,7 +561,7 @@ export function RedeemButton() {
             onChange={handleInputChange}
             label={language === 'pt' ? "Estado" : "State"}
             required
-            disabled={language === 'pt' && lockedFields.state}
+            disabled={false}
           />
           {addressErrors.state && (
             <p className="text-sm text-red-500 mt-1">{addressErrors.state}</p>
@@ -576,7 +572,7 @@ export function RedeemButton() {
           <FloatingLabelInput
             id="country"
             name="country"
-            value={countryName}
+            value={formData.country}
             onChange={handleInputChange}
             label={language === 'pt' ? "País" : "Country"}
             required

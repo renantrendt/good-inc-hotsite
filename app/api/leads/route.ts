@@ -23,8 +23,8 @@ export async function POST(request: Request) {
         city: data.address.city,
         state: data.address.state,
         zipCode: data.address.zipCode,
-        country: data.country || 'Brasil', // Valor padrão para Brasil
-        countryCode: data.countryCode || '+55', // Valor padrão para Brasil
+        country: data.address.country,
+        countryCode: data.phoneCode,
         // Campos do perfil
         clothesOdor: data.clothesOdor,
         productUnderstanding: data.productUnderstanding,
