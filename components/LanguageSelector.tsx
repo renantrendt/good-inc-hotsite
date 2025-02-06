@@ -23,9 +23,8 @@ export default function LanguageSelector() {
         }
       } catch (error) {
         console.error("Error detecting country:", error)
-        // Fallback to browser language or default to English
-        const browserLang = navigator.language.split("-")[0]
-        setLanguage(browserLang === "pt" ? "pt" : "en")
+        // Default to English if there's an error
+        setLanguage("en")
       } finally {
         setIsLoading(false)
       }
