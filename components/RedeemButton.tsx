@@ -22,6 +22,7 @@ interface FloatingLabelInputProps {
   label: string
   type?: string
   required?: boolean
+  disabled?: boolean
 }
 
 function FloatingLabelInput({
@@ -32,6 +33,7 @@ function FloatingLabelInput({
   label,
   type = "text",
   required = false,
+  disabled = false,
 }: FloatingLabelInputProps) {
   const [isFocused, setIsFocused] = useState(false)
 
@@ -52,6 +54,7 @@ function FloatingLabelInput({
         )}
         placeholder={label}
         required={required}
+        disabled={disabled}
       />
       <label
         htmlFor={id}
