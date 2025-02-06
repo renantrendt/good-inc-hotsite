@@ -141,6 +141,7 @@ export function RedeemButton() {
   const [isCEPValid, setIsCEPValid] = useState(false)
   const [isAddressLocked, setIsAddressLocked] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [personalDataErrors, setPersonalDataErrors] = useState<Record<string, string>>({})
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -312,6 +313,7 @@ export function RedeemButton() {
       return // Prevent submission if not all questions are answered
     }
 
+    setIsSubmitting(true)
     try {
       const response = await fetch('/api/leads', {
         method: 'POST',
@@ -350,6 +352,8 @@ export function RedeemButton() {
     } catch (error) {
       console.error('Error submitting form:', error)
       // Show error message to user
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -627,10 +631,14 @@ export function RedeemButton() {
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
-          className="w-full py-3 text-sm font-medium bg-black text-white rounded-lg"
-          disabled={Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length}
+          className="w-full py-3 text-sm font-medium bg-black text-white rounded-lg relative"
+          disabled={Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length || isSubmitting}
         >
-          {t.redeemButton.modal.form.finishOrder}
+          {isSubmitting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            t.redeemButton.modal.form.finishOrder
+          )}
         </Button>
       </div>
     </form>
