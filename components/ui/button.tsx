@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
-  variant?: "primary" | "secondary" | "destructive"
+  variant?: "primary" | "secondary" | "destructive" | "ghost"
 }
 
 const Button = ({ children, variant = "primary", className, ...props }: ButtonProps) => {
@@ -14,6 +14,7 @@ const Button = ({ children, variant = "primary", className, ...props }: ButtonPr
     primary: "bg-primary text-primary-foreground",
     secondary: "bg-secondary text-secondary-foreground",
     destructive: "bg-destructive text-destructive-foreground",
+    ghost: "hover:bg-accent hover:text-accent-foreground",
   }
 
   return (
