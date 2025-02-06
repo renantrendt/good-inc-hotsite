@@ -25,24 +25,24 @@ const getFooterLinks = (language: "en" | "pt") => [
 ]
 
 const paymentLogos = [
-  { src: "https://www.visto.bio/common/images/checkout/payment-icon-visa.png", alt: "Visa" },
-  { src: "https://www.visto.bio/common/images/checkout/payment-icon-master.png", alt: "Mastercard" },
-  { src: "https://www.visto.bio/common/images/checkout/payment-icon-american-express.png", alt: "American Express" },
-  { src: "https://www.visto.bio/common/images/checkout/payment-icon-pix.png", alt: "Pix" },
+  { src: "/images/payment/payment-icon-visa.png", alt: "Visa" },
+  { src: "/images/payment/payment-icon-master.png", alt: "Mastercard" },
+  { src: "/images/payment/payment-icon-american-express.png", alt: "American Express" },
+  { src: "/images/payment/payment-icon-pix.png", alt: "Pix" },
   {
-    src: "https://cdn.vnda.com.br/120x/vistobio/2023/04/19/9_4_1_114_PrincipalFundoBranco.png?v=1700682967",
+    src: "/images/badges/anvisa.png",
     alt: "Pagarme",
   },
 ]
 
 const certificationLogos = [
   {
-    src: "https://cdn.vnda.com.br/120x/vistobio/2022/08/16/14_8_9_974_criar_e_promover_reclame_aqui_480x480.png?v=1700682967",
+    src: "/images/badges/reclame-aqui.png",
     alt: "Reclame Aqui",
     href: "https://www.reclameaqui.com.br/empresa/visto-bio/",
   },
   {
-    src: "https://cdn.vnda.com.br/120x/vistobio/2022/08/16/14_8_5_528_transferir15.png?v=1700682967",
+    src: "/images/badges/fda.png",
     alt: "Google Safe Browsing",
     href: "https://transparencyreport.google.com/safe-browsing/search?url=good.inc",
   },

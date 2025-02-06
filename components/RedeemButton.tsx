@@ -416,7 +416,6 @@ export function RedeemButton() {
                 onChange={handleInputChange}
                 label={language === 'pt' ? "DDD" : "Code"}
                 required
-                disabled
               />
             </div>
             <div className="flex-1">
@@ -581,7 +580,6 @@ export function RedeemButton() {
             onChange={handleInputChange}
             label={language === 'pt' ? "País" : "Country"}
             required
-            disabled
           />
         </div>
       </div>

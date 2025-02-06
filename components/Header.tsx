@@ -66,7 +66,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center">
             <Image
-              src="https://portal.good.inc/static/images/logo_good.2d89a98eab4e.png"
+              src="/images/logo_good.png"
               alt="GOOD.INC Logo"
               width={120}
               height={40}
@@ -87,7 +87,7 @@ export default function Header() {
                 <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between py-4 border-b">
                     <Image
-                      src="https://portal.good.inc/static/images/logo_good.2d89a98eab4e.png"
+                      src="/images/logo_good.png"
                       alt="GOOD.INC Logo"
                       width={120}
                       height={40}
