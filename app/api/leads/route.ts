@@ -15,17 +15,6 @@ export async function POST(request: Request) {
         email: data.email,
         phone: data.phone,
         cpf: data.cpf,
-        street: data.street,
-        number: data.number,
-        complement: data.complement,
-        neighborhood: data.neighborhood,
-        city: data.city,
-        state: data.state,
-        country: data.country,
-        zipCode: data.zipCode,
-        clothesOdor: data.clothesOdor,
-        productUnderstanding: data.productUnderstanding,
-        mainFocus: data.mainFocus,
         // Campos de endereço
         street: data.address.street,
         number: data.address.number,
@@ -36,6 +25,10 @@ export async function POST(request: Request) {
         zipCode: data.address.zipCode,
         country: data.country || 'Brasil', // Valor padrão para Brasil
         countryCode: data.countryCode || '+55', // Valor padrão para Brasil
+        // Campos do perfil
+        clothesOdor: data.clothesOdor,
+        productUnderstanding: data.productUnderstanding,
+        mainFocus: data.mainFocus,
       },
     })
 
