@@ -386,86 +386,24 @@ const translations = {
       contact: "Contato",
       paymentMethods: "Formas de Pagamento",
       copyright: "© 2025, Patente Pendente. Visto.bio.",
-      address: "São Paulo: Rua Finisterre, 159, Riviera - SP, 04928030, CNPJ 32.761.719/0001-31",
-    },
-    redeemButton: {
-      modal: {
-        form: {
-          firstName: "Nome",
-          lastName: "Sobrenome",
-          email: "E-mail",
-          phone: "Telefone",
-          cpf: "CPF",
-          confirmData: "Confirmar dados",
-          finishOrder: "Finalizar pedido"
-        },
-        questions: [
-          {
-            id: "clothes_odor",
-            question: "Você percebe que algumas roupas dão mais mau cheiro que outras?",
-            options: [
-              { value: "yes", label: "Sim" },
-              { value: "no", label: "Não" }
-            ]
-          },
-          {
-            id: "product_understanding",
-            question: "Você entende que tratar os tecidos é essencial para sua saúde?",
-            options: [
-              { value: "yes", label: "Sim" },
-              { value: "no", label: "Não" }
-            ]
-          },
-          {
-            id: "main_focus",
-            question: "Qual é seu foco principal?",
-            options: [
-              { value: "longevity", label: "Longevidade" },
-              { value: "problem_solving", label: "Problema Odor/Suor" }
-            ]
-          }
-        ],
-        titles: {
-          thanks: "Obrigado!",
-          personalData: "Dados pessoais",
-          profile: "Perfil"
-        },
-        success: {
-          message: "Seu pedido foi recebido com sucesso. Nossa equipe entrará em contato em breve através do e-mail cadastrado com mais informações.",
-          close: "Fechar"
-        }
-      },
-      text: "Resgate o Primeiro Mês Grátis",
-      price: "A partir do 2º mês R$299/mês",
-      thankYou: "Obrigado!",
-      redeemTitle: "Resgate Seu Sistema",
-      processingMessage: "Seu pedido está sendo processado. Você receberá mais informações por e-mail em breve.",
-      enterDetails: "Por favor, insira seus dados para resgatar seu sistema.",
-      firstName: "Nome",
-      lastName: "Sobrenome",
-      address: "Endereço",
-      phone: "Telefone",
-      email: "E-mail",
-      submit: "Resgatar",
-      close: "Fechar",
+      address: "São Paulo: Rua Finisterre, 159, Riviera - SP, 04928030, CNPJ 32.761.719/0001-31"
     },
     healthyClean: {
       title: "TODAS AS SUAS NECESSIDADES DE HIGIENE EM UM SISTEMA COMPLETO",
       cards: [
         {
           title: "Formulação livre de alumínio",
-          description: "Bioproduzido no Brasil.\nFabricado na Califórnia.",
+          description: "Bioproduzido no Brasil.\nFabricado na Califórnia."
         },
         {
           title: "Testado globalmente",
-          description:
-            "Testado com sucesso por mais de 5 anos em mais de 60.000 pessoas em 13 países, representando diversos tipos de pele e climas.",
+          description: "Testado com sucesso por mais de 5 anos em mais de 60.000 pessoas em 13 países, representando diversos tipos de pele e climas."
         },
         {
           title: "Embalagem ecológica",
-          description: "Nossa embalagem usa oxigênio em vez de gás e é 100% reciclável.",
-        },
-      ],
+          description: "Nossa embalagem usa oxigênio em vez de gás e é 100% reciclável."
+        }
+      ]
     },
     weeklyProgress: {
       week: "Semana",
@@ -474,9 +412,9 @@ const translations = {
         "As roupas mantêm sua frescura e conforto naturais por mais tempo",
         "O aroma saudável da sua pele floresce naturalmente",
         "A pele fica mais saudável e uniforme do que antes",
-        "Seu equilíbrio interno e confiança aumentam",
-      ],
-    },
+        "Seu equilíbrio interno e confiança aumentam"
+      ]
+    }
   },
 }
 
