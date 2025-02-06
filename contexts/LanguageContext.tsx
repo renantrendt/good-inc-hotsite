@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 
 type Language = "en" | "pt"
 
@@ -13,6 +13,23 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>("en")
+
+  useEffect(() => {
+    async function detectLanguage() {
+      try {
+        const response = await fetch('/api/geolocation')
+        const data = await response.json()
+        
+        if (data.country === 'BR') {
+          setLanguage('pt')
+        }
+      } catch (error) {
+        console.error('Error detecting language:', error)
+      }
+    }
+
+    detectLanguage()
+  }, [])
 
   return <LanguageContext.Provider value={{ language, setLanguage }}>{children}</LanguageContext.Provider>
 }

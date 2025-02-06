@@ -156,7 +156,7 @@ export function RedeemButton() {
     neighborhood: "",
     city: "",
     state: "",
-    country: "Brasil",
+    country: countryName,
   })
   const [profileAnswers, setProfileAnswers] = useState<Record<string, string>>({})
 
