@@ -1,14 +1,18 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { ViaCEPService } from "../services/viacep.service"
+import { Lock, Unlock, Loader2 } from "lucide-react"
+import { useGeolocation } from "../hooks/use-geolocation"
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
 import { Check } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle } from "./ui/dialog"
 import { useLanguage } from "../contexts/LanguageContext"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
+import { Label } from "./ui/label"
 import translations from "../utils/translations"
-import { cn } from "@/lib/utils"
+import { cn } from "../lib/utils"
 
 interface FloatingLabelInputProps {
   id: string
@@ -42,7 +46,7 @@ function FloatingLabelInput({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className={cn(
-          "block w-full h-16 px-4 pt-5 text-lg border border-gray-300 rounded-lg transition-all duration-200 bg-white peer",
+          "block w-full h-12 px-3 pt-6 pb-2 text-sm border border-gray-300 rounded-lg transition-all duration-200 bg-white peer",
           "focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent",
           "placeholder-transparent",
         )}
@@ -52,8 +56,8 @@ function FloatingLabelInput({
       <label
         htmlFor={id}
         className={cn(
-          "absolute left-4 transition-all duration-200 pointer-events-none text-gray-500",
-          isFocused || value ? "transform -translate-y-3 scale-75 origin-left" : "top-1/2 -translate-y-1/2",
+          "absolute left-2 text-xs transition-all duration-200 pointer-events-none text-gray-500 pt-1",
+          isFocused || value ? "translate-y-2 text-[10px]" : "top-1/2 -translate-y-1/2",
         )}
       >
         {label} {required && "*"}
@@ -66,18 +70,8 @@ function ProgressBar({
   currentStep,
   onStepClick,
   isSubmitted,
-  titles
-}: { 
-  currentStep: number; 
-  onStepClick: (step: number) => void; 
-  isSubmitted?: boolean;
-  titles: {
-    personalData: string;
-    shippingAddress: string;
-    profile: string;
-  };
-}) {
-  const steps = [titles.personalData, titles.shippingAddress, titles.profile]
+}: { currentStep: number; onStepClick: (step: number) => void; isSubmitted?: boolean }) {
+  const steps = ["Dados Pessoais", "Endereço", "Perfil"]
 
   return (
     <div className="w-full">
@@ -114,73 +108,69 @@ interface ProfileQuestion {
 }
 
 interface FormData {
+  [key: string]: string
   firstName: string
   lastName: string
   phone: string
-  countryCode: string
   cpf: string
   email: string
-  address: {
-    street: string
-    number: string
-    complement: string
-    neighborhood: string
-    city: string
-    state: string
-    country: string
-    zipCode: string
-  }
+  phoneCode: string
+  zipCode: string
+  street: string
+  number: string
+  complement: string
+  neighborhood: string
+  city: string
+  state: string
+  country: string
 }
 
 export function RedeemButton() {
   const { language } = useLanguage()
   const t = translations[language]
+  const countryName = language === 'pt' ? 'Brasil' : 'United States'
+  const phoneCode = language === 'pt' ? '+55' : '+1'
   const [isOpen, setIsOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
+  const [isLoadingAddress, setIsLoadingAddress] = useState(false)
+  const [addressErrors, setAddressErrors] = useState<Record<string, string>>({})
+  const [lockedFields, setLockedFields] = useState<Record<string, boolean>>({})
+  const [isCEPValid, setIsCEPValid] = useState(false)
+  const [isAddressLocked, setIsAddressLocked] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
-
-  useEffect(() => {
-    // Função para obter o código do país baseado no IP
-    const getCountryCode = async () => {
-      try {
-        const response = await fetch('https://ipapi.co/json/')
-        const data = await response.json()
-        const countryCode = `+${data.country_calling_code.replace(/\+/g, '')}`
-        setFormData(prev => ({ ...prev, countryCode }))
-      } catch (error) {
-        console.error('Error getting country code:', error)
-        // Fallback para o código padrão baseado na língua
-        setFormData(prev => ({ ...prev, countryCode: language === 'pt' ? '+55' : '+1' }))
-      }
-    }
-
-    getCountryCode()
-  }, [])
+  const [personalDataErrors, setPersonalDataErrors] = useState<Record<string, string>>({})
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     phone: "",
-    countryCode: "",
     cpf: "",
     email: "",
-    address: {
-      street: "",
-      number: "",
-      complement: "",
-      neighborhood: "",
-      city: "",
-      state: "",
-      zipCode: ""
-    }
+    phoneCode: phoneCode,
+    zipCode: "",
+    street: "",
+    number: "",
+    complement: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+    country: "Brasil",
   })
   const [profileAnswers, setProfileAnswers] = useState<Record<string, string>>({})
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
+    if (name === "cpf") {
+      const digits = value.replace(/[^0-9]/g, "")
+      let formatted = digits
+      if (digits.length > 3) formatted = formatted.replace(/^(\d{3})/, "$1.")
+      if (digits.length > 6) formatted = formatted.replace(/^(\d{3})\.(\d{3})/, "$1.$2.")
+      if (digits.length > 9) formatted = formatted.replace(/^(\d{3})\.(\d{3})\.(\d{3})/, "$1.$2.$3-")
+      formatted = formatted.slice(0, 14)
+      setFormData(prev => ({ ...prev, [name]: formatted }))
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }))
+    }
+    setPersonalDataErrors(prev => ({ ...prev, [name]: "" }))
   }
 
   const handleProfileChange = (id: string, value: string) => {
@@ -192,57 +182,140 @@ export function RedeemButton() {
 
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault()
-    // Verifica se todos os campos obrigatórios estão preenchidos
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone']
-    if (language === 'pt') {
-      requiredFields.push('cpf')
-    }
+    const errors: Record<string, string> = {}
+
+    if (!formData.firstName) errors.firstName = language === 'pt' ? "Nome é obrigatório" : "First name is required"
+    if (!formData.lastName) errors.lastName = language === 'pt' ? "Sobrenome é obrigatório" : "Last name is required"
+    if (!formData.email) errors.email = language === 'pt' ? "Email é obrigatório" : "Email is required"
+    if (!formData.phone) errors.phone = language === 'pt' ? "Telefone é obrigatório" : "Phone is required"
+    if (!formData.phoneCode) errors.phoneCode = language === 'pt' ? "DDD é obrigatório" : "Country code is required"
     
-    const isValid = requiredFields.every(field => formData[field])
-    if (isValid) {
-      if (currentStep === 1) {
-        setCurrentStep(2)
-      } else if (currentStep === 2) {
-        const addressFields = ['street', 'number', 'city', 'state', 'zipCode', 'country']
-        const isAddressValid = addressFields.every(field => formData.address[field])
-        if (isAddressValid) {
-          setCurrentStep(3)
+    if (language === 'pt') {
+      const cleanCPF = formData.cpf.replace(/\D/g, '')
+      if (!formData.cpf) {
+        errors.cpf = "CPF é obrigatório"
+      } else if (cleanCPF.length !== 11) {
+        errors.cpf = "CPF inválido"
+      } else {
+        let sum = 0
+        for (let i = 0; i < 9; i++) {
+          sum += parseInt(cleanCPF.charAt(i)) * (10 - i)
+        }
+        let firstDigit = 11 - (sum % 11)
+        if (firstDigit >= 10) firstDigit = 0
+        if (firstDigit !== parseInt(cleanCPF.charAt(9))) {
+          errors.cpf = "CPF inválido"
         } else {
-          // Mostrar mensagem de erro ou destacar campos obrigatórios
-          return
+          sum = 0
+          for (let i = 0; i < 10; i++) {
+            sum += parseInt(cleanCPF.charAt(i)) * (11 - i)
+          }
+          let secondDigit = 11 - (sum % 11)
+          if (secondDigit >= 10) secondDigit = 0
+          if (secondDigit !== parseInt(cleanCPF.charAt(10))) {
+            errors.cpf = "CPF inválido"
+          }
         }
       }
     }
+    
+    setPersonalDataErrors(errors)
+    if (Object.keys(errors).length === 0) {
+      setCurrentStep(2)
+    }
+  }
+
+  const handleCEPChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (language === 'pt') {
+      const formatted = ViaCEPService.formatCEP(e.target.value)
+      setFormData(prev => ({
+        ...prev,
+        zipCode: formatted
+      }))
+      setAddressErrors({})
+
+      if (formatted.length === 9) {
+        if (!ViaCEPService.isValidCEP(formatted)) {
+          setAddressErrors({ zipCode: "CEP inválido" })
+          setIsCEPValid(false)
+          return
+        }
+
+        setIsLoadingAddress(true)
+        const address = await ViaCEPService.fetchAddress(formatted)
+        setIsLoadingAddress(false)
+
+        if (address) {
+          const newLockedFields: Record<string, boolean> = {}
+          Object.entries(address).forEach(([key, value]) => {
+            if (value && value.trim() !== '') {
+              newLockedFields[key] = true
+            }
+          })
+          
+          setLockedFields(newLockedFields)
+          setFormData(prev => ({ 
+            ...prev,
+            ...address,
+            number: prev.number
+          }))
+          setIsCEPValid(true)
+          setIsAddressLocked(true)
+        } else {
+          setAddressErrors({ zipCode: "CEP não encontrado" })
+          setIsCEPValid(false)
+        }
+      } else {
+        setIsCEPValid(false)
+      }
+    } else {
+      // Para inglês, apenas atualiza o valor do campo
+      setFormData(prev => ({
+        ...prev,
+        zipCode: e.target.value
+      }))
+    }
+  }
+
+  const toggleFieldLock = (field: string) => {
+    setLockedFields(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }))
+  }
+
+  const handleAddressSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const newErrors: Record<string, string> = {}
+
+    if (!formData.zipCode) {
+      newErrors.zipCode = language === 'pt' ? "CEP é obrigatório" : "ZIP Code is required"
+    } else if (language === 'pt' && !isCEPValid) {
+      newErrors.zipCode = "CEP inválido"
+    }
+
+    if (!formData.street) newErrors.street = language === 'pt' ? "Rua é obrigatória" : "Street is required"
+    if (!formData.number) newErrors.number = language === 'pt' ? "Número é obrigatório" : "Number is required"
+
+    if (!formData.city) newErrors.city = language === 'pt' ? "Cidade é obrigatória" : "City is required"
+    if (!formData.state) newErrors.state = language === 'pt' ? "Estado é obrigatório" : "State is required"
+
+    if (Object.keys(newErrors).length > 0) {
+      setAddressErrors(newErrors)
+      return
+    }
+
+    setCurrentStep(3)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Verificar se todas as perguntas foram respondidas
-    const allQuestionsAnswered = t.redeemButton.modal.questions.every(q => profileAnswers[q.id])
-    if (!allQuestionsAnswered) {
-      console.error('Not all questions answered')
+    if (Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length) {
       return // Prevent submission if not all questions are answered
     }
 
-    // Verificar se todos os campos obrigatórios estão preenchidos
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'countryCode']
-    if (language === 'pt') {
-      requiredFields.push('cpf')
-    }
-    const personalDataValid = requiredFields.every(field => formData[field])
-
-    const addressFields = ['street', 'number', 'city', 'state', 'zipCode', 'country']
-    const addressValid = addressFields.every(field => formData.address[field])
-
-    if (!personalDataValid || !addressValid) {
-      console.error('Required fields missing')
-      return
-    }
-
     try {
-      console.log('Submitting form with data:', { formData, profileAnswers }) // Log para debug
-
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: {
@@ -252,26 +325,25 @@ export function RedeemButton() {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
-          phone: formData.countryCode + formData.phone,
+          phone: formData.phone,
           cpf: formData.cpf || null,
-          street: formData.address.street,
-          number: formData.address.number,
-          complement: formData.address.complement || null,
-          neighborhood: formData.address.neighborhood || null,
-          city: formData.address.city,
-          state: formData.address.state,
-          country: formData.address.country,
-          zipCode: formData.address.zipCode,
+          address: {
+            street: formData.street,
+            number: formData.number,
+            complement: formData.complement || null,
+            neighborhood: formData.neighborhood,
+            city: formData.city,
+            state: formData.state,
+            zipCode: formData.zipCode
+          },
           clothesOdor: profileAnswers.clothes_odor,
           productUnderstanding: profileAnswers.product_understanding,
           mainFocus: profileAnswers.main_focus,
         }),
       })
 
-      const data = await response.json()
-      
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit form')
+        throw new Error('Failed to submit form')
       }
 
       // If successful, show success message
@@ -289,71 +361,97 @@ export function RedeemButton() {
   }
 
   const renderPersonalDataForm = () => (
-    <form onSubmit={handleNextStep} className="p-4 sm:p-6 space-y-4 pb-28 sm:pb-32 relative">
-      <FloatingLabelInput
-        id="firstName"
-        name="firstName"
-        value={formData.firstName}
-        onChange={handleInputChange}
-        label={t.redeemButton.modal.form.firstName}
-        required
-      />
-      <FloatingLabelInput
-        id="lastName"
-        name="lastName"
-        value={formData.lastName}
-        onChange={handleInputChange}
-        label={t.redeemButton.modal.form.lastName}
-        required
-      />
-      <FloatingLabelInput
-        id="email"
-        name="email"
-        value={formData.email}
-        onChange={handleInputChange}
-        label={t.redeemButton.modal.form.email}
-        type="email"
-        required
-      />
-      <div className="flex gap-2">
-        <div className="w-20">
-          <div className="relative">
-            <input
-              id="countryCode"
-              name="countryCode"
-              type="text"
-              value={formData.countryCode}
-              onChange={(e) => setFormData(prev => ({ ...prev, countryCode: e.target.value }))}
-              className="block w-full h-16 px-2 pt-5 text-lg border border-gray-300 rounded-lg transition-all duration-200 bg-white focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-              required
-            />
-            <label
-              htmlFor="countryCode"
-              className="absolute left-2 text-xs text-gray-500 transform -translate-y-3 scale-75 origin-left top-1/2 -translate-y-1/2"
-            >
-              {t.countrySelector.label} *
-            </label>
-          </div>
-        </div>
-        <div className="flex-1">
+    <form onSubmit={handleNextStep} className="p-3 sm:p-4 space-y-1.5 pb-28 sm:pb-32 relative">
+      <div className="space-y-1.5">
+        <div>
           <FloatingLabelInput
-            id="phone"
-            name="phone"
-            value={formData.phone}
+            id="firstName"
+            name="firstName"
+            value={formData.firstName}
             onChange={handleInputChange}
-            label={t.redeemButton.modal.form.phone}
-            type="tel"
+            label={t.redeemButton.modal.form.firstName}
             required
           />
+          {personalDataErrors.firstName && (
+            <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.firstName}</p>
+          )}
         </div>
+        <div>
+          <FloatingLabelInput
+            id="lastName"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleInputChange}
+            label={t.redeemButton.modal.form.lastName}
+            required
+          />
+          {personalDataErrors.lastName && (
+            <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.lastName}</p>
+          )}
+        </div>
+        <div>
+          <FloatingLabelInput
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            label={t.redeemButton.modal.form.email}
+            type="email"
+            required
+          />
+          {personalDataErrors.email && (
+            <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.email}</p>
+          )}
+        </div>
+        <div>
+          <div className="flex gap-2">
+            <div className="w-20">
+              <FloatingLabelInput
+                id="phoneCode"
+                name="phoneCode"
+                value={formData.phoneCode}
+                onChange={handleInputChange}
+                label={language === 'pt' ? "DDD" : "Code"}
+                required
+                disabled
+              />
+            </div>
+            <div className="flex-1">
+              <FloatingLabelInput
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                label={t.redeemButton.modal.form.phone}
+                type="tel"
+                required
+              />
+              {personalDataErrors.phone && (
+                <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.phone}</p>
+              )}
+            </div>
+          </div>
+        </div>
+        {language === 'pt' && (
+          <div>
+            <FloatingLabelInput 
+              id="cpf" 
+              name="cpf" 
+              value={formData.cpf} 
+              onChange={handleInputChange} 
+              label={t.redeemButton.modal.form.cpf} 
+              required 
+            />
+            {personalDataErrors.cpf && (
+              <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.cpf}</p>
+            )}
+          </div>
+        )}
       </div>
-      {language === 'pt' && (
-        <FloatingLabelInput id="cpf" name="cpf" value={formData.cpf} onChange={handleInputChange} label={t.redeemButton.modal.form.cpf} required />
-      )}
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
-          className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
+          className="w-full py-3 text-sm font-medium bg-black text-white rounded-lg"
         >
           {t.redeemButton.modal.form.confirmData}
         </Button>
@@ -362,98 +460,146 @@ export function RedeemButton() {
   )
 
   const renderAddressForm = () => (
-    <form onSubmit={handleNextStep} className="p-4 sm:p-6 space-y-4 pb-28 sm:pb-32 relative">
-      <FloatingLabelInput
-        id="street"
-        name="address.street"
-        value={formData.address.street}
-        onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, street: e.target.value } }))}
-        label={t.redeemButton.modal.form.street}
-        required
-      />
-      <div className="flex gap-4">
-        <div className="w-1/3">
+    <form onSubmit={handleAddressSubmit} className="p-3 sm:p-4 space-y-1.5 pb-24 sm:pb-24 relative">
+      <div className="space-y-1.5">
+        <div className="w-full">
+          <div className="flex gap-1.5">
+            <div className="flex-1">
+              <FloatingLabelInput
+                id="zipCode"
+                name="zipCode"
+                value={formData.zipCode}
+                onChange={handleCEPChange}
+                label={language === 'pt' ? "CEP" : "ZIP Code"}
+                required
+              />
+              {addressErrors.zipCode && (
+                <p className="text-xs text-red-500 mt-0.5">{addressErrors.zipCode}</p>
+              )}
+            </div>
+            {language === 'pt' && isLoadingAddress && (
+              <div className="flex items-center">
+                <Loader2 className="w-4 h-4 animate-spin" />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="w-full">
           <FloatingLabelInput
-            id="number"
-            name="address.number"
-            value={formData.address.number}
-            onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, number: e.target.value } }))}
-            label={t.redeemButton.modal.form.number}
+            id="street"
+            name="street"
+            value={formData.street}
+            onChange={handleInputChange}
+            label={language === 'pt' ? "Endereço" : "Street"}
             required
+            disabled={language === 'pt' && lockedFields.street}
           />
+          {addressErrors.street && (
+            <p className="text-sm text-red-500 mt-1">{addressErrors.street}</p>
+          )}
         </div>
-        <div className="flex-1">
+
+        <div className="flex gap-1.5">
+          <div className="flex-1">
+            <FloatingLabelInput
+              id="number"
+              name="number"
+              value={formData.number}
+              onChange={handleInputChange}
+              label={language === 'pt' ? "Número" : "Number"}
+              required
+            />
+            {addressErrors.number && (
+              <p className="text-xs text-red-500 mt-0.5">{addressErrors.number}</p>
+            )}
+          </div>
+
+          <div className="flex-1">
+            <FloatingLabelInput
+              id="complement"
+              name="complement"
+              value={formData.complement}
+              onChange={handleInputChange}
+              label={language === 'pt' ? "Complemento" : "Complement"}
+            />
+          </div>
+        </div>
+
+        <div className="w-full">
           <FloatingLabelInput
-            id="complement"
-            name="address.complement"
-            value={formData.address.complement}
-            onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, complement: e.target.value } }))}
-            label={t.redeemButton.modal.form.complement}
+            id="neighborhood"
+            name="neighborhood"
+            value={formData.neighborhood}
+            onChange={handleInputChange}
+            label={language === 'pt' ? "Bairro" : "Neighborhood"}
+            disabled={language === 'pt' && lockedFields.neighborhood}
           />
+          {addressErrors.neighborhood && (
+            <p className="text-sm text-red-500 mt-1">{addressErrors.neighborhood}</p>
+          )}
         </div>
-      </div>
-      <FloatingLabelInput
-        id="neighborhood"
-        name="address.neighborhood"
-        value={formData.address.neighborhood}
-        onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, neighborhood: e.target.value } }))}
-        label={t.redeemButton.modal.form.neighborhood}
-      />
-      <div className="flex gap-4">
-        <div className="flex-1">
+
+        <div className="w-full">
           <FloatingLabelInput
             id="city"
-            name="address.city"
-            value={formData.address.city}
-            onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, city: e.target.value } }))}
-            label={t.redeemButton.modal.form.city}
+            name="city"
+            value={formData.city}
+            onChange={handleInputChange}
+            label={language === 'pt' ? "Cidade" : "City"}
             required
+            disabled={language === 'pt' && lockedFields.city}
           />
+          {addressErrors.city && (
+            <p className="text-sm text-red-500 mt-1">{addressErrors.city}</p>
+          )}
         </div>
-        <div className="w-1/3">
+
+        <div className="w-full">
           <FloatingLabelInput
             id="state"
-            name="address.state"
-            value={formData.address.state}
-            onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, state: e.target.value } }))}
-            label={t.redeemButton.modal.form.state}
+            name="state"
+            value={formData.state}
+            onChange={handleInputChange}
+            label={language === 'pt' ? "Estado" : "State"}
             required
+            disabled={language === 'pt' && lockedFields.state}
+          />
+          {addressErrors.state && (
+            <p className="text-sm text-red-500 mt-1">{addressErrors.state}</p>
+          )}
+        </div>
+
+        <div className="w-full">
+          <FloatingLabelInput
+            id="country"
+            name="country"
+            value={countryName}
+            onChange={handleInputChange}
+            label={language === 'pt' ? "País" : "Country"}
+            required
+            disabled
           />
         </div>
       </div>
-      <FloatingLabelInput
-        id="zipCode"
-        name="address.zipCode"
-        value={formData.address.zipCode}
-        onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, zipCode: e.target.value } }))}
-        label={t.redeemButton.modal.form.zipCode}
-        required
-      />
-      <FloatingLabelInput
-        id="country"
-        name="address.country"
-        value={formData.address.country}
-        onChange={(e) => setFormData(prev => ({ ...prev, address: { ...prev.address, country: e.target.value } }))}
-        label={t.redeemButton.modal.form.country}
-        required
-      />
+
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
-          className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
+          className="w-full py-3 text-sm font-medium bg-black text-white rounded-lg"
         >
-          {t.redeemButton.modal.form.confirmData}
+          {language === 'pt' ? "Próximo" : "Next"}
         </Button>
       </div>
     </form>
   )
 
   const renderProfileForm = () => (
-    <form onSubmit={handleSubmit} className="p-4 sm:p-6 pb-28 sm:pb-32 relative">
-      <div className="space-y-8">
+    <form onSubmit={handleSubmit} className="p-3 sm:p-4 pb-16 relative">
+      <div className="space-y-4 mb-12 sm:mb-24">
         {t.redeemButton.modal.questions.map((q) => (
           <div key={q.id} className="space-y-4">
-            <p className="text-base font-medium">{q.question}</p>
+            <p className="text-sm font-medium">{q.question}</p>
             <RadioGroup
               onValueChange={(value) => handleProfileChange(q.id, value)}
               value={profileAnswers[q.id]}
@@ -468,9 +614,9 @@ export function RedeemButton() {
                   >
                     <RadioGroupItem value={option.value} id={`${q.id}-${option.value}`} className="absolute opacity-0" />
                     <div className={cn(
-                      "flex flex-col items-center justify-center w-full p-4 text-gray-500 border border-gray-200 min-h-[60px] transition-all duration-200 whitespace-nowrap",
+                      "flex flex-col items-center justify-center w-full p-3 text-sm border border-gray-200 min-h-[40px] transition-all duration-200 whitespace-nowrap",
                       index % 2 === 0 ? "rounded-l-lg" : "rounded-r-lg",
-                      profileAnswers[q.id] === option.value ? "bg-black text-white border-black" : "hover:text-gray-600 hover:bg-gray-100"
+                      profileAnswers[q.id] === option.value ? "bg-black text-white border-black" : "bg-white text-gray-500 hover:bg-gray-50"
                     )}>
                       {option.label}
                     </div>
@@ -484,8 +630,8 @@ export function RedeemButton() {
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
-          className="w-full p-4 text-lg font-medium bg-black text-white rounded-lg"
-          disabled={!t.redeemButton.modal.questions.every(q => profileAnswers[q.id])}
+          className="w-full py-3 text-sm font-medium bg-black text-white rounded-lg"
+          disabled={Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length}
         >
           {t.redeemButton.modal.form.finishOrder}
         </Button>
@@ -517,7 +663,7 @@ export function RedeemButton() {
       )}
       <DialogTrigger asChild>
         <div className="flex flex-col items-center">
-          <Button className="w-full sm:w-auto px-6 py-3 bg-black text-white text-sm sm:text-base font-medium whitespace-nowrap rounded-md uppercase">
+          <Button className="w-full sm:w-auto px-4 py-2 bg-black text-white text-sm font-medium whitespace-nowrap rounded-md uppercase">
             {t.redeemButton.text || 'RESGATAR'}
           </Button>
           <p className="mt-2 text-xs sm:text-sm text-gray-600">{t.redeemButton.price}</p>
@@ -527,20 +673,19 @@ export function RedeemButton() {
         <div className="overflow-y-auto flex-grow">
           <DialogHeader className="p-4">
             <DialogTitle className="text-xl font-bold mb-4 text-center">
-              {isSubmitted ? t.redeemButton.modal.titles.thanks : currentStep === 1 ? t.redeemButton.modal.titles.personalData : currentStep === 2 ? t.redeemButton.modal.titles.shippingAddress : t.redeemButton.modal.titles.profile}
+              {isSubmitted ? t.redeemButton.modal.titles.thanks : 
+               currentStep === 1 ? t.redeemButton.modal.titles.personalData : 
+               currentStep === 2 ? "Endereço de Entrega" :
+               t.redeemButton.modal.titles.profile
+              }
             </DialogTitle>
-            <ProgressBar 
-              currentStep={currentStep - 1} 
-              onStepClick={handleStepClick} 
-              isSubmitted={isSubmitted}
-              titles={{
-                personalData: t.redeemButton.modal.titles.personalData,
-                shippingAddress: t.redeemButton.modal.titles.shippingAddress,
-                profile: t.redeemButton.modal.titles.profile
-              }}
-            />
+            <ProgressBar currentStep={currentStep - 1} onStepClick={handleStepClick} isSubmitted={isSubmitted} />
           </DialogHeader>
-          {isSubmitted ? renderSuccessMessage() : currentStep === 1 ? renderPersonalDataForm() : currentStep === 2 ? renderAddressForm() : renderProfileForm()}
+          {isSubmitted ? renderSuccessMessage() : (
+            currentStep === 1 ? renderPersonalDataForm() :
+            currentStep === 2 ? renderAddressForm() :
+            renderProfileForm()
+          )}
         </div>
       </DialogContent>
     </Dialog>

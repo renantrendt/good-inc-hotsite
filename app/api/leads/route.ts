@@ -26,6 +26,16 @@ export async function POST(request: Request) {
         clothesOdor: data.clothesOdor,
         productUnderstanding: data.productUnderstanding,
         mainFocus: data.mainFocus,
+        // Campos de endereço
+        street: data.address.street,
+        number: data.address.number,
+        complement: data.address.complement,
+        neighborhood: data.address.neighborhood,
+        city: data.address.city,
+        state: data.address.state,
+        zipCode: data.address.zipCode,
+        country: data.country || 'Brasil', // Valor padrão para Brasil
+        countryCode: data.countryCode || '+55', // Valor padrão para Brasil
       },
     })
 
