@@ -4,6 +4,17 @@ import { NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: Request) {
+  // Add CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  }
+
+  // Handle OPTIONS request for CORS preflight
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, { headers, status: 204 })
+  }
   try {
     console.log('Starting POST request to /api/leads')
     const data = await request.json()
@@ -28,7 +39,7 @@ export async function POST(request: Request) {
       console.error('Missing required fields:', missingFields)
       return NextResponse.json(
         { error: `Missing required fields: ${missingFields.join(', ')}` },
-        { status: 400 }
+        { status: 400, headers }
       )
     }
 
@@ -120,7 +131,7 @@ export async function POST(request: Request) {
       },
     })
 
-    return NextResponse.json({ success: true, lead })
+    return NextResponse.json({ success: true, lead }, { headers })
   } catch (error) {
     console.error('Error creating lead:', error)
     if (error instanceof Error) {

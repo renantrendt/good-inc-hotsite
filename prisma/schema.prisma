@@ -11,6 +11,8 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 /// This model is managed by Supabase and should not be modified

@@ -196,24 +196,42 @@ export function RedeemButton() {
 
       console.log('Request Data:', requestData)
 
-      const response = await fetch('/api/leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData),
-      })
+      try {
+        const apiUrl = '/api/leads'
+        console.log('Sending request to:', apiUrl)
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        console.log('API Error Response:', errorData)
-        
-        if (response.status === 400 && errorData.duplicatedFields) {
-          setIsExistingCustomer(true)
-          return
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        })
+
+        console.log('Response status:', response.status)
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()))
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          console.log('API Error Response:', errorData)
+          
+          if (response.status === 400 && errorData.duplicatedFields) {
+            setIsExistingCustomer(true)
+            return
+          }
+          
+          throw new Error(errorData.error || `API error: ${response.status} ${response.statusText}`)
         }
-        
-        throw new Error(errorData.error || 'Failed to submit form')
+
+        const responseData = await response.json()
+        console.log('API Success Response:', responseData)
+      } catch (fetchError) {
+        console.error('Fetch error details:', {
+          message: fetchError.message,
+          cause: fetchError.cause,
+          stack: fetchError.stack
+        })
+        throw fetchError
       }
 
       setIsSubmitted(true)
