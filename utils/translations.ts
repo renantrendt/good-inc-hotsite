@@ -2,7 +2,7 @@ const translations = {
   en: {
     redeemButton: {
       text: "First Month Free",
-      price: "$299/month",
+      price: "$39.99/month",
       noCard: "No credit card required",
       modal: {
         titles: {
@@ -211,7 +211,7 @@ const translations = {
   pt: {
     redeemButton: {
       text: "Primeiro Mês Grátis",
-      price: "R$ 299/mês",
+      price: "R$299/mês",
       noCard: "Não necessita de cartão de crédito",
       errors: {
         phoneStartWith9: "O número deve começar com 9",
