@@ -1,5 +1,63 @@
 const translations = {
   en: {
+    redeemButton: {
+      text: "First Month Free",
+      price: "$299/month",
+      noCard: "No credit card required",
+      modal: {
+        titles: {
+          personalData: "Personal Data",
+          shippingAddress: "Shipping Address",
+          profile: "Profile",
+          thanks: "Thank you!"
+        },
+        form: {
+          firstName: "First Name",
+          lastName: "Last Name",
+          email: "Email",
+          phone: "Phone",
+          confirmData: "Next",
+          finishOrder: "Finish Order",
+          street: "Street",
+          number: "Number",
+          complement: "Apartment, suite, etc.",
+          city: "City",
+          state: "State",
+          zipCode: "ZIP Code",
+          country: "Country"
+        },
+        questions: [
+          {
+            id: "clothes_odor",
+            question: "Do you notice that some clothes smell more than others?",
+            options: [
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" }
+            ]
+          },
+          {
+            id: "product_understanding",
+            question: "Do you understand that treating fabrics is essential for your health?",
+            options: [
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" }
+            ]
+          },
+          {
+            id: "main_focus",
+            question: "What is your main focus?",
+            options: [
+              { value: "longevity", label: "Longevity" },
+              { value: "problem_solving", label: "Odor/Sweat Problem" }
+            ]
+          }
+        ],
+        success: {
+          message: "Your order has been successfully received. Our team will contact you soon via the registered email with more information.",
+          close: "Close"
+        }
+      }
+    },
     countrySelector: {
       label: "Code",
       defaultCountry: "+1",
@@ -121,8 +179,9 @@ const translations = {
       address: "1007 N Orange St. 4th Floor, Wilmington, DE 19801, USA.",
     },
     redeemButton: {
-      text: "Redeem First Month Free",
-      price: "$39.99/month thereafter",
+      text: "First Month Free",
+      price: "$39.99/month",
+      noCard: "No credit card required",
       modal: {
         titles: {
           personalData: "Personal Data",
@@ -211,7 +270,12 @@ const translations = {
   pt: {
     redeemButton: {
       text: "Primeiro Mês Grátis",
-      price: "R$ 199,90/mês depois",
+      price: "R$ 299/mês",
+      noCard: "Não necessita de cartão de crédito",
+      errors: {
+        phoneStartWith9: "O número deve começar com 9",
+        phoneLength: "O número deve ter 9 dígitos"
+      },
       modal: {
         titles: {
           personalData: "Dados Pessoais",

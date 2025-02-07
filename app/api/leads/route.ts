@@ -24,7 +24,8 @@ export async function POST(request: Request) {
         state: data.address.state,
         zipCode: data.address.zipCode,
         country: data.address.country,
-        countryCode: data.phoneCode,
+        countryCode: data.countryCode,
+        cityCode: data.cityCode,
         // Campos do perfil
         clothesOdor: data.clothesOdor,
         productUnderstanding: data.productUnderstanding,

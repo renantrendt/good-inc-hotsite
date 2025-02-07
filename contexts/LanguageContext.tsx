@@ -4,21 +4,35 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from "
 
 type Language = "en" | "pt"
 
+interface GeoData {
+  country_code: string
+  country_name: string
+  city: string
+  region: string
+}
+
 interface LanguageContextType {
   language: Language
   setLanguage: (lang: Language) => void
+  geoData: GeoData | null
+  isLoading: boolean
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof window !== 'undefined') {
-      const savedLanguage = localStorage.getItem('language') as Language
-      return savedLanguage || 'en'
+  const [language, setLanguage] = useState<Language>('en') // Inicializa com inglês no servidor
+  const [geoData, setGeoData] = useState<GeoData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Inicialização no cliente
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language') as Language
+    if (savedLanguage) {
+      setLanguage(savedLanguage)
+      setIsLoading(false)
     }
-    return 'en'
-  })
+  }, [])
 
   const updateLanguage = (newLanguage: Language) => {
     setLanguage(newLanguage)
@@ -28,31 +42,33 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    async function detectLanguage() {
-      // Se já tiver um idioma salvo no localStorage, não precisa detectar
-      if (typeof window !== 'undefined' && localStorage.getItem('language')) {
-        return
-      }
+    async function detectLocation() {
+      if (typeof window === 'undefined') return
 
       try {
-        console.log('Detecting language from IP...')
+        console.log('🌎 [Language] Detecting location...')
         const response = await fetch('/api/geolocation')
         const data = await response.json()
-        console.log('Geolocation data:', data)
+        console.log('🌎 [Language] Location data:', data)
         
-        if (data.country_code === 'BR') {
-          console.log('Brazilian IP detected, switching to PT')
+        setGeoData(data)
+
+        // Se não tiver idioma salvo, define com base no país
+        if (!localStorage.getItem('language') && data.country_code === 'BR') {
+          console.log('🌎 [Language] Brazilian IP detected, switching to PT')
           updateLanguage('pt')
         }
       } catch (error) {
-        console.error('Error detecting language:', error)
+        console.error('❌ [Language] Error detecting location:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
-    detectLanguage()
+    detectLocation()
   }, [])
 
-  return <LanguageContext.Provider value={{ language, setLanguage }}>{children}</LanguageContext.Provider>
+  return <LanguageContext.Provider value={{ language, setLanguage, geoData, isLoading }}>{children}</LanguageContext.Provider>
 }
 
 export function useLanguage() {

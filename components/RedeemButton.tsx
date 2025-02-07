@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
 import { Label } from "./ui/label"
 import translations from "../utils/translations"
 import { cn } from "../lib/utils"
+import { findAreaCode } from "../utils/brazil-area-codes"
 
 interface FloatingLabelInputProps {
   id: string
@@ -23,6 +24,7 @@ interface FloatingLabelInputProps {
   type?: string
   required?: boolean
   disabled?: boolean
+  language?: 'en' | 'pt'
 }
 
 function FloatingLabelInput({
@@ -34,6 +36,7 @@ function FloatingLabelInput({
   type = "text",
   required = false,
   disabled = false,
+  language = 'en',
 }: FloatingLabelInputProps) {
   const [isFocused, setIsFocused] = useState(false)
 
@@ -117,7 +120,7 @@ interface FormData {
   phone: string
   cpf: string
   email: string
-  phoneCode: string
+  countryCode: string
   cityCode: string
   zipCode: string
   street: string
@@ -127,14 +130,26 @@ interface FormData {
   city: string
   state: string
   country: string
+  // Profile fields
+  clothesOdor: string
+  productUnderstanding: string
+  mainFocus: string
 }
 
 export function RedeemButton() {
-  const { language } = useLanguage()
+  const [isClient, setIsClient] = useState(false)
+  const { language, geoData, isLoading: isLanguageLoading } = useLanguage()
   const t = translations[language]
-  const countryName = language === 'pt' ? 'Brasil' : 'United States'
-  const phoneCode = language === 'pt' ? '+55' : '+1'
-  const { countryCode, city } = useGeolocation()
+  
+  // Inicialização dos dados dependentes de idioma
+  const [countryName, setCountryName] = useState('')
+  const [phoneCode, setPhoneCode] = useState('')
+
+  useEffect(() => {
+    setIsClient(true)
+    setCountryName(language === 'pt' ? 'Brasil' : 'United States')
+    setPhoneCode(language === 'pt' ? '+55' : '+1')
+  }, [language])
   const [isOpen, setIsOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoadingAddress, setIsLoadingAddress] = useState(false)
@@ -146,22 +161,25 @@ export function RedeemButton() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [personalDataErrors, setPersonalDataErrors] = useState<Record<string, string>>({})
 
-  // Preencher código da cidade quando detectar IP do Brasil
+  // Preencher DDD quando detectar cidade do Brasil
   useEffect(() => {
-    if (language === 'pt' && countryCode === 'BR' && city) {
-      setFormData(prev => ({
-        ...prev,
-        cityCode: prev.cityCode || city // Mantém o valor se já foi alterado pelo usuário
-      }))
+    if (language === 'pt' && geoData?.country_code === 'BR' && geoData?.city) {
+      const areaCode = findAreaCode(geoData.city)
+      if (areaCode) {
+        setFormData(prev => ({
+          ...prev,
+          cityCode: prev.cityCode || areaCode // Mantém o valor se já foi alterado pelo usuário
+        }))
+      }
     }
-  }, [language, countryCode, city])
+  }, [language, geoData])
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     phone: "",
     cpf: "",
     email: "",
-    phoneCode: phoneCode,
+    countryCode: language === 'pt' ? '+55' : '+1',
     cityCode: "",
     zipCode: "",
     street: "",
@@ -170,7 +188,7 @@ export function RedeemButton() {
     neighborhood: "",
     city: "",
     state: "",
-    country: countryName,
+    country: language === 'pt' ? 'Brasil' : 'United States',
   })
   const [profileAnswers, setProfileAnswers] = useState<Record<string, string>>({})
 
@@ -184,6 +202,22 @@ export function RedeemButton() {
       if (digits.length > 9) formatted = formatted.replace(/^(\d{3})\.(\d{3})\.(\d{3})/, "$1.$2.$3-")
       formatted = formatted.slice(0, 14)
       setFormData(prev => ({ ...prev, [name]: formatted }))
+    } else if (name === "countryCode") {
+      // Mantém o + e os números, remove outros caracteres
+      const hasPlus = value.startsWith('+')
+      const digits = value.replace(/[^0-9]/g, "").substring(0, 3)
+      const formatted = hasPlus ? "+" + digits : digits
+      setFormData(prev => ({
+        ...prev,
+        [name]: formatted.startsWith('+') ? formatted : "+" + formatted
+      }))
+    } else if (name === "phone") {
+      // Remove qualquer caractere que não seja número
+      const digits = value.replace(/[^0-9]/g, "")
+      setFormData(prev => ({ ...prev, [name]: digits }))
+
+      // Limpa qualquer erro anterior
+      setPersonalDataErrors(prev => ({ ...prev, phone: undefined }))
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
@@ -204,10 +238,35 @@ export function RedeemButton() {
     if (!formData.firstName) errors.firstName = language === 'pt' ? "Nome é obrigatório" : "First name is required"
     if (!formData.lastName) errors.lastName = language === 'pt' ? "Sobrenome é obrigatório" : "Last name is required"
     if (!formData.email) errors.email = language === 'pt' ? "Email é obrigatório" : "Email is required"
-    if (!formData.phone) errors.phone = language === 'pt' ? "Telefone é obrigatório" : "Phone is required"
-    if (!formData.phoneCode) errors.phoneCode = language === 'pt' ? "DDD é obrigatório" : "Country code is required"
+    if (language === 'pt') {
+      if (!formData.phone) {
+        errors.phone = "Celular é obrigatório";
+      } else {
+        if (formData.phone.length !== 9) {
+          errors.phone = t.redeemButton.errors.phoneLength;
+        } else if (!formData.phone.startsWith('9')) {
+          errors.phone = t.redeemButton.errors.phoneStartWith9;
+        }
+      }
+
+      if (!formData.countryCode) {
+        errors.countryCode = "País é obrigatório";
+      } else if (!formData.countryCode.startsWith('+')) {
+        errors.countryCode = "País deve começar com +";
+      }
+
+      if (!formData.cityCode) {
+        errors.cityCode = "DDD é obrigatório";
+      } else if (formData.cityCode.length !== 2) {
+        errors.cityCode = "DDD deve ter 2 dígitos";
+      }
+    } else {
+      if (!formData.phone) errors.phone = "Phone is required";
+      if (!formData.countryCode) errors.countryCode = "Country code is required";
+      if (!formData.countryCode.startsWith('+')) errors.countryCode = "Country code must start with +";
+    }
     
-    if (language === 'pt' && countryCode === 'BR') {
+    if (language === 'pt' && geoData?.country_code === 'BR') {
       if (!formData.cityCode) errors.cityCode = "Código da cidade é obrigatório"
     }
     
@@ -342,7 +401,7 @@ export function RedeemButton() {
           lastName: formData.lastName,
           email: formData.email,
           phone: formData.phone,
-          phoneCode: formData.phoneCode,
+          countryCode: formData.countryCode,
           cityCode: formData.cityCode || null,
           cpf: formData.cpf || null,
           address: {
@@ -384,31 +443,35 @@ export function RedeemButton() {
   const renderPersonalDataForm = () => (
     <form onSubmit={handleNextStep} className="p-3 sm:p-4 space-y-1.5 pb-28 sm:pb-32 relative">
       <div className="space-y-1.5">
-        <div>
-          <FloatingLabelInput
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleInputChange}
-            label={t.redeemButton.modal.form.firstName}
-            required
-          />
-          {personalDataErrors.firstName && (
-            <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.firstName}</p>
-          )}
-        </div>
-        <div>
-          <FloatingLabelInput
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleInputChange}
-            label={t.redeemButton.modal.form.lastName}
-            required
-          />
-          {personalDataErrors.lastName && (
-            <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.lastName}</p>
-          )}
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <FloatingLabelInput
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              label={t.redeemButton.modal.form.firstName}
+              required
+              language={language}
+            />
+            {personalDataErrors.firstName && (
+              <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.firstName}</p>
+            )}
+          </div>
+          <div className="flex-1">
+            <FloatingLabelInput
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              label={t.redeemButton.modal.form.lastName}
+              required
+              language={language}
+            />
+            {personalDataErrors.lastName && (
+              <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.lastName}</p>
+            )}
+          </div>
         </div>
         <div>
           <FloatingLabelInput
@@ -419,6 +482,7 @@ export function RedeemButton() {
             label={t.redeemButton.modal.form.email}
             type="email"
             required
+            language={language}
           />
           {personalDataErrors.email && (
             <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.email}</p>
@@ -426,25 +490,32 @@ export function RedeemButton() {
         </div>
         <div>
           <div className="flex gap-2">
-            <div className="w-20">
+            <div className="w-16">
               <FloatingLabelInput
-                id="phoneCode"
-                name="phoneCode"
-                value={formData.phoneCode}
+                id="countryCode"
+                name="countryCode"
+                value={formData.countryCode}
                 onChange={handleInputChange}
-                label={language === 'pt' ? "DDD" : "Code"}
+                label={language === 'pt' ? "País" : "Country"}
                 required
+                type="tel" // Usar tel para mostrar teclado numérico em mobile
+                language={language}
               />
+              {personalDataErrors.countryCode && (
+                <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.countryCode}</p>
+              )}
             </div>
+
             {language === 'pt' && (
-              <div className="w-24">
+              <div className="w-14">
                 <FloatingLabelInput
                   id="cityCode"
                   name="cityCode"
                   value={formData.cityCode}
                   onChange={handleInputChange}
-                  label="Código"
+                  label="DDD"
                   required
+                  language={language}
                 />
                 {personalDataErrors.cityCode && (
                   <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.cityCode}</p>
@@ -457,9 +528,10 @@ export function RedeemButton() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
-                label={t.redeemButton.modal.form.phone}
+                label={language === 'pt' ? "Celular" : "Phone"}
                 type="tel"
                 required
+                language={language}
               />
               {personalDataErrors.phone && (
                 <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.phone}</p>
@@ -476,6 +548,7 @@ export function RedeemButton() {
               onChange={handleInputChange} 
               label={t.redeemButton.modal.form.cpf} 
               required 
+              language={language}
             />
             {personalDataErrors.cpf && (
               <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.cpf}</p>
@@ -507,6 +580,7 @@ export function RedeemButton() {
                 onChange={handleCEPChange}
                 label={language === 'pt' ? "CEP" : "ZIP Code"}
                 required
+                language={language}
               />
               {addressErrors.zipCode && (
                 <p className="text-xs text-red-500 mt-0.5">{addressErrors.zipCode}</p>
@@ -529,6 +603,7 @@ export function RedeemButton() {
             label={language === 'pt' ? "Endereço" : "Street"}
             required
             disabled={false}
+            language={language}
           />
           {addressErrors.street && (
             <p className="text-sm text-red-500 mt-1">{addressErrors.street}</p>
@@ -544,6 +619,7 @@ export function RedeemButton() {
               onChange={handleInputChange}
               label={language === 'pt' ? "Número" : "Number"}
               required
+              language={language}
             />
             {addressErrors.number && (
               <p className="text-xs text-red-500 mt-0.5">{addressErrors.number}</p>
@@ -557,63 +633,91 @@ export function RedeemButton() {
               value={formData.complement}
               onChange={handleInputChange}
               label={language === 'pt' ? "Complemento" : "Complement"}
+              language={language}
             />
           </div>
         </div>
 
-        <div className="w-full">
-          <FloatingLabelInput
-            id="neighborhood"
-            name="neighborhood"
-            value={formData.neighborhood}
-            onChange={handleInputChange}
-            label={language === 'pt' ? "Bairro" : "Neighborhood"}
-            disabled={false}
-          />
-          {addressErrors.neighborhood && (
-            <p className="text-sm text-red-500 mt-1">{addressErrors.neighborhood}</p>
-          )}
-        </div>
+        {language === 'pt' && (
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <FloatingLabelInput
+                id="neighborhood"
+                name="neighborhood"
+                value={formData.neighborhood}
+                onChange={handleInputChange}
+                label="Bairro"
+                required
+                language={language}
+              />
+              {addressErrors.neighborhood && (
+                <p className="text-sm text-red-500 mt-1">{addressErrors.neighborhood}</p>
+              )}
+            </div>
+            <div className="flex-1">
+              <FloatingLabelInput
+                id="city"
+                name="city"
+                value={formData.city}
+                onChange={handleInputChange}
+                label="Cidade"
+                required
+                language={language}
+              />
+              {addressErrors.city && (
+                <p className="text-sm text-red-500 mt-1">{addressErrors.city}</p>
+              )}
+            </div>
+          </div>
+        )}
 
-        <div className="w-full">
-          <FloatingLabelInput
-            id="city"
-            name="city"
-            value={formData.city}
-            onChange={handleInputChange}
-            label={language === 'pt' ? "Cidade" : "City"}
-            required
-            disabled={false}
-          />
-          {addressErrors.city && (
-            <p className="text-sm text-red-500 mt-1">{addressErrors.city}</p>
-          )}
-        </div>
+        {language !== 'pt' && (
+          <div className="w-full">
+            <FloatingLabelInput
+              id="city"
+              name="city"
+              value={formData.city}
+              onChange={handleInputChange}
+              label="City"
+              required
+              language={language}
+            />
+            {addressErrors.city && (
+              <p className="text-sm text-red-500 mt-1">{addressErrors.city}</p>
+            )}
+          </div>
+        )}
 
-        <div className="w-full">
-          <FloatingLabelInput
-            id="state"
-            name="state"
-            value={formData.state}
-            onChange={handleInputChange}
-            label={language === 'pt' ? "Estado" : "State"}
-            required
-            disabled={false}
-          />
-          {addressErrors.state && (
-            <p className="text-sm text-red-500 mt-1">{addressErrors.state}</p>
-          )}
-        </div>
-
-        <div className="w-full">
-          <FloatingLabelInput
-            id="country"
-            name="country"
-            value={formData.country}
-            onChange={handleInputChange}
-            label={language === 'pt' ? "País" : "Country"}
-            required
-          />
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <FloatingLabelInput
+              id="state"
+              name="state"
+              value={formData.state}
+              onChange={handleInputChange}
+              label={language === 'pt' ? "Estado" : "State"}
+              required
+              language={language}
+            />
+            {addressErrors.state && (
+              <p className="text-sm text-red-500 mt-1">{addressErrors.state}</p>
+            )}
+          </div>
+          <div className="flex-1">
+            <FloatingLabelInput
+              id="country"
+              name="country"
+              value={formData.country}
+              onChange={handleInputChange}
+              label={language === 'pt' ? "País" : "Country"}
+              required
+              readOnly={language !== 'pt'}
+              language={language}
+            />
+            {addressErrors.country && (
+              <p className="text-sm text-red-500 mt-1">{addressErrors.country}</p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -700,11 +804,14 @@ export function RedeemButton() {
         />
       )}
       <DialogTrigger asChild>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-2">
+          <div className="text-xs sm:text-sm text-gray-600 font-bold">{t.redeemButton.price}</div>
           <Button className="w-full sm:w-auto px-4 py-2 bg-black text-white text-sm font-medium whitespace-nowrap rounded-md uppercase">
             {t.redeemButton.text || 'RESGATAR'}
           </Button>
-          <p className="mt-2 text-xs sm:text-sm text-gray-600">{t.redeemButton.price}</p>
+          <div className="text-xs sm:text-sm text-gray-600">
+            {t.redeemButton.noCard}
+          </div>
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] p-0 bg-white max-h-[85vh] flex flex-col fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] shadow-lg z-50 w-[90vw] sm:w-full">
@@ -713,7 +820,7 @@ export function RedeemButton() {
             <DialogTitle className="text-xl font-bold mb-4 text-center">
               {isSubmitted ? t.redeemButton.modal.titles.thanks : 
                currentStep === 1 ? t.redeemButton.modal.titles.personalData : 
-               currentStep === 2 ? "Endereço de Entrega" :
+               currentStep === 2 ? t.redeemButton.modal.titles.shippingAddress :
                t.redeemButton.modal.titles.profile
               }
             </DialogTitle>

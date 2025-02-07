@@ -25,6 +25,7 @@ model LeadRegistration {
   phone     String
   cpf       String? // Optional for non-Brazilian users
   countryCode String @default("+55") // Default to Brazil
+  cityCode   String? // DDD for Brazilian phone numbers
 
   // Address Information
   street      String

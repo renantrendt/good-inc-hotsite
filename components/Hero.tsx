@@ -53,19 +53,14 @@ const mediaItems = [
 ]
 
 export default function Hero() {
-  const [isClient, setIsClient] = useState(false)
   const { language } = useLanguage()
   const t = translations[language]
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   return (
     <section className="bg-[rgb(255,244,240)] text-black py-12 sm:py-20">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-12" style={{ minHeight: isClient ? 'auto' : '80px' }}>
-          <h1 suppressHydrationWarning className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 animate-fade-in">{t.hero.title}</h1>
+        <div className="text-center mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 animate-fade-in">{t.hero.title}</h1>
         </div>
         <div className="aspect-video w-full max-w-4xl mx-auto mb-12">
           <iframe
