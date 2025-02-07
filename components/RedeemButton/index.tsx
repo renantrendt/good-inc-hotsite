@@ -169,48 +169,58 @@ export function RedeemButton() {
 
     setIsSubmitting(true)
     try {
+      // Log dos dados antes de enviar
+      console.log('Profile Answers:', profileAnswers)
+      console.log('Form Data:', formData)
+
+      const requestData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        countryCode: formData.countryCode,
+        cityCode: formData.cityCode || null,
+        cpf: formData.cpf || null,
+        street: formData.street,
+        number: formData.number,
+        complement: formData.complement || null,
+        neighborhood: formData.neighborhood,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
+        country: formData.country,
+        clothesOdor: profileAnswers.clothes_odor || '',
+        productUnderstanding: profileAnswers.product_understanding || '',
+        mainFocus: profileAnswers.main_focus || ''
+      }
+
+      console.log('Request Data:', requestData)
+
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          countryCode: formData.countryCode,
-          cityCode: formData.cityCode || null,
-          cpf: formData.cpf || null,
-          address: {
-            street: formData.street,
-            number: formData.number,
-            complement: formData.complement || null,
-            neighborhood: formData.neighborhood,
-            city: formData.city,
-            state: formData.state,
-            zipCode: formData.zipCode,
-            country: formData.country
-          },
-          clothesOdor: profileAnswers.clothes_odor,
-          productUnderstanding: profileAnswers.product_understanding,
-          mainFocus: profileAnswers.main_focus,
-        }),
+        body: JSON.stringify(requestData),
       })
 
       if (!response.ok) {
         const errorData = await response.json()
+        console.log('API Error Response:', errorData)
+        
         if (response.status === 400 && errorData.duplicatedFields) {
-          // Mostrar mensagem de cliente existente
           setIsExistingCustomer(true)
           return
         }
-        throw new Error('Failed to submit form')
+        
+        throw new Error(errorData.error || 'Failed to submit form')
       }
 
       setIsSubmitted(true)
     } catch (error) {
       console.error('Error submitting form:', error)
+      console.error('Form Data:', formData)
+      console.error('Profile Answers:', profileAnswers)
     } finally {
       setIsSubmitting(false)
     }

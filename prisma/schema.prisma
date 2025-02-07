@@ -13,6 +13,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// This model is managed by Supabase and should not be modified
+model webhook_events {
+  id                         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type                       String?   @db.VarChar
+  status                     String?   @db.VarChar
+  timestamp                  DateTime? @default(now()) @db.Timestamptz
+  response_time              Int?
+  payload_size              Int?
+  attribution               String?   @db.VarChar
+  created                   DateTime? @default(now()) @db.Timestamptz
+  invoice                   String?   @db.VarChar
+  currency                  String?   @db.VarChar
+  customer                  String?   @db.VarChar
+  livemode                  Boolean?
+  metadata                  Json?     @db.JsonB
+  shipping_name             String?   @db.VarChar
+  shipping_phone            String?   @db.VarChar
+  shipping_address_city     String?   @db.VarChar
+  shipping_address_line1    String?   @db.VarChar
+  shipping_address_line2    String?   @db.VarChar
+  shipping_address_state    String?   @db.VarChar
+  shipping_address_country  String?   @db.VarChar
+  shipping_address_postal_code String? @db.VarChar
+  client_secret             String?   @db.VarChar
+  latest_charge             String?   @db.VarChar
+  amount_received           BigInt?
+  amount_capturable         BigInt?
+  customer_name             String?   @db.VarChar
+  customer_email            String?   @db.VarChar
+  customer_phone            String?   @db.VarChar
+  amount_paid               BigInt?
+  capture_method            String?   @db.VarChar
+  payment_method            String?   @db.VarChar
+  payment_method_types      Json?     @db.JsonB
+  statement_descriptor      String?   @db.VarChar
+  created_at                DateTime  @default(now()) @db.Timestamptz
+  updated_at                DateTime  @default(now()) @db.Timestamptz
+  payload                   Json?     @db.JsonB
+
+  @@map("webhook_events")
+}
+
 model LeadRegistration {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -21,11 +63,11 @@ model LeadRegistration {
   // Personal Information
   firstName String
   lastName  String
-  email     String
-  phone     String
-  cpf       String? // Optional for non-Brazilian users
-  countryCode String @default("+55") // Default to Brazil
-  cityCode   String? // DDD for Brazilian phone numbers
+  email     String    @unique
+  phone     String    @unique
+  cpf       String?   @unique // Optional for non-Brazilian users
+  countryCode String  @default("+55") // Default to Brazil
+  cityCode   String?  // DDD for Brazilian phone numbers
 
   // Address Information
   street      String
@@ -35,13 +77,17 @@ model LeadRegistration {
   city        String
   state       String
   zipCode     String
-  country     String @default("Brasil") // Default to Brazil
+  country     String  @default("Brasil") // Default to Brazil
 
   // Profile Questions
-  clothesOdor           String // yes/no
-  productUnderstanding  String // yes/no
-  mainFocus            String // longevity/problem_solving
+  clothesOdor           String  // yes/no
+  productUnderstanding  String  // yes/no
+  mainFocus            String  // longevity/problem_solving
 
   // Status
   status    String @default("pending") // pending, contacted, converted
+
+  @@index([email])
+  @@index([phone])
+  @@index([cpf])
 }
