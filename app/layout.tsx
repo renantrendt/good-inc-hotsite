@@ -21,8 +21,17 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: meta.alternates,
     metadataBase: new URL('https://www.good.inc'),
     icons: {
-      icon: '/favicon.ico',
-      apple: '/apple-touch-icon.png',
+      icon: [
+        { url: '/favicon/favicon.ico' },
+        { url: '/favicon/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+        { url: '/favicon/favicon.svg', type: 'image/svg+xml' }
+      ],
+      apple: [
+        { url: '/favicon/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
+      ],
+    },
+    appleWebApp: {
+      title: 'Good.inc'
     },
     manifest: '/site.webmanifest',
     robots: {
