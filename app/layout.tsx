@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL('https://www.good.inc'),
     icons: {
       icon: [
-        { url: '/favicon/favicon.ico' },
+        { url: '/favicon.ico' },
         { url: '/favicon/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
         { url: '/favicon/favicon.svg', type: 'image/svg+xml' }
       ],
@@ -56,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script src="/judge-me-translations.js" strategy="beforeInteractive" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href="https://www.good.inc" />
+        <link rel="shortcut icon" href="/favicon.ico" />
       </head>
       <body className={inter.className}>
         <LanguageProvider>{children}</LanguageProvider>

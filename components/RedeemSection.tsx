@@ -36,7 +36,7 @@ export default function RedeemSection() {
   if (!isVisible) return null
 
   return (
-    <section className="fixed bottom-0 left-0 right-0 pt-2 pb-1 bg-white border-t shadow-lg z-50">
+    <section className="fixed bottom-0 left-0 right-0 pt-2 pb-1 bg-[rgb(255,244,240)] border-t shadow-lg z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-center items-center">
           <RedeemButton />
