@@ -15,6 +15,7 @@ import { PersonalDataForm } from "./PersonalDataForm"
 import { AddressForm } from "./AddressForm"
 import { ProfileForm } from "./ProfileForm"
 import { SuccessMessage } from "./SuccessMessage"
+import { ExistingCustomerMessage } from "./ExistingCustomerMessage"
 
 export function RedeemButton() {
   const [isClient, setIsClient] = useState(false)
@@ -37,6 +38,7 @@ export function RedeemButton() {
   const [isCEPValid, setIsCEPValid] = useState(false)
   const [isAddressLocked, setIsAddressLocked] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isExistingCustomer, setIsExistingCustomer] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [personalDataErrors, setPersonalDataErrors] = useState<Record<string, string>>({})
   const [profileAnswers, setProfileAnswers] = useState<Record<string, string>>({})
@@ -197,6 +199,12 @@ export function RedeemButton() {
       })
 
       if (!response.ok) {
+        const errorData = await response.json()
+        if (response.status === 400 && errorData.duplicatedFields) {
+          // Mostrar mensagem de cliente existente
+          setIsExistingCustomer(true)
+          return
+        }
         throw new Error('Failed to submit form')
       }
 
@@ -247,6 +255,8 @@ export function RedeemButton() {
           </DialogHeader>
           {isSubmitted ? (
             <SuccessMessage onClose={() => setIsOpen(false)} t={t} />
+          ) : isExistingCustomer ? (
+            <ExistingCustomerMessage t={t} />
           ) : currentStep === 1 ? (
             <PersonalDataForm
               formData={formData}

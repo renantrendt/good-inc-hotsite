@@ -8,6 +8,45 @@ export async function POST(request: Request) {
     const data = await request.json()
     console.log('Received data:', data) // Log para debug
 
+    // Verificar todos os campos que podem estar duplicados
+    const duplicatedFields = []
+    
+    // Verificar email duplicado
+    const existingEmail = await prisma.leadRegistration.findFirst({
+      where: { email: data.email }
+    })
+    if (existingEmail) {
+      duplicatedFields.push('email')
+    }
+
+    // Verificar telefone duplicado
+    const existingPhone = await prisma.leadRegistration.findFirst({
+      where: { phone: data.phone }
+    })
+    if (existingPhone) {
+      duplicatedFields.push('phone')
+    }
+
+    // Verificar CPF duplicado (se fornecido)
+    if (data.cpf) {
+      const existingCPF = await prisma.leadRegistration.findFirst({
+        where: { cpf: data.cpf }
+      })
+      if (existingCPF) {
+        duplicatedFields.push('cpf')
+      }
+    }
+
+    if (duplicatedFields.length > 0) {
+      return NextResponse.json(
+        { 
+          error: 'Campos duplicados encontrados',
+          duplicatedFields
+        },
+        { status: 400 }
+      )
+    }
+
     const lead = await prisma.leadRegistration.create({
       data: {
         firstName: data.firstName,
