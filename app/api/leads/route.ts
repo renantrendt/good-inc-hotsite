@@ -123,12 +123,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, lead })
   } catch (error) {
     console.error('Error creating lead:', error)
-    console.error('Error details:', {
-      name: error?.name,
-      message: error?.message,
-      stack: error?.stack,
-      cause: error?.cause,
-    })
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+        cause: error.cause,
+      })
+    } else {
+      console.error('Unknown error:', error)
+    }
     
     if (error instanceof Error) {
       // Se for um erro do Prisma, ele terá propriedades adicionais
