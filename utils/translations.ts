@@ -165,12 +165,14 @@ const translations = {
             "If you use the deodorant individually in the long term, allergic reactions will occur as it was designed to work in conjunction with the complete system.",
         },
         {
-          question: "What have you discovered about BO?",
+          question: "Traditional deodorants are unhealthy?",
+          showInFAQ: false,
           answer:
             "Body odor begins when bacteria is transferred to your skin from contaminated clothing.\n\nTraditional deodorants trap bacteria in pores, disrupting hormonal balance. In response, the body increases sweat production to clear the pores.\n\nThese deodorant residues, along with bacteria, are transferred back to clothing. Without natural predators on the fabric fibers, bacteria thrive by forming durable biofilms that are nearly impossible to remove after some hours of wear, perpetuating an unhealthy cycle of skin recontamination.\n\nBacteria can adapt to chemicals, including antibiotics, within days. This means that merely trying to switch between deodorants to kill bacteria is not a healthy solution.\n\nInstead, the focus should shift to identifying and eliminating the root source of contamination: clothing.",
         },
         {
-          question: "What have you discovered about Sweat?",
+          question: "Is harmful to reduce sweat artificially?",
+          showInFAQ: false,
           answer:
             "Sweat is vital to our body's cooling system, but using products to manage sweat and odor can have hidden consequences. Balancing sweat management with maintaining the body's natural ability to regulate temperature is essential for overall health.\n\nWhen the body's primary sweat zones are blocked by deodorants, antiperspirants, bacteria and residues, the lymphatic system becomes overloaded, forcing sweat to redirect to less common areas like the back, forehead, hands, groin, and feet.\n\nThis disruption is much like a computer's cooling system failing — causing the brain, our 'processor,' to overheat. The effects include diminished mental capacity, heightened anxiety, and slowed cognitive functions, highlighting the deep connection between physical and mental health.",
         },
@@ -386,12 +388,14 @@ const translations = {
             "Caso você utlize o desodorante individualmente no longo prazo irá ocorrer reações alérgicas pois ele foi projetado para trabalhar em conjunto com o sistema completo.",
         },
         {
-          question: "Qual a descoberta de vocês sobre odor?",
+          question: "Desodorantes tradicionais são prejudiciais?",
+          showInFAQ: false,
           answer:
             "O odor corporal começa quando as bactérias são transferidas para sua pele a partir de roupas contaminadas.\n\nDesodorantes tradicionais prendem bactérias nos poros, perturbando o equilíbrio hormonal. Em resposta, o corpo aumenta a produção de suor para limpar os poros.\n\nEsses resíduos de desodorante, junto com as bactérias, são transferidos de volta para as roupas. Sem predadores naturais nas fibras do tecido, as bactérias prosperam formando biofilmes duráveis que são quase impossíveis de remover após algumas horas de uso, perpetuando um ciclo insalubre de recontaminação da pele.\n\nAs bactérias podem se adaptar a produtos químicos, incluindo antibióticos, em questão de dias. Isso significa que apenas tentar alternar entre desodorantes para matar bactérias não é uma solução saudável.\n\nEm vez disso, o foco deve mudar para identificar e eliminar a fonte raiz da contaminação: as roupas.",
         },
         {
-          question: "Qual a descoberta de vocês sobre suor?",
+          question: "É prejudicial reduzir o suor artificialmente?",
+          showInFAQ: false,
           answer:
             "O suor é vital para o sistema de resfriamento do nosso corpo, mas usar produtos para gerenciar o suor e o odor pode ter consequências ocultas. Equilibrar o gerenciamento do suor com a manutenção da capacidade natural do corpo de regular a temperatura é essencial para a saúde geral.\n\nQuando as principais zonas de transpiração do corpo são bloqueadas por desodorantes, antitranspirantes, bactérias e resíduos, o sistema linfático fica sobrecarregado, forçando o suor a se redirecionar para áreas menos comuns como as costas, testa, mãos, virilha e pés.\n\nEssa perturbação é muito parecida com a falha do sistema de resfriamento de um computador — fazendo com que o cérebro, nosso 'processador', superaqueça. Os efeitos incluem diminuição da capacidade mental, aumento da ansiedade e funções cognitivas mais lentas, destacando a profunda conexão entre saúde física e mental.",
         },

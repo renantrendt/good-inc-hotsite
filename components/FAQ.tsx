@@ -20,7 +20,7 @@ export default function FAQ() {
       <div className="container mx-auto px-4 max-w-6xl">
         <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-10 uppercase">{t.faq.title}</h2>
         <div className="w-full mx-auto">
-          {t.faq.questions.map((faq, index) => (
+          {t.faq.questions.filter(faq => faq.showInFAQ !== false).map((faq, index) => (
             <motion.div key={index} className="mb-4 border border-gray-200 rounded-lg overflow-hidden" initial={false}>
               <button
                 className="w-full text-left p-4 flex justify-between items-center hover:bg-primary/10 transition-colors duration-200"
