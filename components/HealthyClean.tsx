@@ -48,10 +48,10 @@ export default function HealthyClean() {
 
   return (
     <section className="pt-12 pb-12 sm:pt-20 sm:pb-20 bg-white">
-                <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
-            {t.title}
-          </h2>
-      <div className="container mx-auto px-4 max-w-6xl">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+          {t.title}
+        </h2>
         {/* Desktop View */}
         <div className="hidden lg:grid lg:grid-cols-3 gap-6 sm:gap-8">
           {t.cards.map((card, index) => {
