@@ -118,6 +118,7 @@ interface FormData {
   cpf: string
   email: string
   phoneCode: string
+  cityCode: string
   zipCode: string
   street: string
   number: string
@@ -133,6 +134,7 @@ export function RedeemButton() {
   const t = translations[language]
   const countryName = language === 'pt' ? 'Brasil' : 'United States'
   const phoneCode = language === 'pt' ? '+55' : '+1'
+  const { countryCode, city } = useGeolocation()
   const [isOpen, setIsOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoadingAddress, setIsLoadingAddress] = useState(false)
@@ -143,6 +145,16 @@ export function RedeemButton() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [personalDataErrors, setPersonalDataErrors] = useState<Record<string, string>>({})
+
+  // Preencher código da cidade quando detectar IP do Brasil
+  useEffect(() => {
+    if (language === 'pt' && countryCode === 'BR' && city) {
+      setFormData(prev => ({
+        ...prev,
+        cityCode: prev.cityCode || city // Mantém o valor se já foi alterado pelo usuário
+      }))
+    }
+  }, [language, countryCode, city])
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -150,6 +162,7 @@ export function RedeemButton() {
     cpf: "",
     email: "",
     phoneCode: phoneCode,
+    cityCode: "",
     zipCode: "",
     street: "",
     number: "",
@@ -193,6 +206,10 @@ export function RedeemButton() {
     if (!formData.email) errors.email = language === 'pt' ? "Email é obrigatório" : "Email is required"
     if (!formData.phone) errors.phone = language === 'pt' ? "Telefone é obrigatório" : "Phone is required"
     if (!formData.phoneCode) errors.phoneCode = language === 'pt' ? "DDD é obrigatório" : "Country code is required"
+    
+    if (language === 'pt' && countryCode === 'BR') {
+      if (!formData.cityCode) errors.cityCode = "Código da cidade é obrigatório"
+    }
     
     if (language === 'pt') {
       const cleanCPF = formData.cpf.replace(/\D/g, '')
@@ -326,6 +343,7 @@ export function RedeemButton() {
           email: formData.email,
           phone: formData.phone,
           phoneCode: formData.phoneCode,
+          cityCode: formData.cityCode || null,
           cpf: formData.cpf || null,
           address: {
             street: formData.street,
@@ -418,6 +436,21 @@ export function RedeemButton() {
                 required
               />
             </div>
+            {language === 'pt' && (
+              <div className="w-24">
+                <FloatingLabelInput
+                  id="cityCode"
+                  name="cityCode"
+                  value={formData.cityCode}
+                  onChange={handleInputChange}
+                  label="Código"
+                  required
+                />
+                {personalDataErrors.cityCode && (
+                  <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.cityCode}</p>
+                )}
+              </div>
+            )}
             <div className="flex-1">
               <FloatingLabelInput
                 id="phone"
