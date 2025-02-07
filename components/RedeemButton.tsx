@@ -804,9 +804,9 @@ export function RedeemButton() {
         />
       )}
       <DialogTrigger asChild>
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-0.5">
           <div className="text-xs sm:text-sm text-gray-600 font-bold">{t.redeemButton.price}</div>
-          <Button className="w-full sm:w-auto px-4 py-2 bg-black text-white text-sm font-medium whitespace-nowrap rounded-md uppercase">
+          <Button className="w-full sm:w-auto px-4 py-1.5 bg-black text-white text-sm font-medium whitespace-nowrap rounded-md uppercase">
             {t.redeemButton.text || 'RESGATAR'}
           </Button>
           <div className="text-xs sm:text-sm text-gray-600">
