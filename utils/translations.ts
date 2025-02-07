@@ -178,66 +178,7 @@ const translations = {
       copyright: "© 2025, Patent Pending. Visto.bio.",
       address: "1007 N Orange St. 4th Floor, Wilmington, DE 19801, USA.",
     },
-    redeemButton: {
-      text: "First Month Free",
-      price: "$39.99/month",
-      noCard: "No credit card required",
-      modal: {
-        titles: {
-          personalData: "Personal Data",
-          shippingAddress: "Shipping Address",
-          profile: "Profile",
-          thanks: "Thank you!"
-        },
-        form: {
-          firstName: "First Name",
-          lastName: "Last Name",
-          email: "E-mail",
-          phone: "Phone",
-          cpf: "CPF",
-          confirmData: "Next",
-          finishOrder: "Finish Order",
-          street: "Street Address",
-          number: "Number",
-          complement: "Apartment, suite, etc.",
-          neighborhood: "Neighborhood",
-          city: "City",
-          state: "State",
-          zipCode: "ZIP Code",
-          country: "Country"
-        },
-        questions: [
-          {
-            id: "clothes_odor",
-            question: "Do you notice that some clothes give off more odor than others?",
-            options: [
-              { value: "yes", label: "Yes" },
-              { value: "no", label: "No" }
-            ]
-          },
-          {
-            id: "product_understanding",
-            question: "Do you understand that treating fabrics is key to your health?",
-            options: [
-              { value: "yes", label: "Yes" },
-              { value: "no", label: "No" }
-            ]
-          },
-          {
-            id: "main_focus",
-            question: "What is your main focus?",
-            options: [
-              { value: "longevity", label: "Longevity" },
-              { value: "problem_solving", label: "Odor/Sweat Problem" }
-            ]
-          }
-        ],
-        success: {
-          message: "Your order has been successfully received. Our team will contact you soon via the registered email with more information.",
-          close: "Close"
-        }
-      }
-    },
+
     healthyClean: {
       title: "ALL YOUR HYGIENE NEEDS IN ONE COMPLETE SYSTEM",
       cards: [

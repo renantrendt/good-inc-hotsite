@@ -189,6 +189,9 @@ export function RedeemButton() {
     city: "",
     state: "",
     country: language === 'pt' ? 'Brasil' : 'United States',
+    clothesOdor: "",
+    productUnderstanding: "",
+    mainFocus: ""
   })
   const [profileAnswers, setProfileAnswers] = useState<Record<string, string>>({})
 
@@ -217,7 +220,7 @@ export function RedeemButton() {
       setFormData(prev => ({ ...prev, [name]: digits }))
 
       // Limpa qualquer erro anterior
-      setPersonalDataErrors(prev => ({ ...prev, phone: undefined }))
+      setPersonalDataErrors(prev => ({ ...prev, phone: "" }))
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
@@ -238,17 +241,17 @@ export function RedeemButton() {
     if (!formData.firstName) errors.firstName = language === 'pt' ? "Nome é obrigatório" : "First name is required"
     if (!formData.lastName) errors.lastName = language === 'pt' ? "Sobrenome é obrigatório" : "Last name is required"
     if (!formData.email) errors.email = language === 'pt' ? "Email é obrigatório" : "Email is required"
-    if (language === 'pt') {
-      if (!formData.phone) {
-        errors.phone = "Celular é obrigatório";
-      } else {
-        if (formData.phone.length !== 9) {
-          errors.phone = t.redeemButton.errors.phoneLength;
-        } else if (!formData.phone.startsWith('9')) {
-          errors.phone = t.redeemButton.errors.phoneStartWith9;
-        }
+    if (!formData.phone) {
+      errors.phone = language === 'pt' ? "Celular é obrigatório" : "Phone is required";
+    } else if (language === 'pt') {
+      if (formData.phone.length !== 9) {
+        errors.phone = t.redeemButton.errors.phoneLength;
+      } else if (!formData.phone.startsWith('9')) {
+        errors.phone = t.redeemButton.errors.phoneStartWith9;
       }
+    }
 
+    if (language === 'pt') {
       if (!formData.countryCode) {
         errors.countryCode = "País é obrigatório";
       } else if (!formData.countryCode.startsWith('+')) {
@@ -261,9 +264,12 @@ export function RedeemButton() {
         errors.cityCode = "DDD deve ter 2 dígitos";
       }
     } else {
-      if (!formData.phone) errors.phone = "Phone is required";
-      if (!formData.countryCode) errors.countryCode = "Country code is required";
-      if (!formData.countryCode.startsWith('+')) errors.countryCode = "Country code must start with +";
+      if (!formData.countryCode) {
+        errors.countryCode = "Country code is required";
+      } else if (!formData.countryCode.startsWith('+')) {
+        errors.countryCode = "Country code must start with +";
+      }
+    }
     }
     
     if (language === 'pt' && geoData?.country_code === 'BR') {

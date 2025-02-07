@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { RedeemButton } from "./RedeemButton"
+import { RedeemButton } from "./RedeemButton/index"
 
 export default function RedeemSection() {
   const [isVisible, setIsVisible] = useState(false)

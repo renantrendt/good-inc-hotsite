@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 
-// Cache mais agressivo: 12 horas
-export const revalidate = 43200;
+// Força a rota a ser dinâmica
+export const dynamic = 'force-dynamic';
 
 // Mapa de IPs locais conhecidos
 const LOCAL_IPS = [
