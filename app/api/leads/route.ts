@@ -3,6 +3,27 @@ import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
+interface LeadFormData {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  cpf?: string
+  street: string
+  number: string
+  complement?: string
+  neighborhood?: string
+  city: string
+  state: string
+  zipCode: string
+  country: string
+  countryCode?: string
+  cityCode?: string
+  clothesOdor: string
+  productUnderstanding: string
+  mainFocus: string
+}
+
 export async function POST(request: Request) {
   // Add CORS headers
   const headers = {
@@ -17,11 +38,11 @@ export async function POST(request: Request) {
   }
   try {
     console.log('Starting POST request to /api/leads')
-    const data = await request.json()
+    const data = await request.json() as LeadFormData
     console.log('Received data:', JSON.stringify(data, null, 2))
 
     // Validar dados obrigatórios
-    let requiredFields = [
+    const requiredFields: Array<keyof LeadFormData> = [
       // Dados pessoais
       'firstName', 'lastName', 'email', 'phone',
       // Endereço
@@ -34,6 +55,7 @@ export async function POST(request: Request) {
     if (data.country === 'Brasil') {
       requiredFields.push('neighborhood')
     }
+
     const missingFields = requiredFields.filter(field => !data[field])
     if (missingFields.length > 0) {
       console.error('Missing required fields:', missingFields)
@@ -46,13 +68,23 @@ export async function POST(request: Request) {
     console.log('All required fields present, checking for duplicates')
 
     // Verificar todos os campos que podem estar duplicados
-    const duplicatedFields = []
+    const duplicatedFields: string[] = []
     
     // Verificar duplicatas em uma única query
+    const conditions = [
+      `email.eq.${JSON.stringify(data.email)}`,
+      `phone.eq.${JSON.stringify(data.phone)}`
+    ]
+    
+    if (data.cpf) {
+      conditions.push(`cpf.eq.${JSON.stringify(data.cpf)}`)
+    }
+
     const { data: existingData, error: searchError } = await supabaseAdmin
       .from('LeadRegistration')
       .select('email, phone, cpf')
-      .or(`email.eq.${data.email},phone.eq.${data.phone}${data.cpf ? `,cpf.eq.${data.cpf}` : ''}`)
+      .or(conditions.join(','))
+      .limit(1)
 
     if (searchError) {
       console.error('Error checking for duplicates:', searchError)
