@@ -38,6 +38,7 @@ export function AddressForm({
                 label={language === 'pt' ? "CEP" : "ZIP Code"}
                 required
                 language={language}
+                numeric
               />
               {addressErrors.zipCode && (
                 <p className="text-xs text-red-500 mt-0.5">{addressErrors.zipCode}</p>
@@ -77,6 +78,7 @@ export function AddressForm({
               label={language === 'pt' ? "Número" : "Number"}
               required
               language={language}
+              numeric
             />
             {addressErrors.number && (
               <p className="text-xs text-red-500 mt-0.5">{addressErrors.number}</p>
@@ -183,6 +185,7 @@ export function AddressForm({
               required
               readOnly={language !== 'pt'}
               language={language}
+              numeric
             />
             {addressErrors.country && (
               <p className="text-sm text-red-500 mt-1">{addressErrors.country}</p>

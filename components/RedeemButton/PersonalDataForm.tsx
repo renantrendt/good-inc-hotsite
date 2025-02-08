@@ -95,6 +95,7 @@ export function PersonalDataForm({
                   label="DDD"
                   required
                   language={language}
+                  numeric
                 />
                 {personalDataErrors.cityCode && (
                   <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.cityCode}</p>
@@ -109,6 +110,7 @@ export function PersonalDataForm({
                 onChange={handleInputChange}
                 label={language === 'pt' ? "Celular" : "Phone"}
                 type="tel"
+                numeric
                 required
                 language={language}
               />
@@ -128,6 +130,7 @@ export function PersonalDataForm({
               label={t.redeemButton.modal.form.cpf} 
               required 
               language={language}
+              numeric
             />
             {personalDataErrors.cpf && (
               <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.cpf}</p>

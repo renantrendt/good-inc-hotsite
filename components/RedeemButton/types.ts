@@ -26,6 +26,7 @@ export interface ProfileQuestion {
 }
 
 export interface FloatingLabelInputProps {
+  numeric?: boolean;
   id: string
   name: string
   value: string

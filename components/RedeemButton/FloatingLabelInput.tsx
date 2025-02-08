@@ -13,6 +13,7 @@ export function FloatingLabelInput({
   disabled = false,
   readOnly = false,
   language = 'en',
+  numeric = false,
 }: FloatingLabelInputProps) {
   // Função de log que só funciona em desenvolvimento
   const debugLog = (message: string, ...args: any[]) => {
@@ -70,6 +71,8 @@ export function FloatingLabelInput({
         data-form-type="other"
         data-lpignore="true"
         spellCheck="false"
+        inputMode={numeric ? "numeric" : "text"}
+        pattern={numeric ? "[0-9]*" : undefined}
       />
       <label
         htmlFor={id}

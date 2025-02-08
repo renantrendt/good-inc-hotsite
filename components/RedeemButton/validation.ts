@@ -30,31 +30,44 @@ export const validatePersonalData = (formData: FormData, language: 'en' | 'pt', 
       errors.cityCode = "DDD deve ter 2 dígitos"
     }
 
-    const cleanCPF = formData.cpf.replace(/\D/g, '')
     if (!formData.cpf) {
       errors.cpf = "CPF é obrigatório"
-    } else if (cleanCPF.length !== 11) {
+      return errors
+    }
+
+    const cleanCPF = formData.cpf.replace(/\D/g, '')
+    if (cleanCPF.length !== 11) {
       errors.cpf = "CPF inválido"
-    } else {
-      let sum = 0
-      for (let i = 0; i < 9; i++) {
-        sum += parseInt(cleanCPF.charAt(i)) * (10 - i)
-      }
-      let firstDigit = 11 - (sum % 11)
-      if (firstDigit >= 10) firstDigit = 0
-      if (firstDigit !== parseInt(cleanCPF.charAt(9))) {
-        errors.cpf = "CPF inválido"
-      } else {
-        sum = 0
-        for (let i = 0; i < 10; i++) {
-          sum += parseInt(cleanCPF.charAt(i)) * (11 - i)
-        }
-        let secondDigit = 11 - (sum % 11)
-        if (secondDigit >= 10) secondDigit = 0
-        if (secondDigit !== parseInt(cleanCPF.charAt(10))) {
-          errors.cpf = "CPF inválido"
-        }
-      }
+      return errors
+    }
+
+    // Verifica se todos os dígitos são iguais
+    if (/^(\d)\1{10}$/.test(cleanCPF)) {
+      errors.cpf = "CPF inválido"
+      return errors
+    }
+
+    // Validação do primeiro dígito
+    let sum = 0
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(cleanCPF.charAt(i)) * (10 - i)
+    }
+    let firstDigit = 11 - (sum % 11)
+    if (firstDigit >= 10) firstDigit = 0
+    if (firstDigit !== parseInt(cleanCPF.charAt(9))) {
+      errors.cpf = "CPF inválido"
+      return errors
+    }
+
+    // Validação do segundo dígito
+    sum = 0
+    for (let i = 0; i < 10; i++) {
+      sum += parseInt(cleanCPF.charAt(i)) * (11 - i)
+    let secondDigit = 11 - (sum % 11)
+    if (secondDigit >= 10) secondDigit = 0
+    if (secondDigit !== parseInt(cleanCPF.charAt(10))) {
+      errors.cpf = "CPF inválido"
+      return errors
     }
   } else {
     if (!formData.countryCode) {
