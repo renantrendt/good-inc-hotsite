@@ -63,6 +63,7 @@ export const validatePersonalData = (formData: FormData, language: 'en' | 'pt', 
     sum = 0
     for (let i = 0; i < 10; i++) {
       sum += parseInt(cleanCPF.charAt(i)) * (11 - i)
+    }
     let secondDigit = 11 - (sum % 11)
     if (secondDigit >= 10) secondDigit = 0
     if (secondDigit !== parseInt(cleanCPF.charAt(10))) {
