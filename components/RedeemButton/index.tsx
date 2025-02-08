@@ -225,13 +225,17 @@ export function RedeemButton() {
 
         const responseData = await response.json()
         console.log('API Success Response:', responseData)
-      } catch (fetchError) {
-        console.error('Fetch error details:', {
-          message: fetchError.message,
-          cause: fetchError.cause,
-          stack: fetchError.stack
-        })
-        throw fetchError
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error('Fetch error details:', {
+            message: error.message,
+            cause: error.cause,
+            stack: error.stack
+          })
+        } else {
+          console.error('Unknown error:', error)
+        }
+        throw error
       }
 
       setIsSubmitted(true)
