@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabase'
+import { getServiceSupabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
@@ -80,6 +80,7 @@ export async function POST(request: Request) {
       conditions.push(`cpf.eq.${JSON.stringify(data.cpf)}`)
     }
 
+    const supabaseAdmin = getServiceSupabase()
     const { data: existingData, error: searchError } = await supabaseAdmin
       .from('LeadRegistration')
       .select('email, phone, cpf')
