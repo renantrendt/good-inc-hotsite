@@ -1,4 +1,4 @@
-import { findAreaCode } from '../utils/brazil-area-codes'
+import { findAreaCode } from '../../utils/brazil-area-codes'
 
 interface BrasilApiDDDResponse {
   state: string;
