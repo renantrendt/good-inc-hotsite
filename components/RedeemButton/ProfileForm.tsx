@@ -34,7 +34,7 @@ export function ProfileForm({
             <p className="text-sm font-medium">{q.question}</p>
             <RadioGroup
               onValueChange={(value) => handleProfileChange(q.id, value)}
-              value={fieldMapping[q.id] ? formData[fieldMapping[q.id]] : ''}
+              value={formData[fieldMapping[q.id] as keyof FormData] || ''}
               className="grid grid-cols-2 gap-0 w-full"
               required
             >
@@ -48,7 +48,7 @@ export function ProfileForm({
                     <div className={cn(
                       "flex flex-col items-center justify-center w-full p-3 text-sm border border-gray-200 min-h-[40px] transition-all duration-200 whitespace-nowrap",
                       index % 2 === 0 ? "rounded-l-lg" : "rounded-r-lg",
-                      fieldMapping[q.id] ? formData[fieldMapping[q.id]] === option.value : false ? "bg-black text-white border-black" : "bg-white text-gray-500 hover:bg-gray-50"
+                      formData[fieldMapping[q.id] as keyof FormData] === option.value ? "bg-black text-white border-black" : "bg-white text-gray-500 hover:bg-gray-50"
                     )}>
                       {option.label}
                     </div>
