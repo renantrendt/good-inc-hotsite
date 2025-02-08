@@ -1,3 +1,5 @@
+import { debug } from '../lib/debug'
+
 interface ViaCEPResponse {
   cep: string;
   logradouro: string;
@@ -45,7 +47,7 @@ export class ViaCEPService {
         zipCode: data.cep
       };
     } catch (error) {
-      console.error('Erro ao buscar CEP:', error);
+      debug.error('ViaCEP', 'Erro ao buscar CEP:', error);
       return null;
     }
   }

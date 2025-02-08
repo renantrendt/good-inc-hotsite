@@ -8,6 +8,7 @@ import { BrasilApiService } from "../../services/brasil-api.service"
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { FormData } from "./types"
+import { debug } from "../../lib/debug"
 import { validatePersonalData, validateAddress } from "./validation"
 import { formatCPF, formatCountryCode, formatPhone } from "./utils"
 import { ProgressBar } from "./ProgressBar"
@@ -67,9 +68,9 @@ export function RedeemButton() {
   useEffect(() => {
     async function fetchDDD() {
       if (language === 'pt' && geoData?.country_code === 'BR' && geoData?.city) {
-        console.log('🔍 Buscando DDD para cidade:', geoData.city)
+        debug.log('DDD', 'Buscando DDD para cidade:', geoData.city)
         const ddd = await BrasilApiService.findDDDByCityWithCache(geoData.city)
-        console.log('📞 DDD encontrado:', ddd)
+        debug.log('DDD', 'DDD encontrado:', ddd)
         if (ddd) {
           setFormData(prev => ({
             ...prev,
@@ -175,8 +176,8 @@ export function RedeemButton() {
     setIsSubmitting(true)
     try {
       // Log dos dados antes de enviar
-      console.log('Profile Answers:', profileAnswers)
-      console.log('Form Data:', formData)
+      debug.log('Form', 'Profile Answers:', profileAnswers)
+      debug.log('Form', 'Form Data:', formData)
 
       const requestData = {
         firstName: formData.firstName,
@@ -199,11 +200,11 @@ export function RedeemButton() {
         mainFocus: profileAnswers.main_focus || ''
       }
 
-      console.log('Request Data:', requestData)
+      debug.log('Form', 'Request Data:', requestData)
 
       try {
         const apiUrl = '/api/leads'
-        console.log('Sending request to:', apiUrl)
+        debug.log('Form', 'Sending request to:', apiUrl)
 
         const response = await fetch(apiUrl, {
           method: 'POST',
@@ -213,12 +214,12 @@ export function RedeemButton() {
           body: JSON.stringify(requestData),
         })
 
-        console.log('Response status:', response.status)
-        console.log('Response headers:', Object.fromEntries(response.headers.entries()))
+        debug.log('Form', 'Response status:', response.status)
+        debug.log('Form', 'Response headers:', Object.fromEntries(response.headers.entries()))
 
         if (!response.ok) {
           const errorData = await response.json()
-          console.log('API Error Response:', errorData)
+          debug.error('Form', 'API Error Response:', errorData)
           
           if (response.status === 400 && errorData.duplicatedFields) {
             setIsExistingCustomer(true)
@@ -229,7 +230,7 @@ export function RedeemButton() {
         }
 
         const responseData = await response.json()
-        console.log('API Success Response:', responseData)
+        debug.log('Form', 'API Success Response:', responseData)
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error('Fetch error details:', {
@@ -238,16 +239,16 @@ export function RedeemButton() {
             stack: error.stack
           })
         } else {
-          console.error('Unknown error:', error)
+          debug.error('Form', 'Unknown error:', error)
         }
         throw error
       }
 
       setIsSubmitted(true)
     } catch (error) {
-      console.error('Error submitting form:', error)
-      console.error('Form Data:', formData)
-      console.error('Profile Answers:', profileAnswers)
+      debug.error('Form', 'Error submitting form:', error)
+      debug.error('Form', 'Form Data:', formData)
+      debug.error('Form', 'Profile Answers:', profileAnswers)
     } finally {
       setIsSubmitting(false)
     }

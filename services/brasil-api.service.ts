@@ -1,3 +1,5 @@
+import { debug } from '../lib/debug'
+
 interface BrasilApiDDDResponse {
   state: string;
   cities: string[];
@@ -31,7 +33,9 @@ export class BrasilApiService {
       if (!response.ok) return null
       return await response.json()
     } catch (error) {
-      console.error('Erro ao buscar informações do DDD:', error)
+      if (process.env.NODE_ENV === 'development') {
+        debug.error('BrasilAPI', 'Erro ao buscar informações do DDD:', error)
+      }
       return null
     }
   }
@@ -57,12 +61,16 @@ export class BrasilApiService {
 
         if (normalizedSearchCity.includes(normalizedCityName) || 
             normalizedCityName.includes(normalizedSearchCity)) {
-          console.log('✅ DDD encontrado na lista:', ddd)
+          if (process.env.NODE_ENV === 'development') {
+            debug.log('BrasilAPI', 'DDD encontrado na lista:', ddd)
+          }
           return ddd
         }
       }
 
-      console.log('🔄 Buscando DDD na API para:', city)
+      if (process.env.NODE_ENV === 'development') {
+        debug.log('BrasilAPI', 'Buscando DDD na API para:', city)
+      }
       
       // Se não encontrou, tenta alguns DDDs comuns na API
       const commonAPIDDDs = ['11', '21', '31', '41', '51', '61']
@@ -83,7 +91,9 @@ export class BrasilApiService {
           })
 
           if (found) {
-            console.log('✅ DDD encontrado na API:', commonAPIDDDs[i])
+            if (process.env.NODE_ENV === 'development') {
+              debug.log('BrasilAPI', 'DDD encontrado na API:', commonAPIDDDs[i])
+            }
             return commonAPIDDDs[i]
           }
         }
@@ -91,7 +101,9 @@ export class BrasilApiService {
 
       return null
     } catch (error) {
-      console.error('Erro ao buscar DDD pela cidade:', error)
+      if (process.env.NODE_ENV === 'development') {
+        debug.error('BrasilAPI', 'Erro ao buscar DDD pela cidade:', error)
+      }
       return null
     }
   }

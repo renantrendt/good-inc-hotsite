@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { debug } from '../lib/debug';
 
 interface GeolocationData {
   country_code: string;

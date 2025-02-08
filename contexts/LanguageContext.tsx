@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { debug } from "../lib/debug"
 
 type Language = "en" | "pt"
 
@@ -46,20 +47,20 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       if (typeof window === 'undefined') return
 
       try {
-        console.log('🌎 [Language] Detecting location...')
+        debug.log('Language', 'Detecting location...')
         const response = await fetch('/api/geolocation')
         const data = await response.json()
-        console.log('🌎 [Language] Location data:', data)
+        debug.log('Language', 'Location data:', data)
         
         setGeoData(data)
 
         // Se não tiver idioma salvo, define com base no país
         if (!localStorage.getItem('language') && data.country_code === 'BR') {
-          console.log('🌎 [Language] Brazilian IP detected, switching to PT')
+          debug.log('Language', 'Brazilian IP detected, switching to PT')
           updateLanguage('pt')
         }
       } catch (error) {
-        console.error('❌ [Language] Error detecting location:', error)
+        debug.error('Language', 'Error detecting location:', error)
       } finally {
         setIsLoading(false)
       }

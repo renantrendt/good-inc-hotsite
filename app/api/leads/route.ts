@@ -1,5 +1,6 @@
 import { getServiceSupabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
+import { debug } from '../../../lib/debug'
 
 export const dynamic = 'force-dynamic'
 
@@ -58,9 +59,9 @@ export async function POST(request: Request) {
     return new NextResponse(null, { headers, status: 204 })
   }
   try {
-    console.log('Starting POST request to /api/leads')
+    debug.log('Leads', 'Starting POST request to /api/leads')
     const data = await request.json() as LeadFormData
-    console.log('Received data:', JSON.stringify(data, null, 2))
+    debug.log('Leads', 'Received data:', JSON.stringify(data, null, 2))
 
     // Validar dados obrigatórios
     const requiredFields: Array<keyof LeadFormData> = [
@@ -79,21 +80,21 @@ export async function POST(request: Request) {
 
     const missingFields = requiredFields.filter(field => !data[field])
     if (missingFields.length > 0) {
-      console.error('Missing required fields:', missingFields)
+      debug.error('Leads', 'Missing required fields:', missingFields)
       return NextResponse.json(
         { error: `Missing required fields: ${missingFields.join(', ')}` },
         { status: 400, headers }
       )
     }
 
-    console.log('All required fields present, checking for duplicates')
+    debug.log('Leads', 'All required fields present, checking for duplicates')
 
     // Verificar todos os campos que podem estar duplicados
     const duplicatedFields: string[] = []
     
     // Verificar duplicatas
     try {
-      console.log('Checking for duplicates...')
+      debug.log('Leads', 'Checking for duplicates...')
       const supabaseAdmin = getServiceSupabase()
 
       // Primeiro verifica email
@@ -104,7 +105,7 @@ export async function POST(request: Request) {
         .maybeSingle()
 
       if (emailError) {
-        console.error('Error checking email:', emailError)
+        debug.error('Leads', 'Error checking email:', emailError)
         throw new Error(`Database error: ${emailError.message}`)
       }
 
@@ -118,7 +119,7 @@ export async function POST(request: Request) {
         .maybeSingle()
 
       if (phoneError) {
-        console.error('Error checking phone:', phoneError)
+        debug.error('Leads', 'Error checking phone:', phoneError)
         throw new Error(`Database error: ${phoneError.message}`)
       }
 
@@ -133,16 +134,16 @@ export async function POST(request: Request) {
           .maybeSingle()
 
         if (cpfError) {
-          console.error('Error checking CPF:', cpfError)
+          debug.error('Leads', 'Error checking CPF:', cpfError)
           throw new Error(`Database error: ${cpfError.message}`)
         }
 
         if (cpfCheck) duplicatedFields.push('cpf')
       }
 
-      console.log('Duplicate check complete:', { duplicatedFields })
+      debug.log('Leads', 'Duplicate check complete:', { duplicatedFields })
     } catch (error) {
-      console.error('Error in duplicate check:', error)
+      debug.error('Leads', 'Error in duplicate check:', error)
       return NextResponse.json(
         { 
           error: error instanceof Error ? error.message : 'Error checking for duplicates',
@@ -164,7 +165,7 @@ export async function POST(request: Request) {
       )
     }
 
-    console.log('No duplicates found, attempting to create lead')
+    debug.log('Leads', 'No duplicates found, attempting to create lead')
     
     // Log the exact data being sent to Supabase
     const leadData: LeadData = {
@@ -189,7 +190,7 @@ export async function POST(request: Request) {
     }
 
     try {
-      console.log('Data being sent to Supabase:', JSON.stringify(leadData, null, 2))
+      debug.log('Leads', 'Data being sent to Supabase:', JSON.stringify(leadData, null, 2))
 
       const supabaseAdmin = getServiceSupabase()
       const { data: lead, error } = await supabaseAdmin
@@ -199,7 +200,7 @@ export async function POST(request: Request) {
         .single()
 
       if (error) {
-        console.error('Error creating lead:', error)
+        debug.error('Leads', 'Error creating lead:', error)
         throw new Error(`Database error: ${error.message}`)
       }
 
@@ -207,10 +208,10 @@ export async function POST(request: Request) {
         throw new Error('Lead was not created')
       }
 
-      console.log('Lead created successfully:', lead)
+      debug.log('Leads', 'Lead created successfully:', lead)
       return NextResponse.json({ success: true, lead }, { headers })
     } catch (error) {
-      console.error('Error in lead creation:', error)
+      debug.error('Leads', 'Error in lead creation:', error)
       return NextResponse.json(
         { 
           error: error instanceof Error ? error.message : 'Error creating lead',
@@ -222,14 +223,14 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating lead:', error)
     if (error instanceof Error) {
-      console.error('Error details:', {
+      debug.error('Leads', 'Error details:', {
         name: error.name,
         message: error.message,
         stack: error.stack,
         cause: error.cause,
       })
     } else {
-      console.error('Unknown error:', error)
+      debug.error('Leads', 'Unknown error:', error)
     }
     
     if (error instanceof Error) {

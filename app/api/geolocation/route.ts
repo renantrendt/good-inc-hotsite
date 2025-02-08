@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
+import { debug } from '../../../lib/debug';
 
 // Força a rota a ser dinâmica
 export const dynamic = 'force-dynamic';
@@ -35,20 +36,20 @@ function isLocalOrPrivateIP(ip: string): boolean {
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function getLocationFromIP(ip: string) {
-  console.log('🌍 [Geolocation] Iniciando detecção de localização para IP:', ip);
+  debug.log('Geolocation', 'Iniciando detecção de localização para IP:', ip);
 
   // Tentar primeiro o ipapi.co
   try {
-    console.log('🌍 [Geolocation] Tentando ipapi.co...');
+    debug.log('Geolocation', 'Tentando ipapi.co...');
     const response = await fetch(`https://ipapi.co/${ip}/json/`);
-    console.log('🌍 [Geolocation] Status ipapi.co:', response.status);
+    debug.log('Geolocation', 'Status ipapi.co:', response.status);
     
     if (response.ok) {
       const data = await response.json();
-      console.log('🌍 [Geolocation] Resposta ipapi.co:', data);
+      debug.log('Geolocation', 'Resposta ipapi.co:', data);
       
       if (data.error) {
-        console.log('🌍 [Geolocation] ipapi.co retornou erro:', data.error);
+        debug.log('Geolocation', 'ipapi.co retornou erro:', data.error);
         throw new Error('IP API returned error');
       }
       return data;
@@ -56,22 +57,22 @@ async function getLocationFromIP(ip: string) {
 
     // Se receber 429 (rate limit), esperar antes de tentar próxima API
     if (response.status === 429) {
-      console.log('🌍 [Geolocation] Rate limit atingido, aguardando...');
+      debug.log('Geolocation', 'Rate limit atingido, aguardando...');
       await delay(1000);
     }
   } catch (error) {
-    console.error('❌ [Geolocation] ipapi.co falhou:', error);
+    debug.error('Geolocation', 'ipapi.co falhou:', error);
   }
 
   // Fallback para o ip-api.com
   try {
-    console.log('🌍 [Geolocation] Tentando ip-api.com...');
+    debug.log('Geolocation', 'Tentando ip-api.com...');
     const response = await fetch(`http://ip-api.com/json/${ip}`);
-    console.log('🌍 [Geolocation] Status ip-api.com:', response.status);
+    debug.log('Geolocation', 'Status ip-api.com:', response.status);
     
     if (response.ok) {
       const data = await response.json();
-      console.log('🌍 [Geolocation] Resposta ip-api.com:', data);
+      debug.log('Geolocation', 'Resposta ip-api.com:', data);
       
       if (data.status === 'fail') {
         throw new Error(`ip-api.com failed: ${data.message}`);
@@ -85,18 +86,18 @@ async function getLocationFromIP(ip: string) {
       };
     }
   } catch (error) {
-    console.error('❌ [Geolocation] ip-api.com falhou:', error);
+    debug.error('Geolocation', 'ip-api.com falhou:', error);
   }
 
   throw new Error('All geolocation services failed');
 }
 
 export async function GET() {
-  console.log('🌍 [Geolocation] Iniciando requisição GET');
+  debug.log('Geolocation', 'Iniciando requisição GET');
   
   try {
     const headersList = headers();
-    console.log('🌍 [Geolocation] Headers recebidos:', {
+    debug.log('Geolocation', 'Headers recebidos:', {
       'x-forwarded-for': headersList.get('x-forwarded-for'),
       'x-real-ip': headersList.get('x-real-ip')
     });
@@ -106,11 +107,11 @@ export async function GET() {
                headersList.get('x-real-ip') || 
                '127.0.0.1';
 
-    console.log('🌍 [Geolocation] IP detectado:', ip);
+    debug.log('Geolocation', 'IP detectado:', ip);
     
     // Verificar se é IP local ou privado
     if (isLocalOrPrivateIP(ip)) {
-      console.log('🌍 [Geolocation] IP local/privado detectado, simulando localização BR');
+      debug.log('Geolocation', 'IP local/privado detectado, simulando localização BR');
       return NextResponse.json({
         country_code: 'BR',
         country_name: 'Brazil',
@@ -128,10 +129,10 @@ export async function GET() {
       region: data.region
     };
 
-    console.log('✅ [Geolocation] Localização detectada com sucesso:', locationData);
+    debug.log('Geolocation', 'Localização detectada com sucesso:', locationData);
     return NextResponse.json(locationData);
   } catch (error) {
-    console.error('❌ [Geolocation] Erro ao detectar localização:', error);
+    debug.error('Geolocation', 'Erro ao detectar localização:', error);
     // Em caso de erro, retornar um país neutro para não quebrar a aplicação
     return NextResponse.json({
       country_code: 'US',
