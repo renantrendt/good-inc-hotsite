@@ -52,24 +52,23 @@ export function AddressForm({
           </div>
         </div>
 
-        <div className="w-full">
-          <FloatingLabelInput
-            id="street"
-            name="street"
-            value={formData.street}
-            onChange={handleInputChange}
-            label={language === 'pt' ? "Endereço" : "Street"}
-            required
-            disabled={false}
-            language={language}
-          />
-          {addressErrors.street && (
-            <p className="text-sm text-red-500 mt-1">{addressErrors.street}</p>
-          )}
-        </div>
-
         <div className="flex gap-1.5">
-          <div className="flex-1">
+          <div className="flex-[4]">
+            <FloatingLabelInput
+              id="street"
+              name="street"
+              value={formData.street}
+              onChange={handleInputChange}
+              label={language === 'pt' ? "Endereço" : "Street"}
+              required
+              disabled={false}
+              language={language}
+            />
+            {addressErrors.street && (
+              <p className="text-sm text-red-500 mt-1">{addressErrors.street}</p>
+            )}
+          </div>
+          <div className="w-24">
             <FloatingLabelInput
               id="number"
               name="number"
@@ -84,36 +83,38 @@ export function AddressForm({
               <p className="text-xs text-red-500 mt-0.5">{addressErrors.number}</p>
             )}
           </div>
-
-          <div className="flex-1">
-            <FloatingLabelInput
-              id="complement"
-              name="complement"
-              value={formData.complement}
-              onChange={handleInputChange}
-              label={language === 'pt' ? "Complemento" : "Complement"}
-              language={language}
-            />
-          </div>
         </div>
 
         {language === 'pt' ? (
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <FloatingLabelInput
-                id="neighborhood"
-                name="neighborhood"
-                value={formData.neighborhood}
-                onChange={handleInputChange}
-                label="Bairro"
-                required
-                language={language}
-              />
-              {addressErrors.neighborhood && (
-                <p className="text-sm text-red-500 mt-1">{addressErrors.neighborhood}</p>
-              )}
+          <>
+            <div className="flex gap-1.5">
+              <div className="flex-1">
+                <FloatingLabelInput
+                  id="complement"
+                  name="complement"
+                  value={formData.complement}
+                  onChange={handleInputChange}
+                  label="Complemento"
+                  language={language}
+                />
+              </div>
+              <div className="flex-1">
+                <FloatingLabelInput
+                  id="neighborhood"
+                  name="neighborhood"
+                  value={formData.neighborhood}
+                  onChange={handleInputChange}
+                  label="Bairro"
+                  required
+                  language={language}
+                />
+                {addressErrors.neighborhood && (
+                  <p className="text-sm text-red-500 mt-1">{addressErrors.neighborhood}</p>
+                )}
+              </div>
             </div>
-            <div className="flex-1">
+
+            <div className="w-full">
               <FloatingLabelInput
                 id="city"
                 name="city"
@@ -127,21 +128,18 @@ export function AddressForm({
                 <p className="text-sm text-red-500 mt-1">{addressErrors.city}</p>
               )}
             </div>
-          </div>
+          </>
         ) : (
-          <>
-            <div className="w-full">
+          <div>
+            <div className="w-full mb-1.5">
               <FloatingLabelInput
-                id="neighborhood"
-                name="neighborhood"
-                value={formData.neighborhood}
+                id="complement"
+                name="complement"
+                value={formData.complement}
                 onChange={handleInputChange}
-                label="Neighborhood"
+                label="Complement"
                 language={language}
               />
-              {addressErrors.neighborhood && (
-                <p className="text-sm text-red-500 mt-1">{addressErrors.neighborhood}</p>
-              )}
             </div>
             <div className="w-full">
               <FloatingLabelInput
@@ -157,17 +155,17 @@ export function AddressForm({
                 <p className="text-sm text-red-500 mt-1">{addressErrors.city}</p>
               )}
             </div>
-          </>
+          </div>
         )}
-
-        <div className="flex gap-2">
+        {language === 'pt' ? (
+          <div className="flex gap-2">
           <div className="flex-1">
             <FloatingLabelInput
               id="state"
               name="state"
               value={formData.state}
               onChange={handleInputChange}
-              label={language === 'pt' ? "Estado" : "State"}
+              label="Estado"
               required
               language={language}
             />
@@ -175,23 +173,53 @@ export function AddressForm({
               <p className="text-sm text-red-500 mt-1">{addressErrors.state}</p>
             )}
           </div>
+            <div className="flex-1">
+              <FloatingLabelInput
+                id="country"
+                name="country"
+                value={formData.country}
+                onChange={handleInputChange}
+                label="País"
+                required
+                language={language}
+              />
+              {addressErrors.country && (
+                <p className="text-sm text-red-500 mt-1">{addressErrors.country}</p>
+              )}
+        </div>
+          </div>
+        ) : (
+          <div className="flex gap-2">
           <div className="flex-1">
             <FloatingLabelInput
-              id="country"
-              name="country"
-              value={formData.country}
+              id="state"
+              name="state"
+              value={formData.state}
               onChange={handleInputChange}
-              label={language === 'pt' ? "País" : "Country"}
+              label="State"
               required
               language={language}
             />
-            {addressErrors.country && (
-              <p className="text-sm text-red-500 mt-1">{addressErrors.country}</p>
+            {addressErrors.state && (
+              <p className="text-sm text-red-500 mt-1">{addressErrors.state}</p>
             )}
           </div>
+            <div className="flex-1">
+              <FloatingLabelInput
+                id="country"
+                name="country"
+                value={formData.country}
+                onChange={handleInputChange}
+                label="Country"
+                required
+                language={language}
+              />
+              {addressErrors.country && (
+                <p className="text-sm text-red-500 mt-1">{addressErrors.country}</p>
+              )}
         </div>
-      </div>
-
+          </div>
+        )}
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
@@ -199,6 +227,7 @@ export function AddressForm({
         >
           {language === 'pt' ? "Próximo" : "Next"}
         </Button>
+        </div>
       </div>
     </form>
   )

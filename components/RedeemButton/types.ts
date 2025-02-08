@@ -17,6 +17,7 @@ export interface FormData {
   clothesOdor: string
   productUnderstanding: string
   mainFocus: string
+  referral: string
 }
 
 export interface ProfileQuestion {

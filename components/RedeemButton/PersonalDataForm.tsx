@@ -20,7 +20,7 @@ export function PersonalDataForm({
   t
 }: PersonalDataFormProps) {
   return (
-    <form onSubmit={handleNextStep} className="p-3 sm:p-4 space-y-1.5 pb-28 sm:pb-32 relative">
+    <form onSubmit={handleNextStep} className="p-3 sm:p-4 space-y-1.5 pb-24 sm:pb-24 relative">
       <div className="space-y-1.5">
         <div className="flex gap-2">
           <div className="flex-1">

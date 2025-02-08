@@ -23,6 +23,7 @@ interface LeadFormData {
   clothesOdor: string
   productUnderstanding: string
   mainFocus: string
+  referral: string
 }
 
 interface LeadData {
@@ -44,6 +45,7 @@ interface LeadData {
   clothes_odor: string
   product_understanding: string
   main_focus: string
+  referral: string
 }
 
 export async function POST(request: Request) {
@@ -70,7 +72,7 @@ export async function POST(request: Request) {
       // Endereço
       'street', 'number', 'city', 'state', 'zipCode', 'country',
       // Perfil
-      'clothesOdor', 'productUnderstanding', 'mainFocus'
+      'clothesOdor', 'productUnderstanding', 'mainFocus', 'referral'
     ]
 
     // Neighborhood is required only for Brazilian addresses
@@ -187,6 +189,7 @@ export async function POST(request: Request) {
       clothes_odor: data.clothesOdor,
       product_understanding: data.productUnderstanding,
       main_focus: data.mainFocus,
+      referral: data.referral
     }
 
     try {

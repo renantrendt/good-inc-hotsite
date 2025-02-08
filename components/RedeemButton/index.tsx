@@ -42,7 +42,6 @@ export function RedeemButton() {
   const [isExistingCustomer, setIsExistingCustomer] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [personalDataErrors, setPersonalDataErrors] = useState<Record<string, string>>({})
-  const [profileAnswers, setProfileAnswers] = useState<Record<string, string>>({})
 
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -62,7 +61,8 @@ export function RedeemButton() {
     country: language === 'pt' ? 'Brasil' : 'United States',
     clothesOdor: "",
     productUnderstanding: "",
-    mainFocus: ""
+    mainFocus: "",
+    referral: ""
   })
 
   useEffect(() => {
@@ -97,11 +97,21 @@ export function RedeemButton() {
     setPersonalDataErrors(prev => ({ ...prev, [name]: "" }))
   }
 
+  
   const handleProfileChange = (id: string, value: string) => {
-    setProfileAnswers((prev) => ({
-      ...prev,
-      [id]: value,
-    }))
+    const fieldMapping: Record<string, string> = {
+      'clothes_odor': 'clothesOdor',
+      'product_understanding': 'productUnderstanding',
+      'main_focus': 'mainFocus',
+      'referral': 'referral'
+    }
+
+    if (fieldMapping[id]) {
+      setFormData(prev => ({
+        ...prev,
+        [fieldMapping[id]]: value
+      }))
+    }
   }
 
   const handleNextStep = (e: React.FormEvent) => {
@@ -169,38 +179,21 @@ export function RedeemButton() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length) {
+    // Verifica se todos os campos obrigatórios do perfil estão preenchidos
+    if (
+      !formData.clothesOdor ||
+      !formData.productUnderstanding ||
+      !formData.mainFocus ||
+      !formData.referral ||
+      formData.referral.length <= 3
+    ) {
       return
     }
 
     setIsSubmitting(true)
     try {
       // Log dos dados antes de enviar
-      debug.log('Form', 'Profile Answers:', profileAnswers)
       debug.log('Form', 'Form Data:', formData)
-
-      const requestData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        countryCode: formData.countryCode,
-        cityCode: formData.cityCode || null,
-        cpf: formData.cpf || null,
-        street: formData.street,
-        number: formData.number,
-        complement: formData.complement || null,
-        neighborhood: formData.neighborhood,
-        city: formData.city,
-        state: formData.state,
-        zipCode: formData.zipCode,
-        country: formData.country,
-        clothesOdor: profileAnswers.clothes_odor || '',
-        productUnderstanding: profileAnswers.product_understanding || '',
-        mainFocus: profileAnswers.main_focus || ''
-      }
-
-      debug.log('Form', 'Request Data:', requestData)
 
       try {
         const apiUrl = '/api/leads'
@@ -211,7 +204,13 @@ export function RedeemButton() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(requestData),
+          body: JSON.stringify({
+            ...formData,
+            cityCode: formData.cityCode || null,
+            cpf: formData.cpf || null,
+            complement: formData.complement || null,
+            referral: formData.referral
+          }),
         })
 
         debug.log('Form', 'Response status:', response.status)
@@ -248,7 +247,6 @@ export function RedeemButton() {
     } catch (error) {
       debug.error('Form', 'Error submitting form:', error)
       debug.error('Form', 'Form Data:', formData)
-      debug.error('Form', 'Profile Answers:', profileAnswers)
     } finally {
       setIsSubmitting(false)
     }
@@ -319,7 +317,7 @@ export function RedeemButton() {
             <ProfileForm
               handleSubmit={handleSubmit}
               handleProfileChange={handleProfileChange}
-              profileAnswers={profileAnswers}
+              formData={formData}
               isSubmitting={isSubmitting}
               t={t}
             />

@@ -8,7 +8,7 @@ import { Loader2 } from 'lucide-react'
 interface ProfileFormProps {
   handleSubmit: (e: React.FormEvent) => void
   handleProfileChange: (id: string, value: string) => void
-  profileAnswers: Record<string, string>
+  formData: FormData
   isSubmitting: boolean
   t: any
 }
@@ -16,19 +16,25 @@ interface ProfileFormProps {
 export function ProfileForm({
   handleSubmit,
   handleProfileChange,
-  profileAnswers,
+  formData,
   isSubmitting,
   t
 }: ProfileFormProps) {
+  const fieldMapping: Record<string, keyof FormData> = {
+    'clothes_odor': 'clothesOdor',
+    'product_understanding': 'productUnderstanding',
+    'main_focus': 'mainFocus',
+    'referral': 'referral'
+  }
   return (
     <form onSubmit={handleSubmit} className="p-3 sm:p-4 pb-16 relative">
-      <div className="space-y-4 mb-12 sm:mb-24">
+      <div className="space-y-4 mb-4 sm:mb-4">
         {t.redeemButton.modal.questions.map((q: ProfileQuestion) => (
-          <div key={q.id} className="space-y-4">
+          <div key={q.id} className="space-y-1.5">
             <p className="text-sm font-medium">{q.question}</p>
             <RadioGroup
               onValueChange={(value) => handleProfileChange(q.id, value)}
-              value={profileAnswers[q.id]}
+              value={fieldMapping[q.id] ? formData[fieldMapping[q.id]] : ''}
               className="grid grid-cols-2 gap-0 w-full"
               required
             >
@@ -42,7 +48,7 @@ export function ProfileForm({
                     <div className={cn(
                       "flex flex-col items-center justify-center w-full p-3 text-sm border border-gray-200 min-h-[40px] transition-all duration-200 whitespace-nowrap",
                       index % 2 === 0 ? "rounded-l-lg" : "rounded-r-lg",
-                      profileAnswers[q.id] === option.value ? "bg-black text-white border-black" : "bg-white text-gray-500 hover:bg-gray-50"
+                      fieldMapping[q.id] ? formData[fieldMapping[q.id]] === option.value : false ? "bg-black text-white border-black" : "bg-white text-gray-500 hover:bg-gray-50"
                     )}>
                       {option.label}
                     </div>
@@ -53,11 +59,29 @@ export function ProfileForm({
           </div>
         ))}
       </div>
+      <div className="space-y-1.5 mt-3 mb-6 sm:mb-[5em]">
+        <p className="text-sm font-medium">{t.redeemButton.modal.form.referral}</p>
+        <input
+          type="text"
+          placeholder=""
+          className="w-full p-3 text-sm border border-gray-200 rounded-lg"
+          required
+          onChange={(e) => handleProfileChange('referral', e.target.value)}
+          value={formData.referral || ''}
+        />
+      </div>
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
           type="submit"
           className="w-full py-3 text-sm font-medium bg-black text-white rounded-lg relative"
-          disabled={Object.keys(profileAnswers).length !== t.redeemButton.modal.questions.length || isSubmitting}
+          disabled={
+            !formData.clothesOdor ||
+            !formData.productUnderstanding ||
+            !formData.mainFocus ||
+            !formData.referral ||
+            formData.referral.length <= 3 ||
+            isSubmitting
+          }
         >
           {isSubmitting ? (
             <Loader2 className="h-4 w-4 animate-spin" />
