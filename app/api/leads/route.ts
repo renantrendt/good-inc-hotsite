@@ -24,6 +24,27 @@ interface LeadFormData {
   mainFocus: string
 }
 
+interface LeadData {
+  first_name: string
+  last_name: string
+  email: string
+  phone: string
+  cpf?: string
+  street: string
+  number: string
+  complement?: string
+  neighborhood?: string
+  city: string
+  state: string
+  zip_code: string
+  country: string
+  country_code?: string
+  city_code?: string
+  clothes_odor: string
+  product_understanding: string
+  main_focus: string
+}
+
 export async function POST(request: Request) {
   // Add CORS headers
   const headers = {
@@ -70,27 +91,63 @@ export async function POST(request: Request) {
     // Verificar todos os campos que podem estar duplicados
     const duplicatedFields: string[] = []
     
-    // Verificar duplicatas em uma única query
-    const conditions = [
-      `email.eq.${JSON.stringify(data.email)}`,
-      `phone.eq.${JSON.stringify(data.phone)}`
-    ]
-    
-    if (data.cpf) {
-      conditions.push(`cpf.eq.${JSON.stringify(data.cpf)}`)
-    }
+    // Verificar duplicatas
+    try {
+      console.log('Checking for duplicates...')
+      const supabaseAdmin = getServiceSupabase()
 
-    const supabaseAdmin = getServiceSupabase()
-    const { data: existingData, error: searchError } = await supabaseAdmin
-      .from('LeadRegistration')
-      .select('email, phone, cpf')
-      .or(conditions.join(','))
-      .limit(1)
+      // Primeiro verifica email
+      const { data: emailCheck, error: emailError } = await supabaseAdmin
+        .from('leads')
+        .select('email')
+        .eq('email', data.email)
+        .maybeSingle()
 
-    if (searchError) {
-      console.error('Error checking for duplicates:', searchError)
+      if (emailError) {
+        console.error('Error checking email:', emailError)
+        throw new Error(`Database error: ${emailError.message}`)
+      }
+
+      if (emailCheck) duplicatedFields.push('email')
+
+      // Depois verifica telefone
+      const { data: phoneCheck, error: phoneError } = await supabaseAdmin
+        .from('leads')
+        .select('phone')
+        .eq('phone', data.phone)
+        .maybeSingle()
+
+      if (phoneError) {
+        console.error('Error checking phone:', phoneError)
+        throw new Error(`Database error: ${phoneError.message}`)
+      }
+
+      if (phoneCheck) duplicatedFields.push('phone')
+
+      // Por fim, verifica CPF se fornecido
+      if (data.cpf) {
+        const { data: cpfCheck, error: cpfError } = await supabaseAdmin
+          .from('leads')
+          .select('cpf')
+          .eq('cpf', data.cpf)
+          .maybeSingle()
+
+        if (cpfError) {
+          console.error('Error checking CPF:', cpfError)
+          throw new Error(`Database error: ${cpfError.message}`)
+        }
+
+        if (cpfCheck) duplicatedFields.push('cpf')
+      }
+
+      console.log('Duplicate check complete:', { duplicatedFields })
+    } catch (error) {
+      console.error('Error in duplicate check:', error)
       return NextResponse.json(
-        { error: 'Error checking for duplicates' },
+        { 
+          error: error instanceof Error ? error.message : 'Error checking for duplicates',
+          details: error
+        },
         { status: 500, headers }
       )
     }
@@ -116,9 +173,9 @@ export async function POST(request: Request) {
     console.log('No duplicates found, attempting to create lead')
     
     // Log the exact data being sent to Supabase
-    const leadData = {
-      firstName: data.firstName,
-      lastName: data.lastName,
+    const leadData: LeadData = {
+      first_name: data.firstName,
+      last_name: data.lastName,
       email: data.email,
       phone: data.phone,
       cpf: data.cpf,
@@ -128,29 +185,45 @@ export async function POST(request: Request) {
       neighborhood: data.neighborhood,
       city: data.city,
       state: data.state,
-      zipCode: data.zipCode,
+      zip_code: data.zipCode,
       country: data.country,
-      countryCode: data.countryCode,
-      cityCode: data.cityCode,
-      clothesOdor: data.clothesOdor,
-      productUnderstanding: data.productUnderstanding,
-      mainFocus: data.mainFocus,
+      country_code: data.countryCode,
+      city_code: data.cityCode,
+      clothes_odor: data.clothesOdor,
+      product_understanding: data.productUnderstanding,
+      main_focus: data.mainFocus,
     }
 
-    console.log('Data being sent to Supabase:', JSON.stringify(leadData, null, 2))
+    try {
+      console.log('Data being sent to Supabase:', JSON.stringify(leadData, null, 2))
 
-    const { data: lead, error } = await supabaseAdmin
-      .from('LeadRegistration')
-      .insert([leadData])
-      .select()
-      .single()
+      const { data: lead, error } = await supabaseAdmin
+        .from('leads')
+        .insert([leadData])
+        .select()
+        .single()
 
-    if (error) {
-      console.error('Error creating lead:', error)
-      return NextResponse.json({ error: error.message }, { status: 500, headers })
+      if (error) {
+        console.error('Error creating lead:', error)
+        throw new Error(`Database error: ${error.message}`)
+      }
+
+      if (!lead) {
+        throw new Error('Lead was not created')
+      }
+
+      console.log('Lead created successfully:', lead)
+      return NextResponse.json({ success: true, lead }, { headers })
+    } catch (error) {
+      console.error('Error in lead creation:', error)
+      return NextResponse.json(
+        { 
+          error: error instanceof Error ? error.message : 'Error creating lead',
+          details: error
+        },
+        { status: 500, headers }
+      )
     }
-
-    return NextResponse.json({ success: true, lead }, { headers })
   } catch (error) {
     console.error('Error creating lead:', error)
     if (error instanceof Error) {
