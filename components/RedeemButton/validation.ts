@@ -35,9 +35,12 @@ export const validatePersonalData = (formData: FormData, language: 'en' | 'pt', 
       return errors
     }
 
-    const cleanCPF = formData.cpf.replace(/\D/g, '')
+    // Remove todos os caracteres não numéricos
+    const cleanCPF = formData.cpf.replace(/[^0-9]/g, '')
+    
+    // Verifica se tem 11 dígitos
     if (cleanCPF.length !== 11) {
-      errors.cpf = "CPF inválido"
+      errors.cpf = "CPF deve ter 11 dígitos"
       return errors
     }
 
@@ -47,26 +50,25 @@ export const validatePersonalData = (formData: FormData, language: 'en' | 'pt', 
       return errors
     }
 
-    // Validação do primeiro dígito
+    // Validação dos dígitos verificadores
     let sum = 0
     for (let i = 0; i < 9; i++) {
-      sum += parseInt(cleanCPF.charAt(i)) * (10 - i)
+      sum += parseInt(cleanCPF[i]) * (10 - i)
     }
-    let firstDigit = 11 - (sum % 11)
-    if (firstDigit >= 10) firstDigit = 0
-    if (firstDigit !== parseInt(cleanCPF.charAt(9))) {
+    let digit = 11 - (sum % 11)
+    if (digit >= 10) digit = 0
+    if (digit !== parseInt(cleanCPF[9])) {
       errors.cpf = "CPF inválido"
       return errors
     }
 
-    // Validação do segundo dígito
     sum = 0
     for (let i = 0; i < 10; i++) {
-      sum += parseInt(cleanCPF.charAt(i)) * (11 - i)
+      sum += parseInt(cleanCPF[i]) * (11 - i)
     }
-    let secondDigit = 11 - (sum % 11)
-    if (secondDigit >= 10) secondDigit = 0
-    if (secondDigit !== parseInt(cleanCPF.charAt(10))) {
+    digit = 11 - (sum % 11)
+    if (digit >= 10) digit = 0
+    if (digit !== parseInt(cleanCPF[10])) {
       errors.cpf = "CPF inválido"
       return errors
     }
