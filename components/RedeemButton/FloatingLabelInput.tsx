@@ -72,7 +72,6 @@ export function FloatingLabelInput({
         data-lpignore="true"
         spellCheck="false"
         inputMode={numeric ? "numeric" : "text"}
-        pattern={numeric ? "[0-9]*" : undefined}
       />
       <label
         htmlFor={id}

@@ -183,9 +183,7 @@ export function AddressForm({
               onChange={handleInputChange}
               label={language === 'pt' ? "País" : "Country"}
               required
-              readOnly={language !== 'pt'}
               language={language}
-              numeric
             />
             {addressErrors.country && (
               <p className="text-sm text-red-500 mt-1">{addressErrors.country}</p>

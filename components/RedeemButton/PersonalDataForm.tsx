@@ -79,6 +79,7 @@ export function PersonalDataForm({
                 required
                 type="tel"
                 language={language}
+                numeric
               />
               {personalDataErrors.countryCode && (
                 <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.countryCode}</p>
@@ -130,6 +131,7 @@ export function PersonalDataForm({
               label={t.redeemButton.modal.form.cpf} 
               required 
               language={language}
+              numeric
             />
             {personalDataErrors.cpf && (
               <p className="text-xs text-red-500 mt-0.5">{personalDataErrors.cpf}</p>
