@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { supabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
@@ -48,27 +48,34 @@ export async function POST(request: Request) {
     // Verificar todos os campos que podem estar duplicados
     const duplicatedFields = []
     
-    // Verificar email duplicado
-    const existingEmail = await prisma.leadRegistration.findFirst({
-      where: { email: data.email }
-    })
+    // Verificar duplicatas
+    const { data: existingEmail } = await supabase
+      .from('LeadRegistration')
+      .select('email')
+      .eq('email', data.email)
+      .single()
+
     if (existingEmail) {
       duplicatedFields.push('email')
     }
 
-    // Verificar telefone duplicado
-    const existingPhone = await prisma.leadRegistration.findFirst({
-      where: { phone: data.phone }
-    })
+    const { data: existingPhone } = await supabase
+      .from('LeadRegistration')
+      .select('phone')
+      .eq('phone', data.phone)
+      .single()
+
     if (existingPhone) {
       duplicatedFields.push('phone')
     }
 
-    // Verificar CPF duplicado (se fornecido)
     if (data.cpf) {
-      const existingCPF = await prisma.leadRegistration.findFirst({
-        where: { cpf: data.cpf }
-      })
+      const { data: existingCPF } = await supabase
+        .from('LeadRegistration')
+        .select('cpf')
+        .eq('cpf', data.cpf)
+        .single()
+
       if (existingCPF) {
         duplicatedFields.push('cpf')
       }
@@ -86,8 +93,8 @@ export async function POST(request: Request) {
 
     console.log('No duplicates found, attempting to create lead')
     
-    // Log the exact data being sent to Prisma
-    console.log('Data being sent to Prisma:', JSON.stringify({
+    // Log the exact data being sent to Supabase
+    const leadData = {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
@@ -106,30 +113,20 @@ export async function POST(request: Request) {
       clothesOdor: data.clothesOdor,
       productUnderstanding: data.productUnderstanding,
       mainFocus: data.mainFocus,
-    }, null, 2))
+    }
 
-    const lead = await prisma.leadRegistration.create({
-      data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone,
-        cpf: data.cpf,
-        street: data.street,
-        number: data.number,
-        complement: data.complement,
-        neighborhood: data.neighborhood,
-        city: data.city,
-        state: data.state,
-        zipCode: data.zipCode,
-        country: data.country,
-        countryCode: data.countryCode,
-        cityCode: data.cityCode,
-        clothesOdor: data.clothesOdor,
-        productUnderstanding: data.productUnderstanding,
-        mainFocus: data.mainFocus,
-      },
-    })
+    console.log('Data being sent to Supabase:', JSON.stringify(leadData, null, 2))
+
+    const { data: lead, error } = await supabase
+      .from('LeadRegistration')
+      .insert([leadData])
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error creating lead:', error)
+      return NextResponse.json({ error: error.message }, { status: 500, headers })
+    }
 
     return NextResponse.json({ success: true, lead }, { headers })
   } catch (error) {
