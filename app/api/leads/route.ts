@@ -48,37 +48,26 @@ export async function POST(request: Request) {
     // Verificar todos os campos que podem estar duplicados
     const duplicatedFields = []
     
-    // Verificar duplicatas
-    const { data: existingEmail } = await supabaseAdmin
+    // Verificar duplicatas em uma única query
+    const { data: existingData, error: searchError } = await supabaseAdmin
       .from('LeadRegistration')
-      .select('email')
-      .eq('email', data.email)
-      .single()
+      .select('email, phone, cpf')
+      .or(`email.eq.${data.email},phone.eq.${data.phone}${data.cpf ? `,cpf.eq.${data.cpf}` : ''}`)
 
-    if (existingEmail) {
-      duplicatedFields.push('email')
+    if (searchError) {
+      console.error('Error checking for duplicates:', searchError)
+      return NextResponse.json(
+        { error: 'Error checking for duplicates' },
+        { status: 500, headers }
+      )
     }
 
-    const { data: existingPhone } = await supabaseAdmin
-      .from('LeadRegistration')
-      .select('phone')
-      .eq('phone', data.phone)
-      .single()
-
-    if (existingPhone) {
-      duplicatedFields.push('phone')
-    }
-
-    if (data.cpf) {
-      const { data: existingCPF } = await supabaseAdmin
-        .from('LeadRegistration')
-        .select('cpf')
-        .eq('cpf', data.cpf)
-        .single()
-
-      if (existingCPF) {
-        duplicatedFields.push('cpf')
-      }
+    if (existingData && existingData.length > 0) {
+      existingData.forEach(item => {
+        if (item.email === data.email) duplicatedFields.push('email')
+        if (item.phone === data.phone) duplicatedFields.push('phone')
+        if (item.cpf === data.cpf) duplicatedFields.push('cpf')
+      })
     }
 
     if (duplicatedFields.length > 0) {
