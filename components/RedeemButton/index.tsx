@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { ViaCEPService } from "../../services/viacep.service"
 import { useLanguage } from "../../contexts/LanguageContext"
 import translations from "../../utils/translations"
-import { findAreaCode } from "../../utils/brazil-area-codes"
+import { BrasilApiService } from "../../services/brasil-api.service"
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle } from "../ui/dialog"
 import { Button } from "../ui/button"
 import { FormData } from "./types"
@@ -65,15 +65,20 @@ export function RedeemButton() {
   })
 
   useEffect(() => {
-    if (language === 'pt' && geoData?.country_code === 'BR' && geoData?.city) {
-      const areaCode = findAreaCode(geoData.city)
-      if (areaCode) {
-        setFormData(prev => ({
-          ...prev,
-          cityCode: prev.cityCode || areaCode
-        }))
+    async function fetchDDD() {
+      if (language === 'pt' && geoData?.country_code === 'BR' && geoData?.city) {
+        console.log('🔍 Buscando DDD para cidade:', geoData.city)
+        const ddd = await BrasilApiService.findDDDByCityWithCache(geoData.city)
+        console.log('📞 DDD encontrado:', ddd)
+        if (ddd) {
+          setFormData(prev => ({
+            ...prev,
+            cityCode: ddd
+          }))
+        }
       }
     }
+    fetchDDD()
   }, [language, geoData])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

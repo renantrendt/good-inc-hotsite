@@ -57,7 +57,7 @@ const translations = {
           close: "Close"
         },
         existingCustomer: {
-          message: "We've identified that you are already a Good.inc customer. This promotion is exclusively for new customers. If you believe this is an error, please contact our ",
+          message: "We've identified that you are already a Good.inc customer (or already subscribed to this form). This promotion is exclusively for new customers. If you believe this is an error, please contact our ",
           supportLink: "support team by email",
           messageSuffix: ".",
           supportEmail: "support@vistobio.zendesk.com"
@@ -280,7 +280,7 @@ const translations = {
           close: "Fechar"
         },
         existingCustomer: {
-          message: "Identificamos que você já é cliente Good.inc. Esta promoção é exclusiva para novos clientes. Se acredita que isso é um erro, entre em contato com nossa equipe de ",
+          message: "Identificamos que você já é cliente Good.inc (ou já se inscreveu nesse formulário). Esta promoção é exclusiva para novos clientes. Se acredita que isso é um erro, entre em contato com nossa equipe de ",
           supportLink: "suporte por email",
           messageSuffix: ".",
           supportEmail: "support@vistobio.zendesk.com"

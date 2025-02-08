@@ -27,7 +27,7 @@ export function FloatingLabelInput({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className={cn(
-          "block w-full h-12 px-3 pt-6 pb-2 text-sm border border-gray-300 rounded-lg transition-all duration-200 bg-white peer",
+          "block w-full h-12 px-3 pt-6 pb-2 text-base border border-gray-300 rounded-lg transition-all duration-200 bg-white peer",
           "focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent",
           "placeholder-transparent",
         )}
@@ -35,6 +35,10 @@ export function FloatingLabelInput({
         required={required}
         disabled={disabled}
         readOnly={readOnly}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck="false"
       />
       <label
         htmlFor={id}
