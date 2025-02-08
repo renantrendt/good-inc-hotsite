@@ -20,7 +20,7 @@ export function FloatingLabelInput({
     <div className="relative">
       <input
         id={id}
-        name={name}
+        name={`${name}-${Math.random()}`} {/* Nome aleatório para evitar autocomplete */}
         type={type}
         value={value}
         onChange={onChange}
@@ -35,10 +35,12 @@ export function FloatingLabelInput({
         required={required}
         disabled={disabled}
         readOnly={readOnly}
-        autoComplete="off"
+        autoComplete="new-password" {/* Força o navegador a não usar autocomplete */}
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck="false"
+        data-form-type="other" {/* Dica adicional para navegadores mobile */}
+        enterKeyHint="next" {/* Muda o botão Enter para 'Próximo' no teclado mobile */}
       />
       <label
         htmlFor={id}

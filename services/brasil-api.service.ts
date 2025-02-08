@@ -1,3 +1,5 @@
+import { findAreaCode } from '../utils/brazil-area-codes'
+
 interface BrasilApiDDDResponse {
   state: string;
   cities: string[];
@@ -5,6 +7,7 @@ interface BrasilApiDDDResponse {
 
 export class BrasilApiService {
   private static baseUrl = 'https://brasilapi.com.br/api'
+  private static commonDDDs = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '31', '41', '51', '61']
 
   static async getDDDInfo(ddd: string): Promise<BrasilApiDDDResponse | null> {
     try {
@@ -19,11 +22,17 @@ export class BrasilApiService {
 
   static async findDDDByCity(city: string): Promise<string | null> {
     try {
-      // Busca todos os DDDs disponíveis (de 11 a 99)
-      const ddds = Array.from({ length: 89 }, (_, i) => (i + 11).toString())
+      // Primeiro tenta encontrar na lista estática
+      const staticDDD = findAreaCode(city)
+      if (staticDDD) {
+        console.log('✅ DDD encontrado na lista estática:', staticDDD)
+        return staticDDD
+      }
+
+      console.log('🔄 Buscando DDD na API para:', city)
       
-      // Faz as requisições em paralelo
-      const promises = ddds.map(ddd => this.getDDDInfo(ddd))
+      // Se não encontrou, tenta na API apenas com DDDs mais comuns
+      const promises = this.commonDDDs.map(ddd => this.getDDDInfo(ddd))
       const results = await Promise.all(promises)
 
       // Normaliza o nome da cidade para comparação
@@ -46,7 +55,8 @@ export class BrasilApiService {
           })
 
           if (found) {
-            return ddds[i]
+            console.log('✅ DDD encontrado na API:', this.commonDDDs[i])
+            return this.commonDDDs[i]
           }
         }
       }
