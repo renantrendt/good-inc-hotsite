@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     const duplicatedFields = []
     
     // Verificar duplicatas
-    const { data: existingEmail } = await supabase
+    const { data: existingEmail } = await supabaseAdmin
       .from('LeadRegistration')
       .select('email')
       .eq('email', data.email)
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       duplicatedFields.push('email')
     }
 
-    const { data: existingPhone } = await supabase
+    const { data: existingPhone } = await supabaseAdmin
       .from('LeadRegistration')
       .select('phone')
       .eq('phone', data.phone)
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     }
 
     if (data.cpf) {
-      const { data: existingCPF } = await supabase
+      const { data: existingCPF } = await supabaseAdmin
         .from('LeadRegistration')
         .select('cpf')
         .eq('cpf', data.cpf)
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
 
     console.log('Data being sent to Supabase:', JSON.stringify(leadData, null, 2))
 
-    const { data: lead, error } = await supabase
+    const { data: lead, error } = await supabaseAdmin
       .from('LeadRegistration')
       .insert([leadData])
       .select()
