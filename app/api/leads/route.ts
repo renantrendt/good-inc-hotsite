@@ -152,13 +152,7 @@ export async function POST(request: Request) {
       )
     }
 
-    if (existingData && existingData.length > 0) {
-      existingData.forEach(item => {
-        if (item.email === data.email) duplicatedFields.push('email')
-        if (item.phone === data.phone) duplicatedFields.push('phone')
-        if (item.cpf === data.cpf) duplicatedFields.push('cpf')
-      })
-    }
+
 
     if (duplicatedFields.length > 0) {
       return NextResponse.json(
@@ -197,6 +191,7 @@ export async function POST(request: Request) {
     try {
       console.log('Data being sent to Supabase:', JSON.stringify(leadData, null, 2))
 
+      const supabaseAdmin = getServiceSupabase()
       const { data: lead, error } = await supabaseAdmin
         .from('leads')
         .insert([leadData])

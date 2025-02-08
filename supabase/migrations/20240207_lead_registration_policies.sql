@@ -1,5 +1,8 @@
--- Criar a tabela leads se ela não existir
-CREATE TABLE IF NOT EXISTS leads (
+-- Remover a tabela antiga se existir
+DROP TABLE IF EXISTS leads CASCADE;
+
+-- Criar a tabela leads
+CREATE TABLE leads (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
@@ -26,34 +29,19 @@ CREATE TABLE IF NOT EXISTS leads (
 -- Habilitar Row Level Security
 ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 
--- Criar policy para permitir inserções usando service role
-CREATE POLICY "Enable insert for service role"
-    ON leads
-    FOR INSERT
-    TO service_role
-    WITH CHECK (true);
+-- Remover todas as policies existentes
+DROP POLICY IF EXISTS "Enable insert for service role" ON leads;
+DROP POLICY IF EXISTS "Enable read for service role" ON leads;
+DROP POLICY IF EXISTS "Enable update for service role" ON leads;
+DROP POLICY IF EXISTS "Enable delete for service role" ON leads;
 
--- Criar policy para permitir leitura usando service role
-CREATE POLICY "Enable read for service role"
+-- Criar policy para permitir todas as operações para o service role
+CREATE POLICY "service_role_all"
     ON leads
-    FOR SELECT
-    TO service_role
-    USING (true);
-
--- Criar policy para permitir atualizações usando service role
-CREATE POLICY "Enable update for service role"
-    ON leads
-    FOR UPDATE
+    FOR ALL
     TO service_role
     USING (true)
     WITH CHECK (true);
-
--- Criar policy para permitir deleções usando service role
-CREATE POLICY "Enable delete for service role"
-    ON leads
-    FOR DELETE
-    TO service_role
-    USING (true);
 
 -- Criar trigger para atualizar updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -64,7 +52,12 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+DROP TRIGGER IF EXISTS update_leads_updated_at ON leads;
 CREATE TRIGGER update_leads_updated_at
     BEFORE UPDATE ON leads
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
+
+-- Garantir que o service_role tenha todas as permissões na tabela
+GRANT ALL ON leads TO service_role;
+
