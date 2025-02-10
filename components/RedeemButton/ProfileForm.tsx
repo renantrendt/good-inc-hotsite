@@ -69,6 +69,9 @@ export function ProfileForm({
           onChange={(e) => handleProfileChange('referral', e.target.value)}
           value={formData.referral || ''}
         />
+        {formData.referral && formData.referral.length > 0 && formData.referral.length <= 3 && (
+          <p className="text-xs text-red-500 mt-0.5">{t.redeemButton.modal.form.referralMinLength}</p>
+        )}
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t">
         <Button
