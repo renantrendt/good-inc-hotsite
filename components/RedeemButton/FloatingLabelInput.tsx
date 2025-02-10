@@ -58,7 +58,7 @@ export function FloatingLabelInput({
         onFocus={handleFocus}
         onBlur={handleBlur}
         className={cn(
-          "block w-full h-12 px-3 text-base border border-gray-300 rounded-lg transition-all duration-200 bg-white peer",
+          "block w-full h-12 px-4 text-base border border-gray-300 rounded-lg transition-all duration-200 bg-white peer",
           "focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent",
           "placeholder-transparent",
           isFocused ? "pt-6 pb-2" : "pt-6 pb-3.5",

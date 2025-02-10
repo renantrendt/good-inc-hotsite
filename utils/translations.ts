@@ -73,6 +73,7 @@ const translations = {
     },
     hero: {
       title: "PERSONAL CARE SYSTEM MORE THAN CLEAN — HEALTHY",
+      videoId: "12345",
     },
     benefits: {
       title: "Benefits",
@@ -298,6 +299,7 @@ const translations = {
     },
     hero: {
       title: "SISTEMA DE CUIDADOS PESSOAIS MAIS DO QUE LIMPO — SAUDÁVEL",
+      videoId: "i5E3VC_hGB0",
     },
     benefits: {
       title: "Benefícios",

@@ -65,7 +65,7 @@ export default function Hero() {
         <div className="aspect-video w-full max-w-4xl mx-auto mb-12">
           <iframe
             className="w-full h-full rounded-lg shadow-lg"
-            src="https://www.youtube.com/embed/i5E3VC_hGB0"
+            src={`https://www.youtube.com/embed/${t.hero.videoId}`}
             title="Modo uso Good.inc"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
