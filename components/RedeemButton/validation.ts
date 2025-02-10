@@ -93,7 +93,7 @@ export const validateAddress = (formData: FormData, language: 'en' | 'pt', isCEP
   }
 
   if (!formData.street) errors.street = language === 'pt' ? "Rua é obrigatória" : "Street is required"
-  if (!formData.number) errors.number = language === 'pt' ? "Número é obrigatório" : "Number is required"
+  if (language === 'pt' && !formData.number) errors.number = "Número é obrigatório"
   if (!formData.city) errors.city = language === 'pt' ? "Cidade é obrigatória" : "City is required"
   if (!formData.state) errors.state = language === 'pt' ? "Estado é obrigatório" : "State is required"
 

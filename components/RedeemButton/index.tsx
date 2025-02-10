@@ -209,6 +209,7 @@ export function RedeemButton() {
             cityCode: formData.cityCode || null,
             cpf: formData.cpf || null,
             complement: formData.complement || null,
+            number: language === 'en' ? '' : formData.number,
             referral: formData.referral
           }),
         })

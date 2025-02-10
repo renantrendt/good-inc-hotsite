@@ -70,14 +70,14 @@ export async function POST(request: Request) {
       // Dados pessoais
       'firstName', 'lastName', 'email', 'phone',
       // Endereço
-      'street', 'number', 'city', 'state', 'zipCode', 'country',
+      'street', 'city', 'state', 'zipCode', 'country',
       // Perfil
       'clothesOdor', 'productUnderstanding', 'mainFocus', 'referral'
     ]
 
-    // Neighborhood is required only for Brazilian addresses
+    // Neighborhood and number are required only for Brazilian addresses
     if (data.country === 'Brasil') {
-      requiredFields.push('neighborhood')
+      requiredFields.push('neighborhood', 'number')
     }
 
     const missingFields = requiredFields.filter(field => !data[field])

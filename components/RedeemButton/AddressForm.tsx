@@ -59,7 +59,7 @@ export function AddressForm({
               name="street"
               value={formData.street}
               onChange={handleInputChange}
-              label={language === 'pt' ? "Endereço" : "Street"}
+              label={t.redeemButton.modal.form.street}
               required
               disabled={false}
               language={language}
@@ -68,21 +68,23 @@ export function AddressForm({
               <p className="text-sm text-red-500 mt-1">{addressErrors.street}</p>
             )}
           </div>
-          <div className="w-24">
-            <FloatingLabelInput
-              id="number"
-              name="number"
-              value={formData.number}
-              onChange={handleInputChange}
-              label={language === 'pt' ? "Número" : "Number"}
-              required
-              language={language}
-              numeric
-            />
-            {addressErrors.number && (
-              <p className="text-xs text-red-500 mt-0.5">{addressErrors.number}</p>
-            )}
-          </div>
+          {language === 'pt' && (
+            <div className="w-24">
+              <FloatingLabelInput
+                id="number"
+                name="number"
+                value={formData.number}
+                onChange={handleInputChange}
+                label={t.redeemButton.modal.form.number}
+                required
+                language={language}
+                numeric
+              />
+              {addressErrors.number && (
+                <p className="text-xs text-red-500 mt-0.5">{addressErrors.number}</p>
+              )}
+            </div>
+          )}
         </div>
 
         {language === 'pt' ? (
@@ -94,7 +96,7 @@ export function AddressForm({
                   name="complement"
                   value={formData.complement}
                   onChange={handleInputChange}
-                  label="Complemento"
+                  label={t.redeemButton.modal.form.complement}
                   language={language}
                 />
               </div>
@@ -137,7 +139,7 @@ export function AddressForm({
                 name="complement"
                 value={formData.complement}
                 onChange={handleInputChange}
-                label="Complement"
+                label={t.redeemButton.modal.form.complement}
                 language={language}
               />
             </div>
