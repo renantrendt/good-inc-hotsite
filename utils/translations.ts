@@ -73,7 +73,7 @@ const translations = {
     },
     hero: {
       title: "PERSONAL CARE SYSTEM MORE THAN CLEAN — HEALTHY",
-      videoId: "12345",
+      videoId: "7AZXGzXFTPw",
     },
     benefits: {
       title: "Benefits",
@@ -244,7 +244,7 @@ const translations = {
           confirmData: "Próximo",
           finishOrder: "Finalizar Pedido",
           referral: "Quem indicou você?",
-          referralMinLength: "Por favor, informe o nome de quem indicou você.",
+          referralMinLength: "Por favor, informe o nome da empresa ou pessoa que indicou você.",
           street: "Endereço",
           number: "Número",
           complement: "Complemento",
