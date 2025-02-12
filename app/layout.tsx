@@ -55,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <Script src="/judge-me-translations.js" strategy="beforeInteractive" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <link rel="canonical" href="https://www.good.inc" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <script async src="https://cdn.streamform.io/streamform.js" data-token="adY1dF7oW9tmhOoQKc7nXjlYVeKA49DLiSCrBVdgFQA"></script>

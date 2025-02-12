@@ -77,8 +77,9 @@ export async function POST(request: Request) {
       'clothesOdor', 'productUnderstanding', 'mainFocus', 'referral'
     ]
 
-    // Neighborhood and number are required only for Brazilian addresses
-    if (data.country === 'Brasil') {
+    // Neighborhood and number are required only for Portuguese language
+    const language = request.headers.get('Accept-Language') || 'en';
+    if (language.startsWith('pt')) {
       requiredFields.push('neighborhood', 'number')
     }
 

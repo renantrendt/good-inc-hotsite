@@ -49,6 +49,9 @@ export async function sendFormNotification(formData: any) {
     return { success: true };
   } catch (error) {
     console.error('Erro ao enviar email:', error);
-    return { success: false, error: error.message };
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Erro desconhecido ao enviar email'
+    };
   }
 }
