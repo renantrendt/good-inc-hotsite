@@ -19,8 +19,7 @@ export async function sendFormNotification(formData: any) {
       <h3>Dados Pessoais</h3>
       <p><strong>Nome:</strong> ${formData.firstName} ${formData.lastName}</p>
       <p><strong>Email:</strong> ${formData.email}</p>
-      ${formData.cityCode ? `<p><strong>Código da Cidade:</strong> ${formData.cityCode}</p>` : ''}
-      <p><strong>Telefone:</strong> ${formData.phone}</p>
+      <p><strong>Telefone:</strong> <a href="https://wa.me/${formData.countryCode}${formData.cityCode || ''}${formData.phone}">${formData.countryCode}${formData.cityCode || ''}${formData.phone}</a></p>
       ${formData.cpf ? `<p><strong>CPF:</strong> ${formData.cpf}</p>` : ''}
       
       <h3>Endereço</h3>
@@ -31,7 +30,6 @@ export async function sendFormNotification(formData: any) {
       <p><strong>Estado:</strong> ${formData.state}</p>
       <p><strong>CEP:</strong> ${formData.zipCode}</p>
       <p><strong>País:</strong> ${formData.country}</p>
-      ${formData.countryCode ? `<p><strong>Código do País:</strong> ${formData.countryCode}</p>` : ''}
       
       <h3>Perfil</h3>
       <p><strong>Odor das Roupas:</strong> ${formData.clothesOdor}</p>
