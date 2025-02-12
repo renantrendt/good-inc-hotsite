@@ -1,5 +1,5 @@
 import Header from "../components/Header"
-import Hero from "../components/Hero"
+import { VideoHero } from "../components/VideoHero"
 import Benefits from "../components/Benefits"
 import ProductShowcase from "../components/ProductShowcase"
 import JudgeMeReviews from "../components/JudgeMeReviews"
@@ -13,7 +13,7 @@ export default function Home() {
     <>
       <Header />
       <main className="min-h-screen bg-white pt-16">
-        <Hero />
+        <VideoHero />
         <JudgeMeReviews />
         <Benefits />
         <ProductShowcase />
