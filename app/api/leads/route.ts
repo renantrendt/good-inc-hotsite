@@ -48,6 +48,8 @@ interface LeadData {
   referral: string
 }
 
+import { sendFormNotification } from '@/utils/mailer';
+
 export async function POST(request: Request) {
   // Add CORS headers
   const headers = {
@@ -212,6 +214,16 @@ export async function POST(request: Request) {
       }
 
       debug.log('Leads', 'Lead created successfully:', lead)
+
+      // Envia notificação por email
+      try {
+        await sendFormNotification(data);
+        debug.log('Leads', 'Notification email sent successfully');
+      } catch (emailError) {
+        debug.error('Leads', 'Error sending notification email:', emailError);
+        // Não vamos falhar a requisição se o email falhar
+      }
+
       return NextResponse.json({ success: true, lead }, { headers })
     } catch (error) {
       debug.error('Leads', 'Error in lead creation:', error)
