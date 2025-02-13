@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 
-const SERPRO_CONSUMER_KEY = process.env.SERPRO_CONSUMER_KEY || 'XT445GnXYCl7g52jMP8N_TJYRSYa';
-const SERPRO_CONSUMER_SECRET = process.env.SERPRO_CONSUMER_SECRET || 'DLR3wPrSRiFujaliMkfH_jTY8Fga';
+const SERPRO_CONSUMER_KEY = process.env.SERPRO_CONSUMER_KEY;
+const SERPRO_CONSUMER_SECRET = process.env.SERPRO_CONSUMER_SECRET;
+
+if (!SERPRO_CONSUMER_KEY || !SERPRO_CONSUMER_SECRET) {
+  throw new Error('Credenciais da API SERPRO não configuradas. Configure SERPRO_CONSUMER_KEY e SERPRO_CONSUMER_SECRET no arquivo .env');
+}
 const SERPRO_API_URL = 'https://gateway.apiserpro.serpro.gov.br/consulta-cpf-df/v1/cpf';
 const SERPRO_TOKEN_URL = 'https://gateway.apiserpro.serpro.gov.br/token';
 
