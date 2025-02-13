@@ -35,43 +35,8 @@ export const validatePersonalData = (formData: FormData, language: 'en' | 'pt', 
       return errors
     }
 
-    // Remove todos os caracteres não numéricos
-    const cleanCPF = formData.cpf.replace(/[^0-9]/g, '')
-    
-    // Verifica se tem 11 dígitos
-    if (cleanCPF.length !== 11) {
-      errors.cpf = "CPF deve ter 11 dígitos"
-      return errors
-    }
-
-    // Verifica se todos os dígitos são iguais
-    if (/^(\d)\1{10}$/.test(cleanCPF)) {
-      errors.cpf = "CPF inválido"
-      return errors
-    }
-
-    // Validação dos dígitos verificadores
-    let sum = 0
-    for (let i = 0; i < 9; i++) {
-      sum += parseInt(cleanCPF[i]) * (10 - i)
-    }
-    let digit = 11 - (sum % 11)
-    if (digit >= 10) digit = 0
-    if (digit !== parseInt(cleanCPF[9])) {
-      errors.cpf = "CPF inválido"
-      return errors
-    }
-
-    sum = 0
-    for (let i = 0; i < 10; i++) {
-      sum += parseInt(cleanCPF[i]) * (11 - i)
-    }
-    digit = 11 - (sum % 11)
-    if (digit >= 10) digit = 0
-    if (digit !== parseInt(cleanCPF[10])) {
-      errors.cpf = "CPF inválido"
-      return errors
-    }
+    // A validação completa do CPF agora é feita via API
+    // Aqui só verificamos se foi preenchido
   } else {
     if (!formData.countryCode) {
       errors.countryCode = "Country code is required"
