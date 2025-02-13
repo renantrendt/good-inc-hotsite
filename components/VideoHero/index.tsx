@@ -5,111 +5,25 @@ import { VideoPlayer } from './VideoPlayer'
 import { useLanguage } from "../../contexts/LanguageContext"
 import translations from "../../utils/translations"
 import { mediaItems } from "../../utils/constants"
+import { videoChapters } from '../../data/videoChapters'
 
-// Exemplo de vídeos - substitua pelos seus vídeos do Instagram
-const videos = [
-  {
-    id: '1',
-    title: 'Why Good',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-1-NoOVGDVcqSPc7VYCUAGnTzLTG2qEM2.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  },
-  {
-    id: '2',
-    title: 'Discovery: Sweat',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-2-7VYCUAGnTzLTG2qEM2NoOVGDVcqSPc.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  },
-  {
-    id: '3',
-    title: 'Discovery: Odor',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-3-TzLTG2qEM2NoOVGDVcqSPc7VYCUAG.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  },
-  {
-    id: '4',
-    title: 'Longevity',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-4-qEM2NoOVGDVcqSPc7VYCUAGnTzLTG2.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  },
-  {
-    id: '5',
-    title: 'Vídeo 5',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-5-VcqSPc7VYCUAGnTzLTG2qEM2NoOVGD.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  },
-  {
-    id: '6',
-    title: 'Vídeo 6',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-6-UAGnTzLTG2qEM2NoOVGDVcqSPc7VYC.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  },
-  {
-    id: '7',
-    title: 'Vídeo 7',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-7-LTG2qEM2NoOVGDVcqSPc7VYCUAGnTz.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  },
-  {
-    id: '8',
-    title: 'Vídeo 8',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-8-2NoOVGDVcqSPc7VYCUAGnTzLTG2qEM.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  },
-  {
-    id: '9',
-    title: 'Vídeo 9',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-9-7VYCUAGnTzLTG2qEM2NoOVGDVcqSPc.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  },
-  {
-    id: '10',
-    title: 'Vídeo 10',
-    url: 'https://ce0rcu23vrrdzqap.public.blob.vercel-storage.com/videos/hero-video-10-TzLTG2qEM2NoOVGDVcqSPc7VYCUAG.mp4',
-    thumbnail: '/images/products/hero-video.png'
-  }
-]
+// Usando os capítulos do vídeo do YouTube
+const videos = videoChapters
 
 export function VideoHero() {
   const { language } = useLanguage()
-  const t = translations[language]
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
-  const [isDragging, setIsDragging] = useState(false)
-  const [startX, setStartX] = useState(0)
-  const [scrollLeft, setScrollLeft] = useState(0)
 
-  const handleNext = (index?: number) => {
-    if (typeof index === 'number') {
-      setCurrentVideoIndex(index)
-    } else {
-      setCurrentVideoIndex((prev) => (prev + 1) % videos.length)
-    }
-  }
+  const t = translations[language]
 
-  const handlePrevious = () => {
-    setCurrentVideoIndex((prev) => (prev - 1 + videos.length) % videos.length)
-  }
-
-  const handleVideoSelect = (index: number) => {
+  const handleNext = (index: number) => {
     setCurrentVideoIndex(index)
   }
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true)
-    setStartX(e.pageX - (e.currentTarget as HTMLDivElement).offsetLeft)
-    setScrollLeft((e.currentTarget as HTMLDivElement).scrollLeft)
-  }
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return
-    e.preventDefault()
-    const x = e.pageX - (e.currentTarget as HTMLDivElement).offsetLeft
-    const walk = (x - startX) * 2
-    e.currentTarget.scrollLeft = scrollLeft - walk
-  }
-
-  const handleMouseUp = () => {
-    setIsDragging(false)
+  const handlePrevious = () => {
+    if (currentVideoIndex > 0) {
+      setCurrentVideoIndex(currentVideoIndex - 1)
+    }
   }
 
   return (
@@ -129,7 +43,6 @@ export function VideoHero() {
             onPrevious={handlePrevious}
           />
         </div>
-
 
         <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 sm:gap-x-3 w-full max-w-6xl mx-auto px-4">
           {mediaItems.map((item, index) => (
