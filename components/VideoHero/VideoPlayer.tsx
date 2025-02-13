@@ -40,7 +40,10 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
 
     if (Math.abs(swipeDistance) > minSwipeDistance) {
       if (swipeDistance > 0 && onNext) {
-        onNext()
+        const nextIndex = videos.findIndex((v) => v.id === video.id) + 1
+        if (nextIndex < videos.length) {
+          onNext(nextIndex)
+        }
       } else if (swipeDistance < 0 && onPrevious) {
         onPrevious()
       }
@@ -51,7 +54,10 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isFullscreen) {
         if (e.key === 'ArrowRight' && onNext) {
-          onNext()
+          const nextIndex = videos.findIndex((v) => v.id === video.id) + 1
+          if (nextIndex < videos.length) {
+            onNext(nextIndex)
+          }
         } else if (e.key === 'ArrowLeft' && onPrevious) {
           onPrevious()
         } else if (e.key === 'Escape') {
@@ -62,7 +68,7 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isFullscreen, onNext, onPrevious])
+  }, [isFullscreen, onNext, onPrevious, video.id, videos])
 
   useEffect(() => {
     // Verificar se há botões à direita quando o modal abre
@@ -216,7 +222,14 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
                 {showRightArrow && (
                   <div className="absolute right-0 top-0 bottom-0 flex items-center">
                     <button
-                      onClick={() => onNext && onNext()}
+                      onClick={() => {
+                        if (onNext) {
+                          const nextIndex = videos.findIndex((v) => v.id === video.id) + 1
+                          if (nextIndex < videos.length) {
+                            onNext(nextIndex)
+                          }
+                        }
+                      }}
                       className="p-2 backdrop-blur-sm bg-white/30 hover:bg-white/50 text-gray-600 rounded-l-md transition-colors"
                       disabled={!onNext}
                     >

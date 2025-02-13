@@ -141,8 +141,8 @@ export async function POST(request: Request) {
       provided: providedNameParts
     });
 
-    const serproNames = serproNameParts.filter(n => n.trim() !== '').map(normalizeText);
-    const providedNames = providedNameParts.filter(n => n.trim() !== '').map(normalizeText);
+    const serproNames = serproNameParts.filter((n: string) => n.trim() !== '').map(normalizeText);
+    const providedNames = providedNameParts.filter((n: string) => n.trim() !== '').map(normalizeText);
 
     console.log('Após filtro e normalização:', {
       serpro: serproNames,
@@ -167,7 +167,7 @@ export async function POST(request: Request) {
     
     // Verifica se pelo menos um dos sobrenomes fornecidos está presente no nome do SERPRO
     // e não é igual ao primeiro nome
-    const lastNameMatch = providedLastNames.length > 0 && providedLastNames.some(lastName => 
+    const lastNameMatch = providedLastNames.length > 0 && providedLastNames.some((lastName: string) => 
       lastName !== providedFirstName && // não pode ser igual ao primeiro nome
       serproNames.slice(1).includes(lastName) // procura apenas nos sobrenomes do SERPRO
     );
