@@ -4,6 +4,8 @@ import Image from "next/image"
 import { useState, useEffect } from 'react'
 import { useLanguage } from "../contexts/LanguageContext"
 import translations from "../utils/translations"
+import { VideoPlayer } from "./VideoHero/VideoPlayer"
+import { videoChapters } from "../data/videoChapters"
 
 const mediaItems = [
   {
@@ -62,13 +64,10 @@ export default function Hero() {
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 animate-fade-in">{t.hero.title}</h1>
         </div>
-        <div className="aspect-video w-full max-w-4xl mx-auto mb-12">
-          <iframe
-            className="w-full h-full rounded-lg shadow-lg"
-            src={`https://www.youtube.com/embed/${t.hero.videoId}`}
-            title="Modo uso Good.inc"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
+        <div className="w-full max-w-4xl mx-auto mb-12">
+          <VideoPlayer
+            video={videoChapters[0]}
+            videos={videoChapters}
           />
         </div>
         <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 sm:gap-x-3 w-full max-w-6xl mx-auto px-4">
