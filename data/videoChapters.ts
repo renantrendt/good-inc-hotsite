@@ -1,7 +1,7 @@
 export const videoChapters = [
   {
     id: 'i5E3VC_hGB0',
-    title: 'De Vistobio p/ Goodinc',
+    title: 'Vistobio vs Goodinc',
     startTime: 0,
     thumbnail: ''
   },
@@ -13,91 +13,91 @@ export const videoChapters = [
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Dias de conforto vs horas de proteção',
+    title: 'Conforto vs Proteção',
     startTime: 121,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Problemas da máquina de lavar',
+    title: 'Problemas máquina lavar',
     startTime: 156,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Problemas dos sanitizantes',
+    title: 'Problemas sanitizantes',
     startTime: 160,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Problemas dos sabonetes',
+    title: 'Problemas sabonetes',
     startTime: 184,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Problemas dos desodorantes',
+    title: 'Problemas desodorantes',
     startTime: 201,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'O problema não é seu corpo',
+    title: 'Problema não é o corpo',
     startTime: 231,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Importância do tratamento e proteção das roupas',
+    title: 'Tratar e Proteger roupas',
     startTime: 278,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Como usar o tratamento',
+    title: 'Modo uso: Tratamento',
     startTime: 356,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Como usar a proteção',
+    title: 'Modo uso: Proteção',
     startTime: 399,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Como usar o sabonete',
+    title: 'Modo uso: Sabonete',
     startTime: 462,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Como usar o desodorante',
+    title: 'Modo uso: Desodorante',
     startTime: 562,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Goodinc não é pra quem tem odor',
+    title: 'Feito pra quem não tem odor',
     startTime: 663,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Como eliminar odor sem nossos produtos',
+    title: 'Como eliminar odor',
     startTime: 744,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Descoberta sobre o odor',
+    title: 'Descoberta Odor',
     startTime: 881,
     thumbnail: ''
   },
   {
     id: 'i5E3VC_hGB0',
-    title: 'Descoberta sobre o suor',
+    title: 'Descoberta Suor',
     startTime: 1079,
     thumbnail: ''
   },
