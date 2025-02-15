@@ -75,6 +75,7 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
               opts={{
                 width: '100%',
                 height: '100%',
+                host: 'https://www.youtube-nocookie.com',
                 playerVars: {
                   start: video.startTime,
                   modestbranding: 1,
@@ -92,6 +93,8 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
                   cc_load_policy: 0,
                   modestbranding: 1,
                   showinfo: 0,
+                  hl: 'pt',
+                  color: 'white',
                 },
               }}
               className="w-full h-full"
