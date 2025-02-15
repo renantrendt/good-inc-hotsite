@@ -68,6 +68,7 @@ export default function Hero() {
           <VideoPlayer
             video={videoChapters[0]}
             videos={videoChapters}
+            isInitialVideo={true}
           />
         </div>
         <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 sm:gap-x-3 w-full max-w-6xl mx-auto px-4">
@@ -89,4 +90,3 @@ export default function Hero() {
     </section>
   )
 }
-

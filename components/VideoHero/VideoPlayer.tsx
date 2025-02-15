@@ -17,9 +17,16 @@ interface VideoPlayerProps {
   videos: Video[]
   onNext?: (index: number) => void
   onPrevious?: () => void
+  isInitialVideo?: boolean
 }
 
-export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerProps) {
+export function VideoPlayer({ 
+  video, 
+  videos, 
+  onNext, 
+  onPrevious, 
+  isInitialVideo = false 
+}: VideoPlayerProps) {
   const [isCarouselVisible, setIsCarouselVisible] = useState(true)
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
@@ -70,7 +77,7 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
                   playsinline: 1,
                   origin: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
                   title: 0,
-                  autoplay: 1,
+                  autoplay: isInitialVideo ? 0 : 1,
                   enablejsapi: 1,
                 },
               }}

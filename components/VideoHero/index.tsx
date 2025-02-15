@@ -41,6 +41,7 @@ export function VideoHero() {
             videos={videos}
             onNext={handleNext}
             onPrevious={handlePrevious}
+            isInitialVideo={currentVideoIndex === 0}
           />
         </div>
 

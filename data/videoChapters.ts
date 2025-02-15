@@ -1,16 +1,5 @@
 export const videoChapters = [
-  {
-    id: 'i5E3VC_hGB0',
-    title: 'Vistobio vs Goodinc',
-    startTime: 0,
-    thumbnail: ''
-  },
-  {
-    id: 'i5E3VC_hGB0',
-    title: 'Mais do que clean, saudável',
-    startTime: 61,
-    thumbnail: ''
-  },
+
   {
     id: 'i5E3VC_hGB0',
     title: 'Conforto vs Proteção',
