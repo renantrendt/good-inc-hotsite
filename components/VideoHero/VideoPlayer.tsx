@@ -82,10 +82,10 @@ export function VideoPlayer({
                 },
               }}
               className="w-full h-full"
-              onReady={(event) => {
+              onReady={(event: { target: any }) => {
                 playerRef.current = event.target
               }}
-              onError={(e) => console.error('YouTube Error:', e)}
+              onError={(e: { error: number }) => console.error('YouTube Error:', e)}
             /> : <div className="w-full h-full bg-black" />}
           </div>
         </div>

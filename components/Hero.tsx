@@ -1,7 +1,5 @@
 "use client"
 
-import Image from "next/image"
-import { useState, useEffect } from 'react'
 import { useLanguage } from "../contexts/LanguageContext"
 import translations from "../utils/translations"
 import { VideoPlayer } from "./VideoHero/VideoPlayer"
