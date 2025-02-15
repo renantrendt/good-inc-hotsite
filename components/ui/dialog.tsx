@@ -6,7 +6,16 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const Dialog = DialogPrimitive.Root
+const Dialog = ({ children, ...props }: DialogPrimitive.DialogProps) => {
+  React.useEffect(() => {
+    document.body.style.overflow = props.open ? 'hidden' : 'auto'
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [props.open])
+
+  return <DialogPrimitive.Root {...props}>{children}</DialogPrimitive.Root>
+}
 
 const DialogTrigger = DialogPrimitive.Trigger
 

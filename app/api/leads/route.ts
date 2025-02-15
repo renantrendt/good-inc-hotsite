@@ -97,6 +97,8 @@ export async function POST(request: Request) {
     // Verificar todos os campos que podem estar duplicados
     const duplicatedFields: string[] = []
     
+    // O CPF já foi validado no frontend, não precisamos validar novamente aqui
+
     // Verificar duplicatas
     try {
       debug.log('Leads', 'Checking for duplicates...')

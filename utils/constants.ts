@@ -1,11 +1,4 @@
-"use client"
-
-import { useLanguage } from "../contexts/LanguageContext"
-import translations from "../utils/translations"
-import { VideoPlayer } from "./VideoHero/VideoPlayer"
-import { videoChapters } from "../data/videoChapters"
-
-const mediaItems = [
+export const mediaItems = [
   {
     title: "SHARK TANK BRASIL",
     link: "https://www.visto.bio/m/blog/635fc78a047e333fba0b9d12/shark-tank-veja-react-completo-casimiro-e-renan-serrano",
@@ -51,40 +44,3 @@ const mediaItems = [
     link: "https://blog.singularityubrazil.com/blog/a-startup-brasileira-que-ficou-entre-as-cinco-melhores-solucoes-do-mundo-pelo-pandemic-challenge-da-singularity-university/",
   },
 ]
-
-export default function Hero() {
-  const { language } = useLanguage()
-  const t = translations[language]
-
-  return (
-    <section className="bg-[rgb(255,244,240)] text-black py-12 sm:py-20">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 animate-fade-in">{t.hero.title}</h1>
-        </div>
-        <div className="w-full max-w-4xl mx-auto mb-12">
-          <VideoPlayer
-            video={videoChapters[0]}
-            videos={videoChapters}
-            isInitialVideo={true}
-          />
-        </div>
-        <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 sm:gap-x-3 w-full max-w-6xl mx-auto px-4">
-          {mediaItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:opacity-80 transition-opacity"
-            >
-              <span className="text-[9px] leading-[2] sm:text-[11px] font-bold text-gray-800 whitespace-nowrap">
-                {item.title}
-              </span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}

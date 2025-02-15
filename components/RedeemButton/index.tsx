@@ -42,6 +42,8 @@ export function RedeemButton() {
   const [isExistingCustomer, setIsExistingCustomer] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [personalDataErrors, setPersonalDataErrors] = useState<Record<string, string>>({})
+  const [isCPFValid, setIsCPFValid] = useState(false)
+  const [isValidatingCPF, setIsValidatingCPF] = useState(false)
 
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -82,10 +84,59 @@ export function RedeemButton() {
     fetchDDD()
   }, [language, geoData])
 
+  const validateCPF = async (cpf: string, nome: string) => {
+    setIsValidatingCPF(true)
+    try {
+      const response = await fetch(`${window.location.origin}/api/validate-cpf`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cpf, nome })
+      })
+
+      const result = await response.json()
+      
+      if (!result.valid) {
+        setPersonalDataErrors(prev => ({
+          ...prev,
+          cpf: result.message
+        }))
+        setIsCPFValid(false)
+      } else {
+        setPersonalDataErrors(prev => ({ ...prev, cpf: "" }))
+        setIsCPFValid(true)
+        
+        // Verifica se todos os campos estão válidos antes de avançar
+        const errors = validatePersonalData(formData, language, t)
+        if (Object.keys(errors).length === 0) {
+          setCurrentStep(2)
+        } else {
+          setPersonalDataErrors(errors)
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao validar CPF:', error)
+      setPersonalDataErrors(prev => ({
+        ...prev,
+        cpf: "Erro ao validar CPF. Tente novamente."
+      }))
+      setIsCPFValid(false)
+    } finally {
+      setIsValidatingCPF(false)
+    }
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
+    
     if (name === "cpf") {
-      setFormData(prev => ({ ...prev, [name]: formatCPF(value) }))
+      const formattedCPF = formatCPF(value)
+      setFormData(prev => ({ ...prev, [name]: formattedCPF }))
+      
+      // Se o CPF tem 14 caracteres (formato XXX.XXX.XXX-XX), valida
+      if (formattedCPF.length === 14) {
+        const fullName = `${formData.firstName} ${formData.lastName}`.trim()
+        validateCPF(formattedCPF, fullName)
+      }
     } else if (name === "countryCode") {
       setFormData(prev => ({ ...prev, [name]: formatCountryCode(value) }))
     } else if (name === "phone") {
@@ -94,6 +145,7 @@ export function RedeemButton() {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
+    
     setPersonalDataErrors(prev => ({ ...prev, [name]: "" }))
   }
 
@@ -114,13 +166,28 @@ export function RedeemButton() {
     }
   }
 
-  const handleNextStep = (e: React.FormEvent) => {
+  const handleNextStep = async (e: React.FormEvent) => {
     e.preventDefault()
     const errors = validatePersonalData(formData, language, t)
     setPersonalDataErrors(errors)
-    if (Object.keys(errors).length === 0) {
-      setCurrentStep(2)
+    
+    // Se tiver erros básicos de validação, não prossegue
+    if (Object.keys(errors).length > 0) {
+      return
     }
+    
+    // Se estiver em português, valida o CPF com o nome atual
+    if (language === 'pt' && formData.cpf) {
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim()
+      await validateCPF(formData.cpf, fullName)
+      
+      // Se o CPF não for válido, não prossegue
+      if (!isCPFValid) {
+        return
+      }
+    }
+    
+    setCurrentStep(2)
   }
 
   const handleCEPChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -302,6 +369,7 @@ export function RedeemButton() {
               personalDataErrors={personalDataErrors}
               language={language}
               t={t}
+              isValidatingCPF={isValidatingCPF}
             />
           ) : currentStep === 2 ? (
             <AddressForm
