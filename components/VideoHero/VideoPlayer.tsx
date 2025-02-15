@@ -24,12 +24,13 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
   const carouselRef = useRef<HTMLDivElement>(null)
+  const playerRef = useRef<any>(null)
 
   const scrollToCurrentVideo = () => {
     if (!carouselRef.current) return
 
     const currentVideoButton = carouselRef.current.querySelector(
-      `[data-video-id="${video.id}"]`
+      `[data-video-id="${video.id}-${video.startTime}"]`
     ) as HTMLButtonElement
 
     if (currentVideoButton) {
@@ -42,10 +43,17 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
 
   useEffect(() => {
     scrollToCurrentVideo()
-  }, [video.id])
+  }, [video.id, video.startTime])
 
   const handleChapterClick = (v: Video) => {
-    const nextIndex = videos.findIndex((video) => video.id === v.id)
+    // Se for o mesmo vídeo, apenas navega para o tempo correto
+    if (playerRef.current?.internalPlayer && v.id === video.id) {
+      playerRef.current.internalPlayer.seekTo(v.startTime)
+      playerRef.current.internalPlayer.playVideo()
+    }
+    
+    // Em qualquer caso, atualiza o índice para mostrar o capítulo selecionado
+    const nextIndex = videos.findIndex((video) => video.id === v.id && video.startTime === v.startTime)
     if (nextIndex !== -1) {
       onNext && onNext(nextIndex)
     }
@@ -69,11 +77,14 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
                   showinfo: 0,
                   fs: 1,
                   playsinline: 1,
-                  origin: window.location.origin,
+                  origin: process.env.NEXT_PUBLIC_SITE_URL,
                   title: 0,
                 },
               }}
               className="w-full h-full"
+              onReady={(event) => {
+                playerRef.current = event.target
+              }}
               onError={(e) => console.error('YouTube Error:', e)}
             />
           </div>
@@ -111,7 +122,7 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
                 {videos.map((v, index) => (
                   <button
                     key={`${v.id}-${v.startTime}`}
-                    data-video-id={v.id}
+                    data-video-id={`${v.id}-${v.startTime}`}
                     onClick={() => handleChapterClick(v)}
                     className={cn(
                       'w-full py-1 px-4 text-left transition-all duration-300 hover:bg-white/10',
