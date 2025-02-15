@@ -45,17 +45,23 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
     scrollToCurrentVideo()
   }, [video.id, video.startTime])
 
-  const handleChapterClick = (v: Video) => {
+  const handleChapterClick = async (v: Video) => {
     // Se for o mesmo vídeo, apenas navega para o tempo correto
     if (playerRef.current?.internalPlayer && v.id === video.id) {
-      playerRef.current.internalPlayer.seekTo(v.startTime)
-      playerRef.current.internalPlayer.playVideo()
+      await playerRef.current.internalPlayer.seekTo(v.startTime)
+      await playerRef.current.internalPlayer.playVideo()
     }
     
     // Em qualquer caso, atualiza o índice para mostrar o capítulo selecionado
     const nextIndex = videos.findIndex((video) => video.id === v.id && video.startTime === v.startTime)
     if (nextIndex !== -1) {
       onNext && onNext(nextIndex)
+      // Garante que o vídeo vai dar play após a mudança
+      setTimeout(() => {
+        if (playerRef.current?.internalPlayer) {
+          playerRef.current.internalPlayer.playVideo()
+        }
+      }, 1000)
     }
   }
 
@@ -79,6 +85,13 @@ export function VideoPlayer({ video, videos, onNext, onPrevious }: VideoPlayerPr
                   playsinline: 1,
                   origin: process.env.NEXT_PUBLIC_SITE_URL,
                   title: 0,
+                  autoplay: 1,
+                  enablejsapi: 1,
+                  iv_load_policy: 3,
+                  disablekb: 1,
+                  cc_load_policy: 0,
+                  modestbranding: 1,
+                  showinfo: 0,
                 },
               }}
               className="w-full h-full"
