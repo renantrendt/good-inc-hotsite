@@ -120,33 +120,36 @@ export async function POST(request: Request) {
 
       console.log(' BIGQUERY CHECK COMPLETO:', JSON.stringify(bigQueryCheck, null, 2))
 
-      debug.log('Leads', 'BigQuery check result:', bigQueryCheck)
-      
-      // Se o cliente existe no BigQuery e tem pedidos confirmados, bloqueia
+      debug.log('Leads', '🔍 Resultado BigQuery:', {
+        existe: bigQueryCheck.exists,
+        camposDuplicados: bigQueryCheck.duplicatedFields,
+        pedidosConfirmados: bigQueryCheck.hasConfirmedOrders
+      })
+
+      // Se encontrou cliente com pedidos confirmados no BigQuery
       if (bigQueryCheck.exists && bigQueryCheck.hasConfirmedOrders) {
-        console.log(' CLIENTE COM PEDIDOS CONFIRMADOS:', JSON.stringify(bigQueryCheck.customerData, null, 2))
-        debug.log('Leads', 'Customer has confirmed orders, blocking lead creation', {
-          confirmedOrdersCount: bigQueryCheck.customerData?.confirmed_orders_count,
-          customerData: bigQueryCheck.customerData
-        })
+        debug.log('Leads', '🛑 Cliente com pedidos confirmados no BigQuery')
         return NextResponse.json(
           { 
-            error: 'Existing customer', 
-            details: 'Customer already has confirmed orders',
+            error: 'Existing customer',
+            details: 'Customer already exists with confirmed orders',
+            duplicatedFields: bigQueryCheck.duplicatedFields,
             customerData: bigQueryCheck.customerData
           },
           { status: 400, headers }
         )
       }
-      
-      // Se o cliente existe mas não tem pedidos confirmados, permite continuar
+
+      // Se cliente existe no BigQuery mas não tem pedidos confirmados
       if (bigQueryCheck.exists) {
-        debug.log('Leads', 'Customer exists but has no confirmed orders, allowing lead creation')
-        // Adiciona os campos duplicados do BigQuery
-        if (bigQueryCheck.duplicatedFields?.length > 0) {
-          debug.log('Leads', 'Adding duplicated fields from BigQuery:', bigQueryCheck.duplicatedFields)
-        }
+        debug.log('Leads', '✅ Cliente existe no BigQuery mas não tem pedidos confirmados, permitindo continuar')
+        // Não consideramos campos como duplicados neste caso
+        bigQueryCheck.duplicatedFields = []
       }
+
+      debug.log('Leads', '📝 Verificação de duplicidade concluída:', { 
+        duplicatedFields: bigQueryCheck.duplicatedFields 
+      })
 
       // Verifica duplicidade no Supabase
       let duplicatedFields = bigQueryCheck.duplicatedFields || []
