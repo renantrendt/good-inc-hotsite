@@ -113,6 +113,9 @@ export async function checkCustomerDuplicityBigQuery(params: {
   try {
     const { cpf, email, phone } = params
 
+    console.log('🔍 INÍCIO DA VERIFICAÇÃO DE DUPLICIDADE')
+    console.log('   Parâmetros recebidos:', { cpf, email, phone })
+
     // Validar se pelo menos um campo foi fornecido
     if (!cpf && !email && !phone) {
       console.warn(' Nenhum campo de verificação fornecido')
@@ -175,11 +178,6 @@ export async function checkCustomerDuplicityBigQuery(params: {
 
     // Identificar campos duplicados
     const duplicatedFields: string[] = [];
-    let hasConfirmedOrders = false;
-    
-    if (rows.length === 0) {
-      console.log(' Usuário não encontrado no BigQuery. Permitindo avanço.')
-    }
     
     if (rows.length > 0) {
       if (cpf && rows[0].cpf === cpf) duplicatedFields.push('cpf');
@@ -197,26 +195,23 @@ export async function checkCustomerDuplicityBigQuery(params: {
       }
       
       if (phone && rowPhone === phone) duplicatedFields.push('phone');
-      
-      // Verificar se tem pedidos confirmados
-      // Considera como sem pedidos confirmados se:
-      // 1. confirmed_orders_count não existe 
-      // 2. confirmed_orders_count é 0
-      hasConfirmedOrders = rows[0].confirmed_orders_count != null && rows[0].confirmed_orders_count > 0;
-      
-      console.log('🛒 DETALHES DE PEDIDOS:')
-      console.log('   Número de pedidos confirmados:', rows[0].confirmed_orders_count)
-      console.log('   Tipo de confirmed_orders_count:', typeof rows[0].confirmed_orders_count)
-      console.log('   Tem pedidos confirmados:', hasConfirmedOrders)
-      console.log('   Dados completos do cliente:', JSON.stringify(rows[0], null, 2))
     }
 
     console.log(' Campos duplicados:', duplicatedFields)
 
+    // Verificar se tem pedidos confirmados
+    console.log('🛒 DETALHES DE PEDIDOS:')
+    console.log(`   Número de pedidos confirmados: ${rows[0].confirmed_orders_count}`)
+    console.log(`   Tipo de confirmed_orders_count: ${typeof rows[0].confirmed_orders_count}`)
+    
+    const hasConfirmedOrders = rows[0].confirmed_orders_count > 0
+    console.log(`   Tem pedidos confirmados: ${hasConfirmedOrders}`)
+    console.log(`   Dados completos do cliente: ${JSON.stringify(rows[0], null, 2)}`)
+
     return {
       exists: rows.length > 0,
       duplicatedFields,
-      customerData: rows.length > 0 ? rows[0] : undefined,
+      customerData: rows[0] || null,
       hasConfirmedOrders
     };
 

@@ -1,6 +1,8 @@
 import { getServiceSupabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 import { debug } from '../../../lib/debug'
+import { checkCustomerDuplicityBigQuery } from '@/utils/bigquery'
+import { sendFormNotification } from '@/utils/mailer';
 
 export const dynamic = 'force-dynamic'
 
@@ -48,8 +50,6 @@ interface LeadData {
   referral: string
 }
 
-import { sendFormNotification } from '@/utils/mailer';
-
 export async function POST(request: Request) {
   // Add CORS headers
   const headers = {
@@ -95,38 +95,53 @@ export async function POST(request: Request) {
     debug.log('Leads', 'All required fields present, checking for duplicates')
 
     // Verificar todos os campos que podem estar duplicados
-    const duplicatedFields: string[] = []
-    
-    // O CPF já foi validado no frontend, não precisamos validar novamente aqui
-
     // Verificar duplicatas e pedidos confirmados
     try {
       debug.log('Leads', 'Checking for duplicates and confirmed orders...')
-      const duplicatedFields: string[] = []
       
       // Primeiro verifica duplicidade no Supabase
       const supabaseAdmin = getServiceSupabase()
 
-      // Verifica email
-      const { data: emailCheck, error: emailError } = await supabaseAdmin
-        .from('leads')
-        .select('email')
-        .eq('email', data.email)
-        .maybeSingle()
+      // Log detalhado antes da verificação de duplicidade
+      debug.log('Leads', 'Checking duplicates and confirmed orders', {
+        cpf: data.cpf,
+        email: data.email,
+        phone: data.phone
+      })
 
-      if (emailError) {
-        debug.error('Leads', 'Error checking email duplicity:', emailError)
+      console.log(' DADOS RECEBIDOS:', JSON.stringify(data, null, 2))
+
+      // Verifica duplicidade no BigQuery
+      const bigQueryCheck = await checkCustomerDuplicityBigQuery({
+        cpf: data.cpf,
+        email: data.email,
+        phone: data.phone
+      })
+
+      console.log(' BIGQUERY CHECK COMPLETO:', JSON.stringify(bigQueryCheck, null, 2))
+
+      debug.log('Leads', 'BigQuery check result:', bigQueryCheck)
+      
+      // Se tem pedidos confirmados, bloqueia imediatamente
+      if (bigQueryCheck.hasConfirmedOrders) {
+        console.log(' CLIENTE COM PEDIDOS CONFIRMADOS:', JSON.stringify(bigQueryCheck.customerData, null, 2))
+        debug.log('Leads', 'Customer has confirmed orders, blocking lead creation', {
+          confirmedOrdersCount: bigQueryCheck.customerData?.confirmed_orders_count,
+          customerData: bigQueryCheck.customerData
+        })
         return NextResponse.json(
-          { error: 'Error checking duplicates', details: emailError },
-          { status: 500, headers }
+          { 
+            error: 'Existing customer', 
+            details: 'Customer already has confirmed orders',
+            customerData: bigQueryCheck.customerData 
+          },
+          { status: 400, headers }
         )
       }
 
-      if (emailCheck) {
-        duplicatedFields.push('email')
-      }
-
-      // Verifica CPF
+      // Verifica duplicidade no Supabase
+      const duplicatedFields: string[] = []
+      
       if (data.cpf) {
         const { data: cpfCheck, error: cpfError } = await supabaseAdmin
           .from('leads')
@@ -147,158 +162,163 @@ export async function POST(request: Request) {
         }
       }
 
-      // Verifica telefone
-      const { data: phoneCheck, error: phoneError } = await supabaseAdmin
-        .from('leads')
-        .select('phone')
-        .eq('phone', data.phone)
-        .maybeSingle()
+      if (data.email) {
+        const { data: emailCheck, error: emailError } = await supabaseAdmin
+          .from('leads')
+          .select('email')
+          .eq('email', data.email)
+          .maybeSingle()
 
-      if (phoneError) {
-        debug.error('Leads', 'Error checking phone duplicity:', phoneError)
-        return NextResponse.json(
-          { error: 'Error checking duplicates', details: phoneError },
-          { status: 500, headers }
-        )
-      }
-
-      if (phoneCheck) {
-        duplicatedFields.push('phone')
-      }
-
-      // Se encontrou duplicatas no Supabase, retorna erro
-      if (duplicatedFields.length > 0) {
-        debug.log('Leads', 'Duplicate check complete:', { duplicatedFields })
-        return NextResponse.json(
-          { error: 'Duplicate lead found', duplicatedFields },
-          { status: 400, headers }
-        )
-      }
-
-      // Depois verifica no BigQuery se tem pedidos confirmados
-      if (data.cpf) {
-        const url = new URL('/api/check-customer-duplicity', 'http://localhost:3000')
-        const bigQueryResponse = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            cpf: data.cpf
-          })
-        })
-
-        if (!bigQueryResponse.ok) {
-          debug.error('Leads', 'Error checking BigQuery:', await bigQueryResponse.text())
+        if (emailError) {
+          debug.error('Leads', 'Error checking email duplicity:', emailError)
           return NextResponse.json(
-            { error: 'Error checking BigQuery' },
+            { error: 'Error checking duplicates', details: emailError },
             { status: 500, headers }
           )
         }
 
-        const bigQueryCheck = await bigQueryResponse.json()
-        debug.log('Leads', 'BigQuery check result:', bigQueryCheck)
-        
-        // Se tem pedidos confirmados, bloqueia imediatamente
-        if (bigQueryCheck.hasConfirmedOrders === true) {
-          debug.error('Leads', 'Customer has confirmed orders in BigQuery')
-          return NextResponse.json(
-            { error: 'Customer already has confirmed orders', details: bigQueryCheck },
-            { status: 400, headers }
-          )
+        if (emailCheck) {
+          duplicatedFields.push('email')
         }
       }
 
+      if (data.phone) {
+        const { data: phoneCheck, error: phoneError } = await supabaseAdmin
+          .from('leads')
+          .select('phone')
+          .eq('phone', data.phone)
+          .maybeSingle()
 
+        if (phoneError) {
+          debug.error('Leads', 'Error checking phone duplicity:', phoneError)
+          return NextResponse.json(
+            { error: 'Error checking duplicates', details: phoneError },
+            { status: 500, headers }
+          )
+        }
+
+        if (phoneCheck) {
+          duplicatedFields.push('phone')
+        }
+      }
 
       debug.log('Leads', 'Duplicate check complete:', { duplicatedFields })
-    } catch (error) {
-      debug.error('Leads', 'Error in duplicate check:', error)
-      return NextResponse.json(
-        { 
-          error: error instanceof Error ? error.message : 'Error checking for duplicates',
-          details: error
-        },
-        { status: 500, headers }
-      )
-    }
 
-
-
-    if (duplicatedFields.length > 0) {
-      return NextResponse.json(
-        { 
-          error: 'Campos duplicados encontrados',
-          duplicatedFields
-        },
-        { status: 400 }
-      )
-    }
-
-    debug.log('Leads', 'No duplicates found, attempting to create lead')
-    
-    // Log the exact data being sent to Supabase
-    const normalizedData: LeadData = {
-      first_name: data.firstName,
-      last_name: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      cpf: data.cpf ? data.cpf.replace(/[.\-]/g, '') : undefined,
-      street: data.street,
-      number: data.number,
-      complement: data.complement,
-      neighborhood: data.neighborhood,
-      city: data.city,
-      state: data.state,
-      zip_code: data.zipCode,
-      country: data.country,
-      country_code: data.countryCode,
-      city_code: data.cityCode,
-      clothes_odor: data.clothesOdor,
-      product_understanding: data.productUnderstanding,
-      main_focus: data.mainFocus,
-      referral: data.referral
-    }
-
-    try {
-      debug.log('Leads', 'Data being sent to Supabase:', JSON.stringify(normalizedData, null, 2))
-
-      const supabaseAdmin = getServiceSupabase()
-      const { data: lead, error } = await supabaseAdmin
-        .from('leads')
-        .insert([normalizedData])
-        .select()
-        .single()
-
-      if (error) {
-        debug.error('Leads', 'Error creating lead:', error)
-        throw new Error(`Database error: ${error.message}`)
+      if (duplicatedFields.length > 0) {
+        return NextResponse.json(
+          { 
+            error: 'Duplicate lead found', 
+            duplicatedFields 
+          },
+          { status: 400, headers }
+        )
       }
 
-      if (!lead) {
-        throw new Error('Lead was not created')
+      debug.log('Leads', 'No duplicates found, attempting to create lead')
+      
+      // Log the exact data being sent to Supabase
+      const normalizedData: LeadData = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        cpf: data.cpf ? data.cpf.replace(/[.\-]/g, '') : undefined,
+        street: data.street,
+        number: data.number,
+        complement: data.complement,
+        neighborhood: data.neighborhood,
+        city: data.city,
+        state: data.state,
+        zip_code: data.zipCode,
+        country: data.country,
+        country_code: data.countryCode,
+        city_code: data.cityCode,
+        clothes_odor: data.clothesOdor,
+        product_understanding: data.productUnderstanding,
+        main_focus: data.mainFocus,
+        referral: data.referral
       }
 
-      debug.log('Leads', 'Lead created successfully:', lead)
-
-      // Envia notificação por email
       try {
-        await sendFormNotification(data);
-        debug.log('Leads', 'Notification email sent successfully');
-      } catch (emailError) {
-        debug.error('Leads', 'Error sending notification email:', emailError);
-        // Não vamos falhar a requisição se o email falhar
-      }
+        debug.log('Leads', 'Data being sent to Supabase:', JSON.stringify(normalizedData, null, 2))
 
-      return NextResponse.json({ success: true, lead }, { headers })
+        const supabaseAdmin = getServiceSupabase()
+        const { data: lead, error } = await supabaseAdmin
+          .from('leads')
+          .insert([normalizedData])
+          .select()
+          .single()
+
+        if (error) {
+          debug.error('Leads', 'Error creating lead:', error)
+          throw new Error(`Database error: ${error.message}`)
+        }
+
+        if (!lead) {
+          throw new Error('Lead was not created')
+        }
+
+        debug.log('Leads', 'Lead created successfully:', lead)
+
+        // Envia notificação por email
+        try {
+          await sendFormNotification(data);
+          debug.log('Leads', 'Notification email sent successfully');
+        } catch (emailError) {
+          debug.error('Leads', 'Error sending notification email:', emailError);
+          // Não vamos falhar a requisição se o email falhar
+        }
+
+        return NextResponse.json({ success: true, lead }, { headers })
+      } catch (error) {
+        debug.error('Leads', 'Error in lead creation:', error)
+        return NextResponse.json(
+          { 
+            error: error instanceof Error ? error.message : 'Error creating lead',
+            details: error
+          },
+          { status: 500, headers }
+        )
+      }
     } catch (error) {
-      debug.error('Leads', 'Error in lead creation:', error)
+      console.error('Error creating lead:', error)
+      if (error instanceof Error) {
+        debug.error('Leads', 'Error details:', {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+          cause: error.cause,
+        })
+      } else {
+        debug.error('Leads', 'Unknown error:', error)
+      }
+      
+      if (error instanceof Error) {
+        // Se for um erro do Prisma, ele terá propriedades adicionais
+        const prismaError = error as any
+        if (prismaError.code) {
+          console.error('Prisma error code:', prismaError.code)
+          console.error('Prisma error meta:', prismaError.meta)
+        }
+        
+        return NextResponse.json(
+          { 
+            error: error.message,
+            details: prismaError.code ? {
+              code: prismaError.code,
+              meta: prismaError.meta
+            } : undefined
+          },
+          { status: 500 }
+        )
+      }
+      
       return NextResponse.json(
         { 
-          error: error instanceof Error ? error.message : 'Error creating lead',
-          details: error
+          error: 'Failed to create lead',
+          details: error ? String(error) : undefined
         },
-        { status: 500, headers }
+        { status: 500 }
       )
     }
   } catch (error) {

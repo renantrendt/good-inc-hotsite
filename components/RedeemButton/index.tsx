@@ -357,17 +357,22 @@ export function RedeemButton() {
 
         const responseData = await response.json()
         debug.log('Form', 'API Success Response:', responseData)
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error('Fetch error details:', {
-            message: error.message,
-            cause: error.cause,
-            stack: error.stack
-          })
-        } else {
-          debug.error('Form', 'Unknown error:', error)
+      } catch (error: any) {
+        debug.error('[Form] Error submitting form:', error)
+        
+        // Tratamento específico para clientes existentes
+        if (error.response?.data?.error === 'Existing customer') {
+          const customerData = error.response.data.customerData
+          
+          setIsExistingCustomer(true)
+          setIsSubmitting(false)
+          return
         }
-        throw error
+
+        // Tratamento de erros genéricos
+        alert(`Erro ao submeter formulário: ${error.message || 'Ocorreu um erro ao enviar o formulário.'}`)
+        
+        setIsSubmitting(false)
       }
 
       setIsSubmitted(true)
