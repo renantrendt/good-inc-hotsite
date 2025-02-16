@@ -317,7 +317,7 @@ export function RedeemButton() {
         if (bigQueryCheck.exists && bigQueryCheck.hasConfirmedOrders) {
           debug.log('Form', 'Cliente com pedidos confirmados, bloqueando submissão')
           setIsExistingCustomer(true)
-          setIsSubmitting(false)
+          setIsOpen(true)  // Mantém o modal aberto
           return
         }
 
@@ -329,53 +329,35 @@ export function RedeemButton() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept-Language': language
           },
-          body: JSON.stringify({
-            ...formData,
-            cityCode: formData.cityCode || null,
-            cpf: formData.cpf || null,
-            complement: formData.complement || null,
-            number: language === 'en' ? '' : formData.number,
-            referral: formData.referral
-          }),
+          body: JSON.stringify(formData)
         })
 
-        debug.log('Form', 'Response status:', response.status)
-        debug.log('Form', 'Response headers:', Object.fromEntries(response.headers.entries()))
+        const result = await response.json()
+        debug.log('Form', 'API Response:', result)
 
         if (!response.ok) {
-          const errorData = await response.json()
-          debug.error('Form', 'API Error Response:', errorData)
-          
-          if (response.status === 400 && errorData.duplicatedFields) {
+          if (result.error === 'Existing customer' || result.error === 'Duplicate lead found') {
             setIsExistingCustomer(true)
+            setIsOpen(true)  // Mantém o modal aberto
             return
           }
-          
-          throw new Error(errorData.error || `API error: ${response.status} ${response.statusText}`)
+          throw new Error(result.error || 'Error submitting form')
         }
 
-        const responseData = await response.json()
-        debug.log('Form', 'API Success Response:', responseData)
+        // Se chegou aqui, significa que deu tudo certo
+        setIsSubmitted(true)
       } catch (error: any) {
         debug.error('[Form] Error submitting form:', error)
         
-        // Tratamento específico para clientes existentes
-        if (error.response?.data?.error === 'Existing customer') {
-          const customerData = error.response.data.customerData
-          
-          setIsExistingCustomer(true)
-          setIsSubmitting(false)
-          return
-        }
-
         // Tratamento de erros genéricos
-        alert(`Erro ao submeter formulário: ${error.message || 'Ocorreu um erro ao enviar o formulário.'}`)
-        
+        if (!isExistingCustomer) { // Só mostra o alerta se não for cliente existente
+          alert(`Erro ao submeter formulário: ${error.message || 'Ocorreu um erro ao enviar o formulário.'}`)
+        }
+      } finally {
         setIsSubmitting(false)
       }
-
-      setIsSubmitted(true)
     } catch (error) {
       debug.error('Form', 'Error submitting form:', error)
       debug.error('Form', 'Form Data:', formData)

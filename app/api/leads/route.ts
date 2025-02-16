@@ -122,18 +122,22 @@ export async function POST(request: Request) {
 
       debug.log('Leads', 'BigQuery check result:', bigQueryCheck)
       
-      // Se tem pedidos confirmados, bloqueia imediatamente
-      if (bigQueryCheck.hasConfirmedOrders) {
-        console.log(' CLIENTE COM PEDIDOS CONFIRMADOS:', JSON.stringify(bigQueryCheck.customerData, null, 2))
-        debug.log('Leads', 'Customer has confirmed orders, blocking lead creation', {
+      // Se o cliente existe no BigQuery, bloqueia
+      if (bigQueryCheck.exists) {
+        console.log(' CLIENTE ENCONTRADO NO BIGQUERY:', JSON.stringify(bigQueryCheck.customerData, null, 2))
+        debug.log('Leads', 'Customer found in BigQuery, blocking lead creation', {
           confirmedOrdersCount: bigQueryCheck.customerData?.confirmed_orders_count,
-          customerData: bigQueryCheck.customerData
+          customerData: bigQueryCheck.customerData,
+          duplicatedFields: bigQueryCheck.duplicatedFields
         })
         return NextResponse.json(
           { 
             error: 'Existing customer', 
-            details: 'Customer already has confirmed orders',
-            customerData: bigQueryCheck.customerData 
+            details: bigQueryCheck.hasConfirmedOrders 
+              ? 'Customer already has confirmed orders'
+              : 'Customer already exists in our database',
+            customerData: bigQueryCheck.customerData,
+            duplicatedFields: bigQueryCheck.duplicatedFields
           },
           { status: 400, headers }
         )
