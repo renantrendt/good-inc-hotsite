@@ -73,7 +73,63 @@ const translations = {
     },
     hero: {
       title: "PERSONAL CARE SYSTEM MORE THAN CLEAN — HEALTHY",
-      videoId: "7AZXGzXFTPw",
+      videoId: "1Qx6xAetnsY",
+      videoChapters: [
+        {
+          id: '1Qx6xAetnsY',
+          title: 'Harmful Effects of Deodorants',
+          startTime: 0,
+          thumbnail: ''
+        },
+        {
+          id: '1Qx6xAetnsY',
+          title: 'Fabrics provide the solution',
+          startTime: 11,
+          thumbnail: ''
+        },
+        {
+          id: '1Qx6xAetnsY',
+          title: 'Long term health',
+          startTime: 34,
+          thumbnail: ''
+        },
+        {
+          id: '1Qx6xAetnsY',
+          title: 'Two days of comfort',
+          startTime: 44,
+          thumbnail: ''
+        },
+        {
+          id: '1Qx6xAetnsY',
+          title: 'The behavior shift',
+          startTime: 83,
+          thumbnail: ''
+        },
+        {
+          id: '1Qx6xAetnsY',
+          title: 'Gift loved ones',
+          startTime: 118,
+          thumbnail: ''
+        },
+        {
+          id: '1Qx6xAetnsY',
+          title: 'Hormone imbalance',
+          startTime: 166,
+          thumbnail: ''
+        },
+        {
+          id: '1Qx6xAetnsY',
+          title: 'Cognitive function',
+          startTime: 317,
+          thumbnail: ''
+        },
+        {
+          id: '1Qx6xAetnsY',
+          title: 'Kids & Pregnants',
+          startTime: 390,
+          thumbnail: ''
+        }
+      ]
     },
     benefits: {
       title: "Benefits",
@@ -186,7 +242,7 @@ const translations = {
       information: "Information",
       contact: "Contact",
       paymentMethods: "Payment Methods",
-      copyright: "© 2025, Patent Pending. Visto.bio.",
+      copyright: " 2025, Patent Pending. Visto.bio.",
       address: "1007 N Orange St. 4th Floor, Wilmington, DE 19801, USA.",
     },
 
@@ -300,6 +356,104 @@ const translations = {
     hero: {
       title: "SISTEMA DE CUIDADOS PESSOAIS MAIS DO QUE LIMPO — SAUDÁVEL",
       videoId: "i5E3VC_hGB0",
+      videoChapters: [
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Conforto vs Proteção',
+          startTime: 121,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Problemas máquina lavar',
+          startTime: 156,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Problemas sanitizantes',
+          startTime: 160,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Problemas sabonetes',
+          startTime: 184,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Problemas desodorantes',
+          startTime: 201,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Problema não é o corpo',
+          startTime: 231,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Tratar e Proteger roupas',
+          startTime: 278,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Modo uso: Tratamento',
+          startTime: 356,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Modo uso: Proteção',
+          startTime: 399,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Modo uso: Sabonete',
+          startTime: 462,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Modo uso: Desodorante',
+          startTime: 562,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Feito pra quem não tem odor',
+          startTime: 663,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Como eliminar odor',
+          startTime: 744,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Descoberta Odor',
+          startTime: 881,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Descoberta Suor',
+          startTime: 1079,
+          thumbnail: ''
+        },
+        {
+          id: 'i5E3VC_hGB0',
+          title: 'Crianças e gestantes',
+          startTime: 1172,
+          thumbnail: ''
+        }
+      ]
     },
     benefits: {
       title: "Benefícios",
@@ -403,7 +557,7 @@ const translations = {
           question: "É prejudicial reduzir o suor artificialmente?",
           showInFAQ: false,
           answer:
-            "O suor é vital para o sistema de resfriamento do nosso corpo, mas usar produtos para gerenciar o suor e o odor pode ter consequências ocultas. Equilibrar o gerenciamento do suor com a manutenção da capacidade natural do corpo de regular a temperatura é essencial para a saúde geral.\n\nQuando as principais zonas de transpiração do corpo são bloqueadas por desodorantes, antitranspirantes, bactérias e resíduos, o sistema linfático fica sobrecarregado, forçando o suor a se redirecionar para áreas menos comuns como as costas, testa, mãos, virilha e pés.\n\nEssa perturbação é muito parecida com a falha do sistema de resfriamento de um computador — fazendo com que o cérebro, nosso 'processador', superaqueça. Os efeitos incluem diminuição da capacidade mental, aumento da ansiedade e funções cognitivas mais lentas, destacando a profunda conexão entre saúde física e mental.",
+            "O suor é vital para o sistema de resfriamento do nosso corpo, mas usar produtos para gerenciar o suor e o odor pode ter consequências ocultas. Equilibrar o gerenciamento do suor com a manutenção da capacidade natural do corpo de regular a temperatura é essencial para a saúde geral.\n\nQuando as principais zonas de transpiração do corpo são bloqueadas por desodorantes, antitranspirantes, bactérias e resíduos, o sistema linfático fica sobrecarregado, forçando o suor a se redirecionar para áreas menos comuns como as costas, testa, mãos, virilha e pés.\n\nEssa perturbação é muito parecida com a falha do sistema de resfriamento de um computador — fazendo com que o cérebro, nosso 'processador,' superaqueça. Os efeitos incluem diminuição da capacidade mental, aumento da ansiedade e funções cognitivas mais lentas, destacando a profunda conexão entre saúde física e mental.",
         },
       ],
     },
@@ -412,7 +566,7 @@ const translations = {
       information: "Informações",
       contact: "Contato",
       paymentMethods: "Formas de Pagamento",
-      copyright: "© 2025, Patente Pendente. Visto.bio.",
+      copyright: " 2025, Patente Pendente. Visto.bio.",
       address: "São Paulo: Rua Finisterre, 159, Riviera - SP, 04928030, CNPJ 32.761.719/0001-31"
     },
     healthyClean: {
@@ -446,4 +600,3 @@ const translations = {
 }
 
 export default translations
-

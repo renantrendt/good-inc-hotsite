@@ -5,16 +5,13 @@ import { VideoPlayer } from './VideoPlayer'
 import { useLanguage } from "../../contexts/LanguageContext"
 import translations from "../../utils/translations"
 import { mediaItems } from "../../utils/constants"
-import { videoChapters } from '../../data/videoChapters'
-
-// Usando os capítulos do vídeo do YouTube
-const videos = videoChapters
 
 export function VideoHero() {
   const { language } = useLanguage()
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
 
   const t = translations[language]
+  const videos = t.hero.videoChapters
 
   const handleNext = (index: number) => {
     setCurrentVideoIndex(index)
@@ -36,13 +33,15 @@ export function VideoHero() {
         </div>
         
         <div className="aspect-video w-full max-w-4xl mx-auto mb-12">
-          <VideoPlayer
-            video={videos[currentVideoIndex]}
-            videos={videos}
-            onNext={handleNext}
-            onPrevious={handlePrevious}
-            isInitialVideo={currentVideoIndex === 0}
-          />
+          {videos.length > 0 && (
+            <VideoPlayer
+              video={videos[currentVideoIndex]}
+              videos={videos}
+              onNext={handleNext}
+              onPrevious={handlePrevious}
+              isInitialVideo={currentVideoIndex === 0}
+            />
+          )}
         </div>
 
         <div className="flex flex-wrap items-center justify-center sm:justify-between gap-x-2 sm:gap-x-3 w-full max-w-6xl mx-auto px-4">

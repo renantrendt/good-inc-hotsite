@@ -3,7 +3,6 @@
 import { useLanguage } from "../contexts/LanguageContext"
 import translations from "../utils/translations"
 import { VideoPlayer } from "./VideoHero/VideoPlayer"
-import { videoChapters } from "../data/videoChapters"
 
 const mediaItems = [
   {
@@ -64,8 +63,8 @@ export default function Hero() {
         </div>
         <div className="w-full max-w-4xl mx-auto mb-12">
           <VideoPlayer
-            video={videoChapters[0]}
-            videos={videoChapters}
+            video={t.hero.videoChapters[0]}
+            videos={t.hero.videoChapters}
             isInitialVideo={true}
           />
         </div>
