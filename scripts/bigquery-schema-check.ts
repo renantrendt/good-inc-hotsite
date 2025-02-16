@@ -23,7 +23,7 @@ async function checkTableSchema() {
     const [metadata] = await table.getMetadata()
     
     console.log('📋 Colunas da tabela:')
-    metadata.schema.fields.forEach(field => {
+    metadata.schema.fields.forEach((field: { name: string, type: string }) => {
       console.log(`- ${field.name}: ${field.type}`)
     })
 

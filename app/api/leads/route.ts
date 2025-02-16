@@ -20,7 +20,7 @@ interface LeadFormData {
   state: string
   zipCode: string
   country: string
-  countryCode?: string
+  countryCode: string
   cityCode?: string
   clothesOdor: string
   productUnderstanding: string
@@ -43,7 +43,7 @@ interface LeadData {
   zip_code: string
   country: string
   country_code: string
-  city_code: string
+  city_code: string | null
   clothes_odor: string
   product_understanding: string
   main_focus: string
@@ -245,7 +245,7 @@ export async function POST(request: Request) {
         zip_code: data.zipCode,
         country: data.country,
         country_code: data.countryCode,
-        city_code: data.cityCode,
+        city_code: data.cityCode || null,
         clothes_odor: data.clothesOdor,
         product_understanding: data.productUnderstanding,
         main_focus: data.mainFocus,
