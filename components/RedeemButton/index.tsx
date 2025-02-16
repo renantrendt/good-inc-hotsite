@@ -344,13 +344,24 @@ export function RedeemButton() {
         debug.log('Form', 'API Response:', result)
 
         if (!response.ok) {
-          if (result.error === 'Existing customer' || result.error === 'Duplicate lead found') {
-            // Verifica se tem pedidos confirmados
+          if (result.error === 'Existing customer') {
+            // Se tiver campos duplicados no Supabase, mostra tela de cliente existente
+            if (result.duplicatedFields?.length > 0) {
+              debug.log('Form', 'Cliente encontrado no Supabase:', result.duplicatedFields)
+              setIsExistingCustomer(true)
+              setIsOpen(true)
+              return
+            }
+            
+            // Se não tiver campos duplicados, verifica pedidos confirmados do BigQuery
             const hasConfirmedOrders = result.customerData?.confirmed_orders_count > 0
             setIsExistingCustomer(hasConfirmedOrders)
             
-            setIsOpen(true)
-            return
+            if (hasConfirmedOrders) {
+              debug.log('Form', 'Cliente com pedidos confirmados')
+              setIsOpen(true)
+              return
+            }
           }
           throw new Error(result.error || 'Error submitting form')
         }
