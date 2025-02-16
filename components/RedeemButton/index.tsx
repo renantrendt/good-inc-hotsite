@@ -266,6 +266,65 @@ export function RedeemButton() {
         const apiUrl = '/api/leads'
         debug.log('Form', 'Sending request to:', apiUrl)
 
+        // Verificação de duplicidade no BigQuery
+        let bigQueryCheckResponse;
+        try {
+          bigQueryCheckResponse = await fetch('/api/check-customer-duplicity', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              cpf: formData.cpf,
+              email: formData.email,
+              phone: formData.phone
+            })
+          })
+        } catch (fetchError) {
+          debug.error('Form', 'Erro na requisição de duplicidade:', fetchError)
+          // Se falhar na requisição, mostra erro detalhado
+          alert(`Erro ao verificar duplicidade: ${fetchError instanceof Error ? fetchError.message : 'Erro desconhecido'}`)
+          setIsSubmitting(false)
+          return
+        }
+
+        let bigQueryCheck;
+        try {
+          // Verifica se a resposta é ok antes de tentar parsear
+          if (!bigQueryCheckResponse.ok) {
+            const errorText = await bigQueryCheckResponse.text()
+            debug.error('Form', `Erro na verificação de duplicidade. Status: ${bigQueryCheckResponse.status}`, errorText)
+            
+            // Mostra mensagem de erro para o usuário
+            alert(`Erro na verificação de duplicidade: ${errorText || 'Erro interno do servidor'}`)
+            
+            setIsSubmitting(false)
+            return
+          }
+
+          bigQueryCheck = await bigQueryCheckResponse.json()
+        } catch (parseError) {
+          debug.error('Form', 'Erro ao parsear resposta do BigQuery:', parseError)
+          
+          // Mostra mensagem de erro para o usuário
+          alert(`Erro ao processar verificação de duplicidade: ${parseError instanceof Error ? parseError.message : 'Erro desconhecido'}`)
+          
+          // Continua o fluxo em caso de erro de parsing
+          bigQueryCheck = { exists: false, duplicatedFields: [] }
+        }
+
+        // Se houver duplicidade no BigQuery, verifica pedidos confirmados
+        if (bigQueryCheck.exists && bigQueryCheck.hasConfirmedOrders) {
+          debug.log('Form', 'Cliente com pedidos confirmados, bloqueando submissão')
+          setIsExistingCustomer(true)
+          setIsSubmitting(false)
+          return
+        }
+
+        // Adiciona um delay de 1 segundo antes de chamar a API
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        // Se não tiver pedidos confirmados, continua o fluxo normal
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
@@ -315,6 +374,9 @@ export function RedeemButton() {
     } catch (error) {
       debug.error('Form', 'Error submitting form:', error)
       debug.error('Form', 'Form Data:', formData)
+      
+      // Mostra mensagem de erro para o usuário
+      alert(`Erro ao submeter formulário: ${error instanceof Error ? error.message : 'Erro desconhecido'}`)
     } finally {
       setIsSubmitting(false)
     }

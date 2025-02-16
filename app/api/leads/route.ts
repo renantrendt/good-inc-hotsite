@@ -40,8 +40,8 @@ interface LeadData {
   state: string
   zip_code: string
   country: string
-  country_code?: string
-  city_code?: string
+  country_code: string
+  city_code: string
   clothes_odor: string
   product_understanding: string
   main_focus: string
@@ -99,12 +99,15 @@ export async function POST(request: Request) {
     
     // O CPF já foi validado no frontend, não precisamos validar novamente aqui
 
-    // Verificar duplicatas
+    // Verificar duplicatas e pedidos confirmados
     try {
-      debug.log('Leads', 'Checking for duplicates...')
+      debug.log('Leads', 'Checking for duplicates and confirmed orders...')
+      const duplicatedFields: string[] = []
+      
+      // Primeiro verifica duplicidade no Supabase
       const supabaseAdmin = getServiceSupabase()
 
-      // Primeiro verifica email
+      // Verifica email
       const { data: emailCheck, error: emailError } = await supabaseAdmin
         .from('leads')
         .select('email')
@@ -112,13 +115,39 @@ export async function POST(request: Request) {
         .maybeSingle()
 
       if (emailError) {
-        debug.error('Leads', 'Error checking email:', emailError)
-        throw new Error(`Database error: ${emailError.message}`)
+        debug.error('Leads', 'Error checking email duplicity:', emailError)
+        return NextResponse.json(
+          { error: 'Error checking duplicates', details: emailError },
+          { status: 500, headers }
+        )
       }
 
-      if (emailCheck) duplicatedFields.push('email')
+      if (emailCheck) {
+        duplicatedFields.push('email')
+      }
 
-      // Depois verifica telefone
+      // Verifica CPF
+      if (data.cpf) {
+        const { data: cpfCheck, error: cpfError } = await supabaseAdmin
+          .from('leads')
+          .select('cpf')
+          .eq('cpf', data.cpf.replace(/[.\-]/g, ''))
+          .maybeSingle()
+
+        if (cpfError) {
+          debug.error('Leads', 'Error checking CPF duplicity:', cpfError)
+          return NextResponse.json(
+            { error: 'Error checking duplicates', details: cpfError },
+            { status: 500, headers }
+          )
+        }
+
+        if (cpfCheck) {
+          duplicatedFields.push('cpf')
+        }
+      }
+
+      // Verifica telefone
       const { data: phoneCheck, error: phoneError } = await supabaseAdmin
         .from('leads')
         .select('phone')
@@ -126,27 +155,61 @@ export async function POST(request: Request) {
         .maybeSingle()
 
       if (phoneError) {
-        debug.error('Leads', 'Error checking phone:', phoneError)
-        throw new Error(`Database error: ${phoneError.message}`)
+        debug.error('Leads', 'Error checking phone duplicity:', phoneError)
+        return NextResponse.json(
+          { error: 'Error checking duplicates', details: phoneError },
+          { status: 500, headers }
+        )
       }
 
-      if (phoneCheck) duplicatedFields.push('phone')
+      if (phoneCheck) {
+        duplicatedFields.push('phone')
+      }
 
-      // Por fim, verifica CPF se fornecido
+      // Se encontrou duplicatas no Supabase, retorna erro
+      if (duplicatedFields.length > 0) {
+        debug.log('Leads', 'Duplicate check complete:', { duplicatedFields })
+        return NextResponse.json(
+          { error: 'Duplicate lead found', duplicatedFields },
+          { status: 400, headers }
+        )
+      }
+
+      // Depois verifica no BigQuery se tem pedidos confirmados
       if (data.cpf) {
-        const { data: cpfCheck, error: cpfError } = await supabaseAdmin
-          .from('leads')
-          .select('cpf')
-          .eq('cpf', data.cpf)
-          .maybeSingle()
+        const url = new URL('/api/check-customer-duplicity', 'http://localhost:3000')
+        const bigQueryResponse = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            cpf: data.cpf
+          })
+        })
 
-        if (cpfError) {
-          debug.error('Leads', 'Error checking CPF:', cpfError)
-          throw new Error(`Database error: ${cpfError.message}`)
+        if (!bigQueryResponse.ok) {
+          debug.error('Leads', 'Error checking BigQuery:', await bigQueryResponse.text())
+          return NextResponse.json(
+            { error: 'Error checking BigQuery' },
+            { status: 500, headers }
+          )
         }
 
-        if (cpfCheck) duplicatedFields.push('cpf')
+        const bigQueryCheck = await bigQueryResponse.json()
+        debug.log('Leads', 'BigQuery check result:', bigQueryCheck)
+        
+        // Se tem pedidos confirmados, bloqueia imediatamente
+        if (bigQueryCheck.hasConfirmedOrders === true) {
+          debug.error('Leads', 'Customer has confirmed orders in BigQuery')
+          return NextResponse.json(
+            { error: 'Customer already has confirmed orders', details: bigQueryCheck },
+            { status: 400, headers }
+          )
+        }
       }
+
+
 
       debug.log('Leads', 'Duplicate check complete:', { duplicatedFields })
     } catch (error) {
@@ -175,12 +238,12 @@ export async function POST(request: Request) {
     debug.log('Leads', 'No duplicates found, attempting to create lead')
     
     // Log the exact data being sent to Supabase
-    const leadData: LeadData = {
+    const normalizedData: LeadData = {
       first_name: data.firstName,
       last_name: data.lastName,
       email: data.email,
       phone: data.phone,
-      cpf: data.cpf,
+      cpf: data.cpf ? data.cpf.replace(/[.\-]/g, '') : undefined,
       street: data.street,
       number: data.number,
       complement: data.complement,
@@ -198,12 +261,12 @@ export async function POST(request: Request) {
     }
 
     try {
-      debug.log('Leads', 'Data being sent to Supabase:', JSON.stringify(leadData, null, 2))
+      debug.log('Leads', 'Data being sent to Supabase:', JSON.stringify(normalizedData, null, 2))
 
       const supabaseAdmin = getServiceSupabase()
       const { data: lead, error } = await supabaseAdmin
         .from('leads')
-        .insert([leadData])
+        .insert([normalizedData])
         .select()
         .single()
 

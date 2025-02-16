@@ -2,12 +2,14 @@
   "name": "my-v0-project",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "bigquery-test": "node --loader ts-node/esm scripts/bigquery-connection-test.mts"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
@@ -71,12 +73,14 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/node": "^22",
+    "@google-cloud/bigquery": "^7.9.2",
+    "@types/node": "^22.13.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8",
     "prisma": "^6.3.1",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }
