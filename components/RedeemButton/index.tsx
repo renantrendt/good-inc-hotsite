@@ -260,15 +260,27 @@ export function RedeemButton() {
     setIsSubmitting(true)
     try {
       // Log dos dados antes de enviar
-      debug.log('Form', 'Form Data:', formData)
+      debug.log('Form', ' INICIANDO SUBMISSÃO DO FORMULÁRIO')
+      debug.log('Form', ' Dados do formulário:', {
+        ...formData,
+        cpf: formData.cpf ? `${formData.cpf.slice(0,3)}...` : undefined, // Log parcial do CPF por segurança
+        email: formData.email ? `${formData.email.slice(0,3)}...` : undefined
+      })
 
       try {
         const apiUrl = '/api/leads'
-        debug.log('Form', 'Sending request to:', apiUrl)
+        debug.log('Form', ' VERIFICAÇÃO DE DUPLICIDADE')
+        debug.log('Form', '   Enviando requisição para:', '/api/check-customer-duplicity')
 
         // Verificação de duplicidade no BigQuery
         let bigQueryCheckResponse;
         try {
+          debug.log('Form', '   Dados sendo verificados:', {
+            cpf: formData.cpf ? `${formData.cpf.slice(0,3)}...` : undefined,
+            email: formData.email ? `${formData.email.slice(0,3)}...` : undefined,
+            phone: formData.phone ? `${formData.phone.slice(0,3)}...` : undefined
+          })
+
           bigQueryCheckResponse = await fetch('/api/check-customer-duplicity', {
             method: 'POST',
             headers: {
@@ -280,9 +292,10 @@ export function RedeemButton() {
               phone: formData.phone
             })
           })
+
+          debug.log('Form', '   Status da resposta:', bigQueryCheckResponse.status)
         } catch (fetchError) {
-          debug.error('Form', 'Erro na requisição de duplicidade:', fetchError)
-          // Se falhar na requisição, mostra erro detalhado
+          debug.error('Form', ' Erro na requisição de duplicidade:', fetchError)
           alert(`Erro ao verificar duplicidade: ${fetchError instanceof Error ? fetchError.message : 'Erro desconhecido'}`)
           setIsSubmitting(false)
           return
@@ -293,44 +306,41 @@ export function RedeemButton() {
           // Verifica se a resposta é ok antes de tentar parsear
           if (!bigQueryCheckResponse.ok) {
             const errorText = await bigQueryCheckResponse.text()
-            debug.error('Form', `Erro na verificação de duplicidade. Status: ${bigQueryCheckResponse.status}`, errorText)
-            
-            // Mostra mensagem de erro para o usuário
+            debug.error('Form', ` Erro na verificação de duplicidade. Status: ${bigQueryCheckResponse.status}`, errorText)
             alert(`Erro na verificação de duplicidade: ${errorText || 'Erro interno do servidor'}`)
-            
             setIsSubmitting(false)
             return
           }
 
           bigQueryCheck = await bigQueryCheckResponse.json()
+          debug.log('Form', ' Resultado da verificação:', {
+            exists: bigQueryCheck.exists,
+            duplicatedFields: bigQueryCheck.duplicatedFields,
+            hasConfirmedOrders: bigQueryCheck.customerData?.confirmed_orders_count > 0
+          })
         } catch (parseError) {
-          debug.error('Form', 'Erro ao parsear resposta do BigQuery:', parseError)
-          
-          // Mostra mensagem de erro para o usuário
+          debug.error('Form', ' Erro ao parsear resposta:', parseError)
           alert(`Erro ao processar verificação de duplicidade: ${parseError instanceof Error ? parseError.message : 'Erro desconhecido'}`)
-          
-          // Continua o fluxo em caso de erro de parsing
-          bigQueryCheck = { exists: false, duplicatedFields: [] }
+          setIsSubmitting(false)
+          return
         }
 
         // Se o cliente existe no BigQuery, verifica pedidos confirmados
         if (bigQueryCheck.exists) {
-          debug.log('Form', 'Cliente encontrado no BigQuery')
+          debug.log('Form', ' CLIENTE ENCONTRADO NO BIGQUERY')
           const hasConfirmedOrders = bigQueryCheck.customerData?.confirmed_orders_count > 0
+          debug.log('Form', '   Pedidos confirmados:', hasConfirmedOrders)
           setIsExistingCustomer(hasConfirmedOrders)
           
           if (hasConfirmedOrders) {
-            debug.log('Form', 'Cliente com pedidos confirmados, bloqueando submissão')
-          setIsExistingCustomer(true)
-          setIsOpen(true)  // Mantém o modal aberto
+            debug.log('Form', ' Cliente com pedidos confirmados, bloqueando submissão')
+            setIsExistingCustomer(true)
+            setIsOpen(true)  // Mantém o modal aberto
             return
           }
         }
 
-        // Adiciona um delay de 1 segundo antes de chamar a API
-        await new Promise(resolve => setTimeout(resolve, 1000))
-
-        // Se não tiver pedidos confirmados, continua o fluxo normal
+        debug.log('Form', ' ENVIANDO DADOS PARA API')
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
@@ -341,13 +351,18 @@ export function RedeemButton() {
         })
 
         const result = await response.json()
-        debug.log('Form', 'API Response:', result)
+        debug.log('Form', ' Resposta da API:', {
+          status: response.status,
+          ok: response.ok,
+          error: result.error,
+          details: result.details
+        })
 
         if (!response.ok) {
           if (result.error === 'Existing customer') {
             // Se tiver campos duplicados no Supabase, mostra tela de cliente existente
             if (result.duplicatedFields?.length > 0) {
-              debug.log('Form', 'Cliente encontrado no Supabase:', result.duplicatedFields)
+              debug.log('Form', ' Cliente encontrado no Supabase:', result.duplicatedFields)
               setIsExistingCustomer(true)
               setIsOpen(true)
               return
@@ -358,7 +373,7 @@ export function RedeemButton() {
             setIsExistingCustomer(hasConfirmedOrders)
             
             if (hasConfirmedOrders) {
-              debug.log('Form', 'Cliente com pedidos confirmados')
+              debug.log('Form', ' Cliente com pedidos confirmados')
               setIsOpen(true)
               return
             }
