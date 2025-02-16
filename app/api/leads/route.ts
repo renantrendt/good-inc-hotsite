@@ -122,29 +122,34 @@ export async function POST(request: Request) {
 
       debug.log('Leads', 'BigQuery check result:', bigQueryCheck)
       
-      // Se o cliente existe no BigQuery, bloqueia
-      if (bigQueryCheck.exists) {
-        console.log(' CLIENTE ENCONTRADO NO BIGQUERY:', JSON.stringify(bigQueryCheck.customerData, null, 2))
-        debug.log('Leads', 'Customer found in BigQuery, blocking lead creation', {
+      // Se o cliente existe no BigQuery e tem pedidos confirmados, bloqueia
+      if (bigQueryCheck.exists && bigQueryCheck.hasConfirmedOrders) {
+        console.log(' CLIENTE COM PEDIDOS CONFIRMADOS:', JSON.stringify(bigQueryCheck.customerData, null, 2))
+        debug.log('Leads', 'Customer has confirmed orders, blocking lead creation', {
           confirmedOrdersCount: bigQueryCheck.customerData?.confirmed_orders_count,
-          customerData: bigQueryCheck.customerData,
-          duplicatedFields: bigQueryCheck.duplicatedFields
+          customerData: bigQueryCheck.customerData
         })
         return NextResponse.json(
           { 
             error: 'Existing customer', 
-            details: bigQueryCheck.hasConfirmedOrders 
-              ? 'Customer already has confirmed orders'
-              : 'Customer already exists in our database',
-            customerData: bigQueryCheck.customerData,
-            duplicatedFields: bigQueryCheck.duplicatedFields
+            details: 'Customer already has confirmed orders',
+            customerData: bigQueryCheck.customerData
           },
           { status: 400, headers }
         )
       }
+      
+      // Se o cliente existe mas não tem pedidos confirmados, permite continuar
+      if (bigQueryCheck.exists) {
+        debug.log('Leads', 'Customer exists but has no confirmed orders, allowing lead creation')
+        // Adiciona os campos duplicados do BigQuery
+        if (bigQueryCheck.duplicatedFields?.length > 0) {
+          debug.log('Leads', 'Adding duplicated fields from BigQuery:', bigQueryCheck.duplicatedFields)
+        }
+      }
 
       // Verifica duplicidade no Supabase
-      const duplicatedFields: string[] = []
+      let duplicatedFields = bigQueryCheck.duplicatedFields || []
       
       if (data.cpf) {
         const { data: cpfCheck, error: cpfError } = await supabaseAdmin
@@ -211,7 +216,8 @@ export async function POST(request: Request) {
       if (duplicatedFields.length > 0) {
         return NextResponse.json(
           { 
-            error: 'Duplicate lead found', 
+            error: 'Existing customer',
+            details: 'Customer already exists in our database',
             duplicatedFields 
           },
           { status: 400, headers }

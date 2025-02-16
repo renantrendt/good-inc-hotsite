@@ -313,12 +313,18 @@ export function RedeemButton() {
           bigQueryCheck = { exists: false, duplicatedFields: [] }
         }
 
-        // Se houver duplicidade no BigQuery, verifica pedidos confirmados
-        if (bigQueryCheck.exists && bigQueryCheck.hasConfirmedOrders) {
-          debug.log('Form', 'Cliente com pedidos confirmados, bloqueando submissão')
+        // Se o cliente existe no BigQuery, verifica pedidos confirmados
+        if (bigQueryCheck.exists) {
+          debug.log('Form', 'Cliente encontrado no BigQuery')
+          const hasConfirmedOrders = bigQueryCheck.customerData?.confirmed_orders_count > 0
+          setIsExistingCustomer(hasConfirmedOrders)
+          
+          if (hasConfirmedOrders) {
+            debug.log('Form', 'Cliente com pedidos confirmados, bloqueando submissão')
           setIsExistingCustomer(true)
           setIsOpen(true)  // Mantém o modal aberto
-          return
+            return
+          }
         }
 
         // Adiciona um delay de 1 segundo antes de chamar a API
@@ -339,8 +345,11 @@ export function RedeemButton() {
 
         if (!response.ok) {
           if (result.error === 'Existing customer' || result.error === 'Duplicate lead found') {
-            setIsExistingCustomer(true)
-            setIsOpen(true)  // Mantém o modal aberto
+            // Verifica se tem pedidos confirmados
+            const hasConfirmedOrders = result.customerData?.confirmed_orders_count > 0
+            setIsExistingCustomer(hasConfirmedOrders)
+            
+            setIsOpen(true)
             return
           }
           throw new Error(result.error || 'Error submitting form')
