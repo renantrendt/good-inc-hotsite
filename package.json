@@ -50,7 +50,6 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "@supabase/supabase-js": "^2.48.1",
     "@swc/core": "^1.10.16",
-    "@swc/core-darwin-arm64": "^1.10.16",
     "@types/nodemailer": "^6.4.17",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",

@@ -1,8 +1,0 @@
-{
-  "build": {
-    "env": {
-      "NPM_CONFIG_PLATFORM": "darwin",
-      "NPM_CONFIG_ARCH": "arm64"
-    }
-  }
-}
