@@ -3,16 +3,32 @@ import { BigQuery } from '@google-cloud/bigquery';
 let bigqueryClient: BigQuery | null = null;
 
 try {
+  // Log para debug
+  console.log('Iniciando configuração do BigQuery...');
+  console.log('Project ID:', process.env.GOOGLE_PROJECT_ID);
+  console.log('Client Email:', process.env.GOOGLE_CLIENT_EMAIL);
+  console.log('Private Key exists:', !!process.env.GOOGLE_PRIVATE_KEY);
+
+  // Tratamento especial para a private key
+  const privateKey = process.env.GOOGLE_PRIVATE_KEY
+    ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
+    : undefined;
+
+  if (!process.env.GOOGLE_PROJECT_ID || !process.env.GOOGLE_CLIENT_EMAIL || !privateKey) {
+    throw new Error('Credenciais do BigQuery não configuradas');
+  }
+
   bigqueryClient = new BigQuery({
     projectId: process.env.GOOGLE_PROJECT_ID,
     credentials: {
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      private_key: privateKey,
     }
   });
-  console.log(' Cliente BigQuery inicializado com sucesso');
+  console.log('Cliente BigQuery inicializado com sucesso');
 } catch (clientError) {
-  console.error(' Erro ao criar cliente BigQuery:', clientError);
+  console.error('Erro ao criar cliente BigQuery:', clientError);
+  bigqueryClient = null;
 }
 
 interface CustomerCheckResult {
