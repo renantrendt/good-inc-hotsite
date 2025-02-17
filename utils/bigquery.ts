@@ -1,30 +1,29 @@
 import { BigQuery } from '@google-cloud/bigquery';
 
+const getGCPCredentials = () => {
+  // for Vercel, use environment variables
+  return process.env.GCP_PRIVATE_KEY
+    ? {
+        credentials: {
+          client_email: process.env.GCP_SERVICE_ACCOUNT_EMAIL,
+          private_key: process.env.GCP_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        },
+        projectId: process.env.GCP_PROJECT_ID,
+      }
+    // for local development, use gcloud CLI
+    : {};
+};
+
 let bigqueryClient: BigQuery | null = null;
 
 try {
-  // Log para debug
-  console.log('Iniciando configuração do BigQuery...');
-  console.log('Project ID:', process.env.GOOGLE_PROJECT_ID);
-  console.log('Client Email:', process.env.GOOGLE_CLIENT_EMAIL);
-  console.log('Private Key exists:', !!process.env.GOOGLE_PRIVATE_KEY);
-
-  // Tratamento especial para a private key
-  const privateKey = process.env.GOOGLE_PRIVATE_KEY
-    ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
-    : undefined;
-
-  if (!process.env.GOOGLE_PROJECT_ID || !process.env.GOOGLE_CLIENT_EMAIL || !privateKey) {
+  const credentials = getGCPCredentials();
+  
+  if (!credentials.projectId) {
     throw new Error('Credenciais do BigQuery não configuradas');
   }
 
-  bigqueryClient = new BigQuery({
-    projectId: process.env.GOOGLE_PROJECT_ID,
-    credentials: {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: privateKey,
-    }
-  });
+  bigqueryClient = new BigQuery(credentials);
   console.log('Cliente BigQuery inicializado com sucesso');
 } catch (clientError) {
   console.error('Erro ao criar cliente BigQuery:', clientError);
