@@ -92,12 +92,12 @@ export function VideoPlayer({
 
         <div className={cn(
           'absolute top-0 h-full bg-black/50 backdrop-blur-md transition-all duration-300 ease-in-out z-10',
-          isCarouselVisible ? 'left-0' : 'md:-left-[180px] -left-[70px]',
-          'w-[100px] md:w-[200px]'
+          isCarouselVisible ? 'left-0' : 'md:-left-[150px] -left-[70px]',
+          'w-[100px] md:w-[175px]'
         )}>
           <button 
             onClick={() => setIsCarouselVisible(!isCarouselVisible)}
-            className="absolute -right-10 top-1/2 -translate-y-1/2 w-10 h-16 flex items-center justify-center bg-black/50 text-white/60 hover:text-white/90 transition-colors rounded-r-md z-10"
+            className="absolute -right-5 sm:-right-10 top-1/2 -translate-y-1/2 w-5 sm:w-10 h-8 sm:h-16 flex items-center justify-center bg-black/50 text-white/60 hover:text-white/90 transition-colors rounded-r-md z-10"
           >
             {isCarouselVisible ? (
               <ChevronLeft className="w-6 h-6" />
@@ -136,7 +136,7 @@ export function VideoPlayer({
                       }
                     }}
                     className={cn(
-                      'w-full px-4 text-left transition-all duration-300 hover:bg-white/10',
+                      'w-full px-4 text-right transition-all duration-300 hover:bg-white/10',
                       v.id === video.id && video.startTime === v.startTime
                         ? 'bg-white/20 text-white'
                         : 'text-white/80 hover:text-white',
