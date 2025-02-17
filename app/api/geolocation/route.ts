@@ -96,15 +96,18 @@ export async function GET() {
   debug.log('Geolocation', 'Iniciando requisição GET');
   
   try {
-    const headersList = headers();
+    const headersList = await headers();
+    const forwardedFor = headersList.get('x-forwarded-for');
+    const realIp = headersList.get('x-real-ip');
+    
     debug.log('Geolocation', 'Headers recebidos:', {
-      'x-forwarded-for': headersList.get('x-forwarded-for'),
-      'x-real-ip': headersList.get('x-real-ip')
+      'x-forwarded-for': forwardedFor,
+      'x-real-ip': realIp
     });
 
     // Tentar obter IP real considerando proxies
-    const ip = headersList.get('x-forwarded-for')?.split(',')[0] || 
-               headersList.get('x-real-ip') || 
+    const ip = forwardedFor?.split(',')[0] || 
+               realIp || 
                '127.0.0.1';
 
     debug.log('Geolocation', 'IP detectado:', ip);

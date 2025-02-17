@@ -2,15 +2,23 @@
   "name": "my-v0-project",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0 <21.0.0",
+    "npm": ">=9.0.0"
+  },
+  "cpu": ["arm64", "x64"],
+  "os": ["darwin", "linux"],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "bigquery-test": "node --loader ts-node/esm scripts/bigquery-connection-test.mts"
   },
   "dependencies": {
-    "@emotion/is-prop-valid": "latest",
+    "@emotion/is-prop-valid": "^1.2.1",
     "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^6.3.1",
     "@radix-ui/react-accordion": "^1.2.2",
@@ -41,6 +49,7 @@
     "@radix-ui/react-toggle-group": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@supabase/supabase-js": "^2.48.1",
+    "@swc/core": "^1.10.16",
     "@types/nodemailer": "^6.4.17",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
@@ -49,10 +58,10 @@
     "cmdk": "1.0.4",
     "date-fns": "^3.0.0",
     "embla-carousel-react": "8.5.1",
-    "framer-motion": "latest",
+    "framer-motion": "^11.0.22",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
-    "next": "14.2.16",
+    "next": "^14.2.1",
     "next-themes": "^0.4.4",
     "nodemailer": "^6.10.0",
     "react": "^18",
@@ -71,12 +80,14 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/node": "^22",
+    "@google-cloud/bigquery": "^7.9.2",
+    "@types/node": "^22.13.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8",
     "prisma": "^6.3.1",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }

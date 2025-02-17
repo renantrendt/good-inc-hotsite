@@ -260,61 +260,145 @@ export function RedeemButton() {
     setIsSubmitting(true)
     try {
       // Log dos dados antes de enviar
-      debug.log('Form', 'Form Data:', formData)
+      debug.log('Form', ' INICIANDO SUBMISSÃO DO FORMULÁRIO')
+      debug.log('Form', ' Dados do formulário:', {
+        ...formData,
+        cpf: formData.cpf ? `${formData.cpf.slice(0,3)}...` : undefined, // Log parcial do CPF por segurança
+        email: formData.email ? `${formData.email.slice(0,3)}...` : undefined
+      })
 
       try {
         const apiUrl = '/api/leads'
-        debug.log('Form', 'Sending request to:', apiUrl)
+        debug.log('Form', ' VERIFICAÇÃO DE DUPLICIDADE')
+        debug.log('Form', '   Enviando requisição para:', '/api/check-customer-duplicity')
 
+        // Verificação de duplicidade no BigQuery
+        let bigQueryCheckResponse;
+        try {
+          debug.log('Form', '   Dados sendo verificados:', {
+            cpf: formData.cpf ? `${formData.cpf.slice(0,3)}...` : undefined,
+            email: formData.email ? `${formData.email.slice(0,3)}...` : undefined,
+            phone: formData.phone ? `${formData.phone.slice(0,3)}...` : undefined
+          })
+
+          bigQueryCheckResponse = await fetch('/api/check-customer-duplicity', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              cpf: formData.cpf,
+              email: formData.email,
+              phone: formData.phone
+            })
+          })
+
+          debug.log('Form', '   Status da resposta:', bigQueryCheckResponse.status)
+        } catch (fetchError) {
+          debug.error('Form', ' Erro na requisição de duplicidade:', fetchError)
+          alert(`Erro ao verificar duplicidade: ${fetchError instanceof Error ? fetchError.message : 'Erro desconhecido'}`)
+          setIsSubmitting(false)
+          return
+        }
+
+        let bigQueryCheck;
+        try {
+          // Verifica se a resposta é ok antes de tentar parsear
+          if (!bigQueryCheckResponse.ok) {
+            const errorText = await bigQueryCheckResponse.text()
+            debug.error('Form', ` Erro na verificação de duplicidade. Status: ${bigQueryCheckResponse.status}`, errorText)
+            alert(`Erro na verificação de duplicidade: ${errorText || 'Erro interno do servidor'}`)
+            setIsSubmitting(false)
+            return
+          }
+
+          bigQueryCheck = await bigQueryCheckResponse.json()
+          debug.log('Form', ' Resultado da verificação:', {
+            exists: bigQueryCheck.exists,
+            duplicatedFields: bigQueryCheck.duplicatedFields,
+            hasConfirmedOrders: bigQueryCheck.customerData?.confirmed_orders_count > 0
+          })
+        } catch (parseError) {
+          debug.error('Form', ' Erro ao parsear resposta:', parseError)
+          alert(`Erro ao processar verificação de duplicidade: ${parseError instanceof Error ? parseError.message : 'Erro desconhecido'}`)
+          setIsSubmitting(false)
+          return
+        }
+
+        // Se o cliente existe no BigQuery, verifica pedidos confirmados
+        if (bigQueryCheck.exists) {
+          debug.log('Form', ' CLIENTE ENCONTRADO NO BIGQUERY')
+          const hasConfirmedOrders = bigQueryCheck.customerData?.confirmed_orders_count > 0
+          debug.log('Form', '   Pedidos confirmados:', hasConfirmedOrders)
+          setIsExistingCustomer(hasConfirmedOrders)
+          
+          if (hasConfirmedOrders) {
+            debug.log('Form', ' Cliente com pedidos confirmados, bloqueando submissão')
+            setIsExistingCustomer(true)
+            setIsOpen(true)  // Mantém o modal aberto
+            return
+          }
+        }
+
+        debug.log('Form', ' ENVIANDO DADOS PARA API')
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Accept-Language': language
           },
-          body: JSON.stringify({
-            ...formData,
-            cityCode: formData.cityCode || null,
-            cpf: formData.cpf || null,
-            complement: formData.complement || null,
-            number: language === 'en' ? '' : formData.number,
-            referral: formData.referral
-          }),
+          body: JSON.stringify(formData)
         })
 
-        debug.log('Form', 'Response status:', response.status)
-        debug.log('Form', 'Response headers:', Object.fromEntries(response.headers.entries()))
+        const result = await response.json()
+        debug.log('Form', ' Resposta da API:', {
+          status: response.status,
+          ok: response.ok,
+          error: result.error,
+          details: result.details
+        })
 
         if (!response.ok) {
-          const errorData = await response.json()
-          debug.error('Form', 'API Error Response:', errorData)
-          
-          if (response.status === 400 && errorData.duplicatedFields) {
-            setIsExistingCustomer(true)
-            return
+          if (result.error === 'Existing customer') {
+            // Se tiver campos duplicados no Supabase, mostra tela de cliente existente
+            if (result.duplicatedFields?.length > 0) {
+              debug.log('Form', ' Cliente encontrado no Supabase:', result.duplicatedFields)
+              setIsExistingCustomer(true)
+              setIsOpen(true)
+              return
+            }
+            
+            // Se não tiver campos duplicados, verifica pedidos confirmados do BigQuery
+            const hasConfirmedOrders = result.customerData?.confirmed_orders_count > 0
+            setIsExistingCustomer(hasConfirmedOrders)
+            
+            if (hasConfirmedOrders) {
+              debug.log('Form', ' Cliente com pedidos confirmados')
+              setIsOpen(true)
+              return
+            }
           }
-          
-          throw new Error(errorData.error || `API error: ${response.status} ${response.statusText}`)
+          throw new Error(result.error || 'Error submitting form')
         }
 
-        const responseData = await response.json()
-        debug.log('Form', 'API Success Response:', responseData)
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error('Fetch error details:', {
-            message: error.message,
-            cause: error.cause,
-            stack: error.stack
-          })
-        } else {
-          debug.error('Form', 'Unknown error:', error)
+        // Se chegou aqui, significa que deu tudo certo
+        setIsSubmitted(true)
+      } catch (error: any) {
+        debug.error('[Form] Error submitting form:', error)
+        
+        // Tratamento de erros genéricos
+        if (!isExistingCustomer) { // Só mostra o alerta se não for cliente existente
+          alert(`Erro ao submeter formulário: ${error.message || 'Ocorreu um erro ao enviar o formulário.'}`)
         }
-        throw error
+      } finally {
+        setIsSubmitting(false)
       }
-
-      setIsSubmitted(true)
     } catch (error) {
       debug.error('Form', 'Error submitting form:', error)
       debug.error('Form', 'Form Data:', formData)
+      
+      // Mostra mensagem de erro para o usuário
+      alert(`Erro ao submeter formulário: ${error instanceof Error ? error.message : 'Erro desconhecido'}`)
     } finally {
       setIsSubmitting(false)
     }
