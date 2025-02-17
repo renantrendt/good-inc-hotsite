@@ -1,31 +1,14 @@
 import { BigQuery } from '@google-cloud/bigquery';
-import path from 'path';
-import fs from 'fs';
-
-// Log de verificação de credenciais
-const keyFilePath = path.resolve(
-  process.cwd(), 
-  'credentials', 
-  'datalake-vistobio-new-f5a5eccee454.json'
-);
-
-console.log(' Caminho do arquivo de credenciais:', keyFilePath);
-console.log(' Arquivo de credenciais existe:', fs.existsSync(keyFilePath));
-
-// Verificação de permissão de leitura
-try {
-  fs.accessSync(keyFilePath, fs.constants.R_OK);
-  console.log(' Arquivo de credenciais tem permissão de leitura');
-} catch (permError) {
-  console.error(' Erro de permissão no arquivo de credenciais:', permError);
-}
 
 let bigqueryClient: BigQuery | null = null;
 
 try {
   bigqueryClient = new BigQuery({
-    keyFilename: keyFilePath,
-    projectId: 'datalake-vistobio-new'
+    projectId: process.env.GOOGLE_PROJECT_ID,
+    credentials: {
+      client_email: process.env.GOOGLE_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }
   });
   console.log(' Cliente BigQuery inicializado com sucesso');
 } catch (clientError) {
