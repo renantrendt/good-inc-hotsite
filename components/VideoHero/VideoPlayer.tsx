@@ -136,10 +136,14 @@ export function VideoPlayer({
                       }
                     }}
                     className={cn(
-                      'w-full py-1 px-4 text-left transition-all duration-300 hover:bg-white/10',
+                      'w-full px-4 text-left transition-all duration-300 hover:bg-white/10',
                       v.id === video.id && video.startTime === v.startTime
                         ? 'bg-white/20 text-white'
-                        : 'text-white/80 hover:text-white'
+                        : 'text-white/80 hover:text-white',
+                      // Conditional padding based on language and screen size
+                      v.title.toLowerCase().includes('português') || v.title.toLowerCase().includes('portugues')
+                        ? 'py-1 sm:py-4'
+                        : 'py-1 sm:py-4'
                     )}
                   >
                     <span className="text-xs leading-none font-small">{v.title}</span>
