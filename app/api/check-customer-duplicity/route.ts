@@ -9,17 +9,8 @@ export async function POST(request: NextRequest) {
 
   try {
     // Verificar variáveis de ambiente do BigQuery
-    console.log(' Verificando variáveis de ambiente:')
-    console.log(' - GCP_PROJECT_ID exists:', !!process.env.GCP_PROJECT_ID)
-    console.log(' - GCP_SERVICE_ACCOUNT_EMAIL exists:', !!process.env.GCP_SERVICE_ACCOUNT_EMAIL)
-    console.log(' - GCP_PRIVATE_KEY exists:', !!process.env.GCP_PRIVATE_KEY)
-    
     if (!process.env.GCP_PROJECT_ID || !process.env.GCP_SERVICE_ACCOUNT_EMAIL || !process.env.GCP_PRIVATE_KEY) {
-      console.error(' ERRO: Variáveis de ambiente do BigQuery não configuradas', {
-        hasProjectId: !!process.env.GCP_PROJECT_ID,
-        hasServiceAccount: !!process.env.GCP_SERVICE_ACCOUNT_EMAIL,
-        hasPrivateKey: !!process.env.GCP_PRIVATE_KEY
-      })
+      console.error(' ERRO: Variáveis de ambiente do BigQuery não configuradas')
       return NextResponse.json(
         { 
           error: 'Credenciais do BigQuery não configuradas',
