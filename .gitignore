@@ -27,5 +27,5 @@ yarn-error.log*
 next-env.d.ts
 
 # credentials
-/credentials
+/credentials*
 /credentials/*.json
