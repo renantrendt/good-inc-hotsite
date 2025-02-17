@@ -1,17 +1,31 @@
 import { BigQuery } from '@google-cloud/bigquery';
 
 const getGCPCredentials = () => {
+  // Log das variáveis de ambiente
+  console.log('Verificando variáveis GCP:', {
+    hasProjectId: !!process.env.GCP_PROJECT_ID,
+    hasServiceAccount: !!process.env.GCP_SERVICE_ACCOUNT_EMAIL,
+    hasPrivateKey: !!process.env.GCP_PRIVATE_KEY,
+    projectId: process.env.GCP_PROJECT_ID
+  });
+
   // for Vercel, use environment variables
-  return process.env.GCP_PRIVATE_KEY
-    ? {
-        credentials: {
-          client_email: process.env.GCP_SERVICE_ACCOUNT_EMAIL,
-          private_key: process.env.GCP_PRIVATE_KEY.replace(/\\n/g, '\n'),
-        },
-        projectId: process.env.GCP_PROJECT_ID,
-      }
-    // for local development, use gcloud CLI
-    : {};
+  if (!process.env.GCP_PRIVATE_KEY || !process.env.GCP_SERVICE_ACCOUNT_EMAIL || !process.env.GCP_PROJECT_ID) {
+    console.error('Variáveis de ambiente GCP faltando:', {
+      projectId: !!process.env.GCP_PROJECT_ID,
+      serviceAccount: !!process.env.GCP_SERVICE_ACCOUNT_EMAIL,
+      privateKey: !!process.env.GCP_PRIVATE_KEY
+    });
+    throw new Error('Credenciais do BigQuery não configuradas - Variáveis de ambiente ausentes');
+  }
+
+  return {
+    credentials: {
+      client_email: process.env.GCP_SERVICE_ACCOUNT_EMAIL,
+      private_key: process.env.GCP_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    },
+    projectId: process.env.GCP_PROJECT_ID,
+  };
 };
 
 let bigqueryClient: BigQuery | null = null;

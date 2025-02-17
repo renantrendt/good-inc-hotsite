@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkCustomerDuplicityBigQuery } from '@/utils/bigquery'
-import { normalizeCPF } from '@/utils/cpf'
+
 
 export async function POST(request: NextRequest) {
   // Log de início com timestamp
