@@ -2,7 +2,7 @@ const translations = {
   en: {
     redeemButton: {
       text: "First Month Free",
-      price: "$39.99/month",
+      price: "$49.99/month",
       noCard: "No credit card required",
       modal: {
         titles: {
