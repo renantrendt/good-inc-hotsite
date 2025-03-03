@@ -51,14 +51,15 @@ export default function ProductShowcase() {
 
   const products = [
     {
-      name: language === "en" ? "TREATMENT" : "TRATAMENTO",
-      volume: language === "en" ? "6 FL OZ (177mL)" : "300mL",
-      description: language === "en" ? "ON THE WAY TO THE LAUNDRY BASKET" : "A CAMINHO DO CESTO DE ROUPA SUJA",
+      name: t.products.treatment.name,
+      volume: t.products.treatment.volume,
+      description: t.products.treatment.description,
       why: t.products.treatment.why,
       image: "/images/products/treatment-pre.jpeg",
       directions: t.products.treatment.directions,
       explanation: t.products.treatment.explanation,
       faqTitle: t.products.treatment.faqTitle,
+      productInfo: t.products.treatment.productInfo,
       faqItems: [
         {
           question: t.faq.questions[7].question, // "What is the truth about body odor?"
@@ -71,14 +72,15 @@ export default function ProductShowcase() {
       ],
     },
     {
-      name: language === "en" ? "PROTECTOR" : "PROTETOR",
-      volume: language === "en" ? "6 FL OZ (177mL)" : "300mL",
-      description: language === "en" ? "ON THE WAY TO DRY" : "A CAMINHO DA SECAGEM",
+      name: t.products.protector.name,
+      volume: t.products.protector.volume,
+      description: t.products.protector.description,
       why: t.products.protector.why,
       image: "/images/products/treatment-post.jpeg",
       directions: t.products.protector.directions,
       explanation: t.products.protector.explanation,
       faqTitle: t.products.protector.faqTitle,
+      productInfo: t.products.protector.productInfo,
       faqItems: [
         {
           question: t.faq.questions[7].question, // "What is the truth about body odor?"
@@ -91,14 +93,15 @@ export default function ProductShowcase() {
       ],
     },
     {
-      name: language === "en" ? "CLEANSER" : "SABONETE",
-      volume: language === "en" ? "6 FL OZ (177mL)" : "250mL",
-      description: language === "en" ? "IN THE SHOWER" : "NO BANHO",
+      name: t.products.cleanser.name,
+      volume: t.products.cleanser.volume,
+      description: t.products.cleanser.description,
       why: t.products.cleanser.why,
       image: "/images/products/cleanser.jpeg",
       directions: t.products.cleanser.directions,
       explanation: t.products.cleanser.explanation,
       faqTitle: t.products.cleanser.faqTitle,
+      productInfo: t.products.cleanser.productInfo,
       faqItems: [
         {
           question: t.faq.questions[7].question, // "What is the truth about body odor?"
@@ -111,14 +114,15 @@ export default function ProductShowcase() {
       ],
     },
     {
-      name: language === "en" ? "DEODORANT" : "DESODORANTE",
-      volume: language === "en" ? "1 FL OZ (30mL)" : "15mL",
-      description: language === "en" ? "AFTER SHOWERING" : "APÓS O BANHO",
+      name: t.products.deodorant.name,
+      volume: t.products.deodorant.volume,
+      description: t.products.deodorant.description,
       why: t.products.deodorant.why,
       image: "/images/products/deodorant.jpeg",
       directions: t.products.deodorant.directions,
       explanation: t.products.deodorant.explanation,
       faqTitle: t.products.deodorant.faqTitle,
+      productInfo: t.products.deodorant.productInfo,
       faqItems: [
         {
           question: t.faq.questions[7].question, // "What is the truth about body odor?"
@@ -259,7 +263,7 @@ export default function ProductShowcase() {
                       className="w-full py-3 sm:py-4 flex justify-between items-center text-left"
                     >
                       <span className="text-base sm:text-lg font-semibold">
-                        {language === "en" ? "Directions" : "Instruções"}
+                        {products[activeProduct].productInfo.directions}
                       </span>
                       {expandedFAQ === "directions" ? <ChevronUp /> : <ChevronDown />}
                     </button>
@@ -273,15 +277,13 @@ export default function ProductShowcase() {
                         >
                           <p className="mb-3 sm:mb-4">{products[activeProduct].directions}</p>
                           <p className="font-semibold mb-2">
-                            {language === "en"
-                              ? "This product is designed to last for one month and relies on other products from the system to be effective in the long term."
-                              : "Este produto foi projetado para durar um mês e depende de outros produtos do sistema para ser eficaz a longo prazo."}
+                            {products[activeProduct].productInfo.instructions}
                           </p>
-                          <p className="text-gray-600">
-                            {language === "en"
-                              ? "Use 1/4 of the bottle per week to ensure optimal results."
-                              : "Use 1/4 do frasco por semana para garantir resultados ideais."}
-                          </p>
+                          {'usage' in products[activeProduct].productInfo && (
+                            <p className="text-gray-600">
+                              {(products[activeProduct].productInfo as any).usage}
+                            </p>
+                          )}
                         </motion.div>
                       )}
                     </AnimatePresence>

@@ -1,7 +1,11 @@
 const translations = {
   en: {
+    judgeMeReviews: {
+      quote: "MY ROUTINE HAS BECOME MORE SOPHISTICATED SIMPLY BY TAKING CARE OF MY CLOTHES AND TOPS WITH GOOD.INC. NOW, I TAKE A SHOWER JUST TO RELAX, NOT OUT OF NECESSITY.",
+      googleReviews: "+4.7K GOOGLE REVIEWS"
+    },
     redeemButton: {
-      text: "First Month Free",
+      text: "Test now and pay only if you like it",
       price: "$49.99/month",
       noCard: "No credit card required",
       modal: {
@@ -150,6 +154,10 @@ const translations = {
         explanation:
           "Washing machines are unable to remove microbes in fabrics.\n\nFabric sanitizers cannot fully kill all germs, prevent their growth on clean clothes, or stop them from contaminating your skin.",
         faqTitle: "What's wrong with my washing machine?",
+        productInfo: {
+          directions: "Directions",
+          instructions: "This product is designed to last for one month and relies on other products from the system to be effective in the long term."
+        },
       },
       protector: {
         name: "PROTECTOR",
@@ -161,29 +169,41 @@ const translations = {
         explanation:
           "The real problem is not your body — it's your system.\n\nFabrics can introduce harmful microbes to your skin daily, particularly when you dry off with a contaminated towel or wear clothes carrying microbes.\n\nYour system keeps you in an endless unhealthy cycle, dependent on products that block pores, kill bacteria, and mask the problem with fragrances.",
         faqTitle: "What's wrong with my system?",
+        productInfo: {
+          directions: "Directions",
+          instructions: "This product is designed to last for one month and relies on other products from the system to be effective in the long term."
+        },
       },
       cleanser: {
         name: "CLEANSER",
         volume: "6 FL OZ (177mL)",
         description: "IN THE SHOWER",
-        why: "Breaks down dead skin cells, keeps pores clear, and balances skin pH, therefore enhancing the function of skin sensory receptors and helping to reduce sweat.",
+        why: "Breaks down dead skin cells, keeps pores clear, and balances skin pH, therefore enhancing the function of skin sensory receptors and helping to naturally reduce sweat.",
         directions:
-          "Rinse your body with water. Apply the product to your palm, massage it all over your body, let it sit briefly for deeper cleansing, then rinse thoroughly. Before leaving the shower or using other products, smell your skin. If it does not have a neutral smell, repeat the process. Dry yourself with a clean towel treated with the Good.inc system to keep microbes away from your skin.",
+          "Rinse your body with water. Apply the product to your palm, massage it all over your body, let it sit briefly for deeper cleansing, then rinse thoroughly. Before leaving the shower or using other products, smell your skin. If it does not have a neutral smell, repeat the process. Dry yourself with a clean towel treated and protected with the Good.inc system to keep microbes away from your skin.",
         explanation:
           "Cleansers do not remove microbes lodged inside your pores, so they require fragrances to mask them.\n\nAdditionally, they leave residues that impact your sensory receptors.",
         faqTitle: "What's wrong with my cleanser?",
+        productInfo: {
+          directions: "Directions",
+          instructions: "This product is designed to last for one month and relies on other products from the system to be effective in the long term."
+        },
       },
       deodorant: {
         name: "DEODORANT",
         volume: "1 FL OZ (30mL)",
-        description: "AFTER SHOWERING",
-        why: "In synergistic use with the other parts of the system, it limits bacterial growth on the skin, keeping your skin naturally clearer, baby-soft, and clean-smelling, while leaving no traces on your skin or clothes.",
-        directions:
-          "Depending on the intensity of the day and type of clothing, optionally spray a small amount once a day onto clean, dry skin after drying with a treated towel, then wear clothes treated with the Good.inc system as well.",
+        description: "OPTIONAL",
+        why: "When the skin has been properly cleansed, dried with a treated and protected towel, and you have put on clothes and tops that have also received the proper treatment, the use of deodorants becomes unnecessary.",
+        directions: "Apply a small amount to dry skin on those days when you had to rush to take a shower, dried off with a used towel, and/or had to re-wear clothes.",
         explanation:
           "Deodorants, even natural ones, clog your pores and trap microbes inside, unbalancing hormones and increasing sweat production in the long term.",
         faqTitle: "What's wrong with my deodorant?",
-      },
+        productInfo: {
+          directions: "Directions",
+          instructions: "Despite the benefits, this product limits microbial growth. We do not recommend daily use.",
+          usage: "Designed to last for one month, it depends on other products to extend its durability."
+        },
+      }
     },
     faq: {
       title: "Frequently Asked Questions",
@@ -276,8 +296,12 @@ const translations = {
     },
   },
   pt: {
+    judgeMeReviews: {
+      quote: "MINHA ROTINA SE SOFISTICOU SIMPLESMENTE AO CUIDAR DAS MINHAS ROUPAS E TOPS COM GOOD.INC. AGORA, TOMO BANHO APENAS PARA RELAXAR, NÃO POR NECESSIDADE.",
+      googleReviews: "+4.7 MIL AVALIAÇÕES..."
+    },
     redeemButton: {
-      text: "Primeiro Mês Grátis",
+      text: " Experimente e pague só se gostar",
       price: "R$299/mês",
       noCard: "Não necessita de cartão de crédito",
       errors: {
@@ -466,7 +490,7 @@ const translations = {
     products: {
       treatment: {
         name: "TRATAMENTO",
-        volume: "177mL (6 FL OZ)",
+        volume: "300mL",
         description: "A CAMINHO DO CESTO DE ROUPA SUJA",
         why: "Melhora o processo de lavagem, ajudando suas roupas a ficarem mais limpas e permitindo que o Protetor se ligue às fibras.",
         directions:
@@ -474,10 +498,15 @@ const translations = {
         explanation:
           "As máquinas de lavar não conseguem remover os micróbios das fibras.\n\nOs higienizadores de tecidos não conseguem matar completamente todos os germes, impedir seu crescimento em roupas limpas ou impedir que contaminem sua pele.",
         faqTitle: "O que há de errado com minha máquina de lavar?",
+        productInfo: {
+          directions: "Instruções",
+          instructions: "Este produto foi projetado para durar um mês e depende de outros produtos do sistema para ser eficaz a longo prazo.",
+          usage: "Use 1/4 do frasco por semana para garantir resultados ideais."
+        },
       },
       protector: {
         name: "PROTETOR",
-        volume: "177mL (6 FL OZ)",
+        volume: "300mL",
         description: "A CAMINHO DA SECAGEM",
         why: "Limita o crescimento bacteriano nos tecidos, protegendo assim sua pele da contaminação.",
         directions:
@@ -485,29 +514,44 @@ const translations = {
         explanation:
           "O verdadeiro problema não é o seu corpo — é o seu sistema.\n\nOs tecidos podem introduzir micróbios nocivos em sua pele diariamente, principalmente quando você se seca com uma toalha contaminada ou usa roupas que carregam micróbios.\n\nSeu sistema mantém você em um ciclo interminável e não saudável, dependente de produtos que bloqueiam os poros, matam bactérias e mascaram o problema com fragrâncias.",
         faqTitle: "O que há de errado com meu sistema?",
+        productInfo: {
+          directions: "Instruções",
+          instructions: "Este produto foi projetado para durar um mês e depende de outros produtos do sistema para ser eficaz a longo prazo.",
+          usage: "Use 1/4 do frasco por semana para garantir resultados ideais."
+        },
       },
       cleanser: {
-        name: "Sabonete",
-        volume: "177mL (6 FL OZ)",
+        name: "SABONETE",
+        volume: "300mL",
         description: "NO BANHO",
-        why: "Quebra as células mortas da pele, mantém os poros limpos e equilibra o pH da pele, melhorando assim a função dos receptores sensoriais da pele e ajudando a reduzir o suor.",
+        why: "Dissolve as células mortas da pele, mantém os poros limpos e equilibra o pH da pele, melhorando assim a função dos rec de forma totalmente naturaleptores sensoriais da pele e ajudando a reduzir o suor naturalmente.",
         directions:
           "Enxágue seu corpo com água. Aplique o produto na palma da mão, massageie por todo o corpo, deixe agir brevemente para uma limpeza mais profunda e depois enxágue completamente. Antes de sair do chuveiro ou usar outros produtos, cheire sua pele. Se não tiver um cheiro neutro, repita o processo. Seque-se com uma toalha limpa tratada com o sistema Good.inc para manter os micróbios longe da sua pele.",
         explanation:
-          "Os limpadores não removem os micróbios alojados dentro de seus poros, por isso requerem fragrâncias para mascará-los.\n\nAlém disso, eles deixam resíduos que afetam seus receptores sensoriais.",
-        faqTitle: "O que há de errado com meu limpador?",
+          "Os sabonetes não removem os micróbios alojados dentro de seus poros, por isso requerem fragrâncias para mascará-los.\n\nAlém disso, eles deixam resíduos que afetam seus receptores sensoriais.",
+        faqTitle: "O que há de errado com meu sabonete?",
+        productInfo: {
+          directions: "Instruções",
+          instructions: "Este produto foi projetado para durar um mês e depende de outros produtos do sistema para ser eficaz a longo prazo.",
+          usage: "Use 1/4 do frasco por semana para garantir resultados ideais."
+        },
       },
       deodorant: {
         name: "DESODORANTE",
-        volume: "30mL (1 FL OZ)",
-        description: "APÓS O BANHO",
-        why: "Em uso sinérgico com as outras partes do sistema, ele limita o crescimento bacteriano na pele, mantendo sua pele naturalmente mais clara, macia como a de um bebê e com cheiro limpo, sem deixar vestígios na sua pele ou roupas.",
+        volume: "15mL",
+        description: "OPCIONAL",
+        why: "Quando a pele foi devidamente limpa, seca com uma toalha tratada e protegida, e você vestiu roupas e tops que também receberam o tratamento adequado, o uso de desodorantes se torna desnecessário. O sistema Good.inc mantém a pele naturalmente mais clara, macia como a de um bebê e com cheiro limpo, sem deixar vestígios na sua pele ou roupas.",
         directions:
-          "Dependendo da intensidade do dia e do tipo de roupa, opcionalmente borrife uma pequena quantidade uma vez por dia na pele limpa e seca após secar-se com uma toalha tratada, e então vista roupas tratadas com o sistema Good.inc também.",
+          "Aplique uma pequena borrifada na pele seca naqueles dias que você teve que tomar banho correndo, se secou com uma toalha usada e/ou teve que repetir a roupa.",
         explanation:
           "Desodorantes, mesmo os naturais, entopem seus poros e prendem micróbios dentro, desequilibrando hormônios e aumentando a produção de suor a longo prazo.",
         faqTitle: "O que há de errado com meu desodorante?",
-      },
+        productInfo: {
+          directions: "Instruções",
+          instructions: "Apesar dos benefícios, este produto limita o crescimento microbiano. Não recomendamos o uso diário.",
+          usage: "Projetado para durar um mês, depende de outros produtos para ter sua durabilidade estendida."
+        },
+      }
     },
     faq: {
       title: "Perguntas Frequentes",
