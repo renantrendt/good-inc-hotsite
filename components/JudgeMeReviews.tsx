@@ -11,7 +11,7 @@ export default function JudgeMeReviews() {
       <div className="container mx-auto px-4">
         <h2 className="text-1xl sm:text-3xl font-bold text-center">
           <p>"{language === "pt" ? translations.pt.judgeMeReviews.quote : translations.en.judgeMeReviews.quote}"
-          </p><br></br>
+          </p>
 
           <a
             href="https://www.visto.bio/p/opinioes"

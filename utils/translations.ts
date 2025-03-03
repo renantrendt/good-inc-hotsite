@@ -2,7 +2,7 @@ const translations = {
   en: {
     judgeMeReviews: {
       quote: "MY ROUTINE HAS BECOME MORE SOPHISTICATED SIMPLY BY TAKING CARE OF MY CLOTHES AND TOPS WITH GOOD.INC. NOW, I TAKE A SHOWER JUST TO RELAX, NOT OUT OF NECESSITY.",
-      googleReviews: "+4.7K GOOGLE REVIEWS"
+      googleReviews: "+4.7K GOOGLE REVIEWS..."
     },
     redeemButton: {
       text: "Test now and pay only if you like it",
