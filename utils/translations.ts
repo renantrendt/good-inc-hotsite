@@ -524,7 +524,7 @@ const translations = {
         name: "SABONETE",
         volume: "300mL",
         description: "NO BANHO",
-        why: "Dissolve as células mortas da pele, mantém os poros limpos e equilibra o pH da pele, melhorando assim a função dos rec de forma totalmente naturaleptores sensoriais da pele e ajudando a reduzir o suor naturalmente.",
+        why: "Dissolve as células mortas da pele, mantém os poros limpos e equilibra o pH da pele, melhorando assim a função dos receptores sensoriais da pele e ajudando a reduzir o suor naturalmente.",
         directions:
           "Enxágue seu corpo com água. Aplique o produto na palma da mão, massageie por todo o corpo, deixe agir brevemente para uma limpeza mais profunda e depois enxágue completamente. Antes de sair do chuveiro ou usar outros produtos, cheire sua pele. Se não tiver um cheiro neutro, repita o processo. Seque-se com uma toalha limpa tratada com o sistema Good.inc para manter os micróbios longe da sua pele.",
         explanation:
