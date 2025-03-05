@@ -540,7 +540,7 @@ const translations = {
         name: "DESODORANTE",
         volume: "15mL",
         description: "OPCIONAL",
-        why: "Quando a pele foi devidamente limpa, seca com uma toalha tratada e protegida, e você vestiu roupas e tops que também receberam o tratamento adequado, o uso de desodorantes se torna desnecessário. O sistema Good.inc mantém a pele naturalmente mais clara, macia como a de um bebê e com cheiro limpo, sem deixar vestígios na sua pele ou roupas.",
+        why: "Quando a pele foi devidamente limpa, seca com uma toalha tratada e protegida, e você vestiu roupas e tops que também receberam o tratamento adequado, o uso de desodorantes se torna desnecessário. O sistema Good.inc mantém a pele naturalmente uniforme, macia como a de um bebê e com cheiro naturalmente limpo, sem deixar vestígios e fragrâncias na sua pele ou roupas.",
         directions:
           "Aplique uma pequena borrifada na pele seca naqueles dias que você teve que tomar banho correndo, se secou com uma toalha usada e/ou teve que repetir a roupa.",
         explanation:
