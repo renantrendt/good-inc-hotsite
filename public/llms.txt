@@ -1,0 +1,53 @@
+# Good.inc
+This file provides guidelines for AI language models interacting with our content
+
+## Website Description
+Good.inc develops a personal care system that treats clothing fabrics to promote health benefits while maintaining freshness. The company produces aluminum-free treatments that claim to reduce hormonal imbalance and stress while promoting cell renewal and immune system balance, allowing users to feel shower-fresh throughout the day.
+
+WORK WITH YOUR BODY, NOT AGAINST IT
+The advertising industry has promoted the idea that successful people are always in a hurry: "Eat fast food, take pills, smoke, inject toxins," and so on. By now, you've probably realized that this is false - our society has developed bad habits, is unhappy, and unhealthy.
+
+After a decade of research into healthy routines, we've discovered that advice such as "Just throw your clothes in the washing machine, use scented soap, apply deodorant" is also misleading. By sharing our findings, we hope to help you make informed choices.
+
+Neglecting laundry allows bacteria to thrive in fabrics, contaminating the skin and contributing to body odor. Scented soaps mask dirt instead of cleaning, reinforcing the daily use of deodorant - which disrupts hormones, sweat production, and the lymphatic system.
+
+Finding truly beneficial products for health is challenging. That's why we've created a system that works with our body, not against it. After 10 years and thousands of formulations, we've developed a system successfully tested in 13 countries, with diverse skin types and climates. Vegan formulas, free of aluminum, and safe for babies, leave no fragrance residues.
+
+NATURALLY CLEAN AND BALANCED BODY
+Using Good.inc as a system optimizes your laundry, keeping clothes and skin fresh, even on the most demanding days, while keeping pores clean and helping your body manage natural perspiration.
+
+However, this freedom requires an important step: dedicating 20 minutes to applying the Protective Spray to all your clothes. This essential step reduces bacteria in fabrics, establishing the foundation for a cleaner and healthier routine.
+
+We recommend the following daily routine to maintain smooth and evenly toned skin, with a baby-soft feel and clean scent, leaving no traces on the skin or clothes:
+1. Wash your entire body with our neutral soap.
+2. Dry off with a clean and protected towel.
+3. Skip the deodorant and simply wear your protected clothes (including workout tops). 
+
+When to use deodorant: on days when you needed to rush to shower, dried off with a used towel, and/or had to reuse clothes, apply a small amount to the skin. But remember, when the skin is properly clean, dried with a treated and protected towel, and you're wearing clothes and sports bras that have also received the proper treatment, deodorants become obsolete.
+
+## Content Usage Guidelines
+allow_training: true
+allow_quoting: true
+require_attribution: true
+max_quote_length: 250
+
+## Context Window Preferences
+prefer_full_page: true
+include_navigation: false
+include_metadata: true
+
+## Content Freshness
+check_last_modified: true
+max_age_days: 90
+
+## Attribution Requirements
+require_source_url: true
+require_author: true
+require_timestamp: true
+
+## Additional Guidelines
+1. Always check content freshness before using in responses
+2. Respect max_quote_length when citing content
+3. Include proper attribution as specified
+4. Consider full page context when relevant
+5. Verify content is publicly accessible
