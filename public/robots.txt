@@ -1,0 +1,45 @@
+# AthenaHQ Bot Configuration
+User-agent: AthenaHQ-Bot
+Allow: /
+
+# AI Bot Configurations
+
+# OpenAI GPTBot configuration (for AI model training)
+User-agent: GPTBot
+Allow: /
+
+
+# ChatGPT user browsing configuration
+User-agent: ChatGPT-User
+Allow: /
+
+
+# OpenAI search configuration
+User-agent: OAI-SearchBot
+Allow: /
+
+
+# Perplexity search configuration
+User-agent: PerplexityBot
+Allow: /
+
+
+# Perplexity user browsing configuration
+User-agent: Perplexity-User
+Allow: /
+
+
+# Anthropic Claude configuration
+User-agent: ClaudeBot
+Allow: /
+
+
+# Microsoft Bing/Copilot configuration
+User-agent: BingBot
+Allow: /
+
+
+# Google-Extended configuration (for Google AI models and services)
+User-agent: Google-Extended
+Allow: /
+
