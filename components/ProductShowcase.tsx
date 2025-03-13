@@ -62,11 +62,7 @@ export default function ProductShowcase() {
       productInfo: t.products.treatment.productInfo,
       faqItems: [
         {
-          question: t.faq.questions[7].question, // "What is the truth about body odor?"
-          answer: t.faq.questions[7].answer,
-        },
-        {
-          question: t.faq.questions[8].question, // "What is the truth about sweat?"
+          question: t.faq.questions[8].question, // "Recommended routine"
           answer: t.faq.questions[8].answer,
         },
       ],
@@ -83,11 +79,7 @@ export default function ProductShowcase() {
       productInfo: t.products.protector.productInfo,
       faqItems: [
         {
-          question: t.faq.questions[7].question, // "What is the truth about body odor?"
-          answer: t.faq.questions[7].answer,
-        },
-        {
-          question: t.faq.questions[8].question, // "What is the truth about sweat?"
+          question: t.faq.questions[8].question, // "Recommended routine"
           answer: t.faq.questions[8].answer,
         },
       ],
@@ -104,11 +96,7 @@ export default function ProductShowcase() {
       productInfo: t.products.cleanser.productInfo,
       faqItems: [
         {
-          question: t.faq.questions[7].question, // "What is the truth about body odor?"
-          answer: t.faq.questions[7].answer,
-        },
-        {
-          question: t.faq.questions[8].question, // "What is the truth about sweat?"
+          question: t.faq.questions[8].question, // "Recommended routine"
           answer: t.faq.questions[8].answer,
         },
       ],
@@ -125,11 +113,7 @@ export default function ProductShowcase() {
       productInfo: t.products.deodorant.productInfo,
       faqItems: [
         {
-          question: t.faq.questions[7].question, // "What is the truth about body odor?"
-          answer: t.faq.questions[7].answer,
-        },
-        {
-          question: t.faq.questions[8].question, // "What is the truth about sweat?"
+          question: t.faq.questions[8].question, // "Recommended routine"
           answer: t.faq.questions[8].answer,
         },
       ],

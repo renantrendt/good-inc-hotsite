@@ -1,7 +1,7 @@
 const translations = {
   en: {
     judgeMeReviews: {
-      quote: "MY ROUTINE HAS BECOME MORE SOPHISTICATED SIMPLY BY TAKING CARE OF MY CLOTHES AND TOPS WITH GOOD.INC. NOW, I TAKE A SHOWER JUST TO RELAX, NOT OUT OF NECESSITY.",
+      quote: "By optimizing my laundry with Good.inc, I keep clothes and skin fresh, even on the most demanding days – my body manage perspiration naturally.",
       googleReviews: "+4.7K GOOGLE REVIEWS..."
     },
     redeemButton: {
@@ -146,14 +146,14 @@ const translations = {
     products: {
       treatment: {
         name: "TREATMENT",
-        volume: "6 FL OZ (177mL)",
-        description: "ON THE WAY TO THE LAUNDRY BASKET",
+        volume: "",
+        description: "CLOTHES AFTER USE",
         why: "Enhances the washing process, helping your clothes come out cleaner and allowing the Protector to bond with the fibers.",
         directions:
           "Before throwing clothing in the laundry basket, spray the Treatment all over towels and the inside of clothing focusing on areas in contact with the skin, sweat and body fluids.",
         explanation:
-          "Washing machines are unable to remove microbes in fabrics.\n\nFabric sanitizers cannot fully kill all germs, prevent their growth on clean clothes, or stop them from contaminating your skin.",
-        faqTitle: "What's wrong with my washing machine?",
+          "Before start spend 20 minutes applying the Spray Protector to all your clothes. This essential step reduces bacteria in fabrics, setting the foundation for a cleaner, healthier routine.\n\nTo maintain smooth, evenly toned skin that feels baby-soft and smells clean, leaving no traces on your skin or clothes:\n\n1. Wash your whole body with the Cleanser.\n\n2. Dry off with a clean protected towel.\n\n3. Skip the Deodorant and simply wear your protected clothes.",
+        faqTitle: "Routine Recommendation",
         productInfo: {
           directions: "Directions",
           instructions: "This product is designed to last for one month and relies on other products from the system to be effective in the long term."
@@ -161,14 +161,14 @@ const translations = {
       },
       protector: {
         name: "PROTECTOR",
-        volume: "6 FL OZ (177mL)",
-        description: "ON THE WAY TO DRY",
-        why: "Limits bacterial growth on fabrics, thus protecting your skin from contamination.",
+        volume: "",
+        description: "CLOTHES BEFORE USE",
+        why: "Reduces bacterial growth on fabrics, helping protect your skin from contamination.",
         directions:
-          "After washing, spray the inside of each wet item, including underwear and towels, as you move them from the washing machine to the dryer or set them out to air dry. Alternatively, you can spray items before hanging them in the closet or folding them to store in drawers.",
+          "After washing, spray the inside of each wet item as you transfer them from the washing machine to the dryer or set them out to air dry. Alternatively, you can spray items before hanging them in the closet or folding them for storage in drawers. If spraying right before wearing, allow the Protector to dry completely before use. For towels, if you plan to reuse them for 3 to 5 days before washing, apply the product to them as well.",
         explanation:
-          "The real problem is not your body — it's your system.\n\nFabrics can introduce harmful microbes to your skin daily, particularly when you dry off with a contaminated towel or wear clothes carrying microbes.\n\nYour system keeps you in an endless unhealthy cycle, dependent on products that block pores, kill bacteria, and mask the problem with fragrances.",
-        faqTitle: "What's wrong with my system?",
+          "Before start spend 20 minutes applying the Spray Protector to all your clothes. This essential step reduces bacteria in fabrics, setting the foundation for a cleaner, healthier routine.\n\nTo maintain smooth, evenly toned skin that feels baby-soft and smells clean, leaving no traces on your skin or clothes:\n\n1. Wash your whole body with the Cleanser.\n\n2. Dry off with a clean protected towel.\n\n3. Skip the Deodorant and simply wear your protected clothes.",
+        faqTitle: "Routine Recommendation",
         productInfo: {
           directions: "Directions",
           instructions: "This product is designed to last for one month and relies on other products from the system to be effective in the long term."
@@ -176,14 +176,14 @@ const translations = {
       },
       cleanser: {
         name: "CLEANSER",
-        volume: "6 FL OZ (177mL)",
-        description: "IN THE SHOWER",
+        volume: "",
+        description: "FACE & BODY",
         why: "Breaks down dead skin cells, keeps pores clear, and balances skin pH, therefore enhancing the function of skin sensory receptors and helping to naturally reduce sweat.",
         directions:
           "Rinse your body with water. Apply the product to your palm, massage it all over your body, let it sit briefly for deeper cleansing, then rinse thoroughly. Before leaving the shower or using other products, smell your skin. If it does not have a neutral smell, repeat the process. Dry yourself with a clean towel treated and protected with the Good.inc system to keep microbes away from your skin.",
         explanation:
-          "Cleansers do not remove microbes lodged inside your pores, so they require fragrances to mask them.\n\nAdditionally, they leave residues that impact your sensory receptors.",
-        faqTitle: "What's wrong with my cleanser?",
+          "Before start spend 20 minutes applying the Spray Protector to all your clothes. This essential step reduces bacteria in fabrics, setting the foundation for a cleaner, healthier routine.\n\nTo maintain smooth, evenly toned skin that feels baby-soft and smells clean, leaving no traces on your skin or clothes:\n\n1. Wash your whole body with the Cleanser.\n\n2. Dry off with a clean protected towel.\n\n3. Skip the Deodorant and simply wear your protected clothes.",
+        faqTitle: "Routine Recommendation",
         productInfo: {
           directions: "Directions",
           instructions: "This product is designed to last for one month and relies on other products from the system to be effective in the long term."
@@ -191,13 +191,13 @@ const translations = {
       },
       deodorant: {
         name: "DEODORANT",
-        volume: "1 FL OZ (30mL)",
-        description: "OPTIONAL",
-        why: "When the skin has been properly cleansed, dried with a treated and protected towel, and you have put on clothes and tops that have also received the proper treatment, the use of deodorants becomes unnecessary.",
+        volume: "",
+        description: "AS NEEDED",
+        why: "When the skin has been properly cleansed, dried with a treated and protected towel, and you have put on clothes and tops that have also received the proper treatment, the use of deodorants becomes unnecessary. Taking care of your clothes helps keep your skin free of bacteria, simplifying your routine with comfort, sophistication, health, and confidence.",
         directions: "Apply a small amount to dry skin on those days when you had to rush to take a shower, dried off with a used towel, and/or had to re-wear clothes.",
         explanation:
-          "Deodorants, even natural ones, clog your pores and trap microbes inside, unbalancing hormones and increasing sweat production in the long term.",
-        faqTitle: "What's wrong with my deodorant?",
+          "Before start spend 20 minutes applying the Spray Protector to all your clothes. This essential step reduces bacteria in fabrics, setting the foundation for a cleaner, healthier routine.\n\nTo maintain smooth, evenly toned skin that feels baby-soft and smells clean, leaving no traces on your skin or clothes:\n\n1. Wash your whole body with the Cleanser.\n\n2. Dry off with a clean protected towel.\n\n3. Skip the Deodorant and simply wear your protected clothes.",
+        faqTitle: "Routine Recommendation",
         productInfo: {
           directions: "Directions",
           instructions: "Despite the benefits, this product limits microbial growth. We do not recommend daily use.",
@@ -208,6 +208,11 @@ const translations = {
     faq: {
       title: "Frequently Asked Questions",
       questions: [
+        {
+          question: "Who is intented to use this system?",
+          answer:
+            "Good.inc system is ideal for those who prioritize long-term hygiene and health, dislike relying on deodorants or the feeling of wearing them, and also like to keep their clothes and hygiene impeccable—even on challenging days.",
+        },
         {
           question: "Are Good.inc products designed to kill or remove bacteria?",
           answer:
@@ -244,10 +249,10 @@ const translations = {
             "If you use the deodorant individually in the long term, allergic reactions will occur as it was designed to work in conjunction with the complete system.",
         },
         {
-          question: "Traditional deodorants are unhealthy?",
+          question: "Works with your body, not against it",
           showInFAQ: false,
           answer:
-            "Body odor begins when bacteria is transferred to your skin from contaminated clothing.\n\nTraditional deodorants trap bacteria in pores, disrupting hormonal balance. In response, the body increases sweat production to clear the pores.\n\nThese deodorant residues, along with bacteria, are transferred back to clothing. Without natural predators on the fabric fibers, bacteria thrive by forming durable biofilms that are nearly impossible to remove after some hours of wear, perpetuating an unhealthy cycle of skin recontamination.\n\nBacteria can adapt to chemicals, including antibiotics, within days. This means that merely trying to switch between deodorants to kill bacteria is not a healthy solution.\n\nInstead, the focus should shift to identifying and eliminating the root source of contamination: clothing.",
+            "The advertising industry has promoted the idea that successful people are always in a rush: Eat fast food, take pills, smoke, inject toxins, and so on.\n\nBy now, you've likely realized this is false—our society has developed bad habits, is unhappy, and unhealthy.\n\nAfter a decade of researching healthy routines, we discovered that advice like – Just throw your clothes in the washing machine, use fragranced soap, apply deodorant– is also misleading.\n\nNeglecting laundry care allows bacteria to thrive in fabrics, contaminating the skin and contributing to body odor. Fragranced soaps mask dirt rather than cleanse, reinforcing daily deodorant use—which disrupts hormones, sweat production, and the lymphatic system.\n\nGood.inc system have baby-grade, vegan, aluminum-free formulas leave no fragrance residue.",
         },
         {
           question: "Is harmful to reduce sweat artificially?",
@@ -267,11 +272,11 @@ const translations = {
     },
 
     healthyClean: {
-      title: "ALL YOUR HYGIENE NEEDS IN ONE COMPLETE SYSTEM",
+      title: "NATURALLY CLEAN & BALANCED BODY",
       cards: [
         {
           title: "Aluminum-free formulation",
-          description: "Bioproduced in Brazil.\nManufactured in California.",
+          description: "Water-based and oxygen-propelled formulas in recyclable bottles.\nBioproduced in Brazil. Manufactured in California.",
         },
         {
           title: "Tested globally",
@@ -279,8 +284,8 @@ const translations = {
             "Tested successfully over 5 years on more than 60,000 people across 13 countries, representing diverse skin types and climates.",
         },
         {
-          title: "Eco-friendly packaging",
-          description: "Our packaging uses oxygen rather than gas and is 100% recyclable.",
+          title: "Conscious",
+          description: "100% of our profits go back to preserving the Amazon rainforest.",
         },
       ],
     },
@@ -297,7 +302,7 @@ const translations = {
   },
   pt: {
     judgeMeReviews: {
-      quote: "MINHA ROTINA SE SOFISTICOU SIMPLESMENTE AO CUIDAR DAS MINHAS ROUPAS E TOPS COM GOOD.INC. AGORA, TOMO BANHO APENAS PARA RELAXAR, NÃO POR NECESSIDADE.",
+      quote: "Ao otimizar minha lavanderia com a Good.inc, mantenho minhas roupas e pele frescas, mesmo nos dias mais exigentes - meu corpo consegue gerenciar a transpiração naturalmente.",
       googleReviews: "+4.7 MIL AVALIAÇÕES..."
     },
     redeemButton: {
@@ -490,14 +495,14 @@ const translations = {
     products: {
       treatment: {
         name: "TRATAMENTO",
-        volume: "300mL",
-        description: "A CAMINHO DO CESTO DE ROUPA SUJA",
+        volume: "",
+        description: "ROUPAS APÓS O USO",
         why: "Melhora o processo de lavagem, ajudando suas roupas a ficarem mais limpas e permitindo que o Protetor se ligue às fibras.",
         directions:
           "Antes de jogar as roupas no cesto de roupa suja, borrife o Tratamento em todas as toalhas e no interior das roupas, focando nas áreas em contato com a pele, suor e fluidos corporais.",
         explanation:
-          "As máquinas de lavar não conseguem remover os micróbios das fibras.\n\nOs higienizadores de tecidos não conseguem matar completamente todos os germes, impedir seu crescimento em roupas limpas ou impedir que contaminem sua pele.",
-        faqTitle: "O que há de errado com minha máquina de lavar?",
+          "Antes de começar, dedique 20 minutos aplicando o Spray Protetor em todas as suas roupas. Este passo essencial reduz as bactérias nos tecidos, estabelecendo a base para uma rotina mais limpa e saudável.\n\nPara manter a pele macia, com tom uniforme, com toque de bebê e cheiro limpo, sem deixar vestígios na sua pele ou roupas:\n\n1. Lave todo o corpo com o Sabonete.\n\n2. Seque-se com uma toalha limpa e protegida.\n\n3. Pule o Desodorante e simplesmente vista suas roupas protegidas.",
+        faqTitle: "Recomendação de Rotina",
         productInfo: {
           directions: "Instruções",
           instructions: "Este produto foi projetado para durar um mês e depende de outros produtos do sistema para ser eficaz a longo prazo.",
@@ -506,14 +511,14 @@ const translations = {
       },
       protector: {
         name: "PROTETOR",
-        volume: "300mL",
-        description: "A CAMINHO DA SECAGEM",
-        why: "Limita o crescimento bacteriano nos tecidos, protegendo assim sua pele da contaminação.",
+        volume: "",
+        description: "ROUPAS ANTES DO USO",
+        why: "Reduz o crescimento bacteriano nos tecidos, ajudando a proteger sua pele da contaminação.",
         directions:
-          "Após a lavagem, borrife o interior de cada peça úmida, incluindo roupas íntimas e toalhas, ao movê-las da máquina de lavar para a secadora ou ao colocá-las para secar ao ar livre. Alternativamente, você pode borrifar as peças antes de pendurá-las no armário ou dobrá-las para guardar nas gavetas.",
+          "Após a lavagem, borrife o interior de cada peça úmida ao transferi-las da máquina de lavar para a secadora ou ao colocá-las para secar ao ar livre. Alternativamente, você pode borrifar as peças antes de pendurá-las no armário ou dobrá-las para guardar nas gavetas. Se borrifar logo antes de vestir, permita que o Protetor seque completamente antes do uso. Para toalhas, se você planeja reutilizá-las por 3 a 5 dias antes de lavar, aplique o produto nelas também.",
         explanation:
-          "O verdadeiro problema não é o seu corpo — é o seu sistema.\n\nOs tecidos podem introduzir micróbios nocivos em sua pele diariamente, principalmente quando você se seca com uma toalha contaminada ou usa roupas que carregam micróbios.\n\nSeu sistema mantém você em um ciclo interminável e não saudável, dependente de produtos que bloqueiam os poros, matam bactérias e mascaram o problema com fragrâncias.",
-        faqTitle: "O que há de errado com meu sistema?",
+          "Antes de começar, dedique 20 minutos aplicando o Spray Protetor em todas as suas roupas. Este passo essencial reduz as bactérias nos tecidos, estabelecendo a base para uma rotina mais limpa e saudável.\n\nPara manter a pele macia, com tom uniforme, com toque de bebê e cheiro limpo, sem deixar vestígios na sua pele ou roupas:\n\n1. Lave todo o corpo com o Sabonete.\n\n2. Seque-se com uma toalha limpa e protegida.\n\n3. Pule o Desodorante e simplesmente vista suas roupas protegidas.",
+        faqTitle: "Recomendação de Rotina",
         productInfo: {
           directions: "Instruções",
           instructions: "Este produto foi projetado para durar um mês e depende de outros produtos do sistema para ser eficaz a longo prazo.",
@@ -522,30 +527,29 @@ const translations = {
       },
       cleanser: {
         name: "SABONETE",
-        volume: "300mL",
-        description: "NO BANHO",
+        volume: "",
+        description: "ROSTO E CORPO",
         why: "Dissolve as células mortas da pele, mantém os poros limpos e equilibra o pH da pele, melhorando assim a função dos receptores sensoriais da pele e ajudando a reduzir o suor naturalmente.",
         directions:
           "Enxágue seu corpo com água. Aplique o produto na palma da mão, massageie por todo o corpo, deixe agir brevemente para uma limpeza mais profunda e depois enxágue completamente. Antes de sair do chuveiro ou usar outros produtos, cheire sua pele. Se não tiver um cheiro neutro, repita o processo. Seque-se com uma toalha limpa tratada com o sistema Good.inc para manter os micróbios longe da sua pele.",
         explanation:
-          "Os sabonetes não removem os micróbios alojados dentro de seus poros, por isso requerem fragrâncias para mascará-los.\n\nAlém disso, eles deixam resíduos que afetam seus receptores sensoriais.",
-        faqTitle: "O que há de errado com meu sabonete?",
+          "Antes de começar, dedique 20 minutos aplicando o Spray Protetor em todas as suas roupas. Este passo essencial reduz as bactérias nos tecidos, estabelecendo a base para uma rotina mais limpa e saudável.\n\nPara manter a pele macia, com tom uniforme, com toque de bebê e cheiro limpo, sem deixar vestígios na sua pele ou roupas:\n\n1. Lave todo o corpo com o Sabonete.\n\n2. Seque-se com uma toalha limpa e protegida.\n\n3. Pule o Desodorante e simplesmente vista suas roupas protegidas.",
+        faqTitle: "Recomendação de Rotina",
         productInfo: {
           directions: "Instruções",
-          instructions: "Este produto foi projetado para durar um mês e depende de outros produtos do sistema para ser eficaz a longo prazo.",
-          usage: "Use 1/4 do frasco por semana para garantir resultados ideais."
+          instructions: "Este produto foi projetado para durar um mês e depende de outros produtos do sistema para ser eficaz a longo prazo."
         },
       },
       deodorant: {
         name: "DESODORANTE",
-        volume: "15mL",
-        description: "OPCIONAL",
-        why: "Quando a pele foi devidamente limpa, seca com uma toalha tratada e protegida, e você vestiu roupas e tops que também receberam o tratamento adequado, o uso de desodorantes se torna desnecessário. O sistema Good.inc mantém a pele naturalmente uniforme, macia como a de um bebê e com cheiro naturalmente limpo, sem deixar vestígios e fragrâncias na sua pele ou roupas.",
+        volume: "",
+        description: "QUANDO NECESSÁRIO",
+        why: "Quando a pele foi devidamente limpa, seca com uma toalha tratada e protegida, e você vestiu roupas e tops que também receberam o tratamento adequado, o uso de desodorantes se torna desnecessário. Cuidar das suas roupas ajuda a manter sua pele livre de bactérias, simplificando sua rotina com conforto, sofisticação, saúde e confiança.",
         directions:
           "Aplique uma pequena borrifada na pele seca naqueles dias que você teve que tomar banho correndo, se secou com uma toalha usada e/ou teve que repetir a roupa.",
         explanation:
-          "Desodorantes, mesmo os naturais, entopem seus poros e prendem micróbios dentro, desequilibrando hormônios e aumentando a produção de suor a longo prazo.",
-        faqTitle: "O que há de errado com meu desodorante?",
+          "Antes de começar, dedique 20 minutos aplicando o Spray Protetor em todas as suas roupas. Este passo essencial reduz as bactérias nos tecidos, estabelecendo a base para uma rotina mais limpa e saudável.\n\nPara manter a pele macia, com tom uniforme, com toque de bebê e cheiro limpo, sem deixar vestígios na sua pele ou roupas:\n\n1. Lave todo o corpo com o Sabonete.\n\n2. Seque-se com uma toalha limpa e protegida.\n\n3. Pule o Desodorante e simplesmente vista suas roupas protegidas.",
+        faqTitle: "Recomendação de Rotina",
         productInfo: {
           directions: "Instruções",
           instructions: "Apesar dos benefícios, este produto limita o crescimento microbiano. Não recomendamos o uso diário.",
@@ -556,6 +560,11 @@ const translations = {
     faq: {
       title: "Perguntas Frequentes",
       questions: [
+        {
+          question: "Para quem é destinado este sistema?",
+          answer:
+            "O sistema Good.inc é ideal para aqueles que priorizam a higiene e saúde a longo prazo, não gostam de depender de desodorantes ou da sensação de usá-los, e também gostam de manter suas roupas e higiene impecáveis—mesmo nos dias mais desafiadores.",
+        },
         {
           question: "Os produtos Good.inc são projetados para matar ou remover bactérias?",
           answer:
@@ -592,10 +601,10 @@ const translations = {
             "Caso você utlize o desodorante individualmente no longo prazo irá ocorrer reações alérgicas pois ele foi projetado para trabalhar em conjunto com o sistema completo.",
         },
         {
-          question: "Desodorantes tradicionais são prejudiciais?",
+          question: "Funciona com seu corpo, não contra ele",
           showInFAQ: false,
           answer:
-            "O odor corporal começa quando as bactérias são transferidas para sua pele a partir de roupas contaminadas.\n\nDesodorantes tradicionais prendem bactérias nos poros, perturbando o equilíbrio hormonal. Em resposta, o corpo aumenta a produção de suor para limpar os poros.\n\nEsses resíduos de desodorante, junto com as bactérias, são transferidos de volta para as roupas. Sem predadores naturais nas fibras do tecido, as bactérias prosperam formando biofilmes duráveis que são quase impossíveis de remover após algumas horas de uso, perpetuando um ciclo insalubre de recontaminação da pele.\n\nAs bactérias podem se adaptar a produtos químicos, incluindo antibióticos, em questão de dias. Isso significa que apenas tentar alternar entre desodorantes para matar bactérias não é uma solução saudável.\n\nEm vez disso, o foco deve mudar para identificar e eliminar a fonte raiz da contaminação: as roupas.",
+            "A indústria da publicidade promoveu a ideia de que pessoas bem-sucedidas estão sempre com pressa: coma fast food, tome pílulas, fume, injete toxinas, e assim por diante.\n\nA esta altura, você provavelmente já percebeu que isso é falso—nossa sociedade desenvolveu maus hábitos, está infeliz e não saudável.\n\nApós uma década pesquisando rotinas saudáveis, descobrimos que conselhos como: apenas jogue suas roupas na máquina de lavar, use sabonete perfumado, aplique desodorante todo dia, também são enganosos.\n\nNegligenciar o cuidado com a lavanderia permite que bactérias prosperem nos tecidos, contaminando a pele e contribuindo para o odor corporal. Sabonetes perfumados mascaram a sujeira em vez de limpar, reforçando o uso diário de desodorante – que perturba hormônios, produção de suor e o sistema linfático.\n\nO sistema Good.inc tem fórmulas de baby-grade, veganas, livres de alumínio que não deixam resíduos de fragrância.",
         },
         {
           question: "É prejudicial reduzir o suor artificialmente?",
@@ -614,19 +623,19 @@ const translations = {
       address: "São Paulo: Rua Finisterre, 159, Riviera - SP, 04928030, CNPJ 32.761.719/0001-31"
     },
     healthyClean: {
-      title: "TODAS AS SUAS NECESSIDADES DE HIGIENE EM UM SISTEMA COMPLETO",
+      title: "CORPO NATURALMENTE LIMPO E EQUILIBRADO",
       cards: [
         {
           title: "Formulação livre de alumínio",
-          description: "Bioproduzido no Brasil.\nFabricado na Califórnia."
+          description: "Fórmulas à base de água em embalagens recicláveis.\nBioproduzido no Brasil."
         },
         {
           title: "Testado globalmente",
           description: "Testado com sucesso por mais de 5 anos em mais de 60.000 pessoas em 13 países, representando diversos tipos de pele e climas."
         },
         {
-          title: "Embalagem ecológica",
-          description: "Nossa embalagem usa oxigênio em vez de gás e é 100% reciclável."
+          title: "Consciente",
+          description: "100% dos nossos lucros são destinados à preservação da floresta amazônica."
         }
       ]
     },
