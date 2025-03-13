@@ -1,7 +1,7 @@
 const translations = {
   en: {
     judgeMeReviews: {
-      quote: "By optimizing my laundry with Good.inc, I keep clothes and skin fresh, even on the most demanding days – my body manage perspiration naturally.",
+      quote: "By optimizing my laundry with Good.inc, I keep my clothes and skin fresh, even on the most demanding days, as my body naturally manages perspiration.",
       googleReviews: "+4.7K GOOGLE REVIEWS..."
     },
     redeemButton: {
@@ -302,7 +302,7 @@ const translations = {
   },
   pt: {
     judgeMeReviews: {
-      quote: "Ao otimizar minha lavanderia com a Good.inc, mantenho minhas roupas e pele frescas, mesmo nos dias mais exigentes - meu corpo consegue gerenciar a transpiração naturalmente.",
+      quote: "Ao otimizar minha lavanderia com a Good.inc, mantenho minhas roupas e pele frescas, mesmo nos dias mais exigentes pois meu corpo consegue gerenciar a transpiração naturalmente.",
       googleReviews: "+4.7 MIL AVALIAÇÕES..."
     },
     redeemButton: {
