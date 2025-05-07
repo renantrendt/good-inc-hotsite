@@ -16,7 +16,8 @@ export async function GET(request: NextRequest) {
     }).catch(error => console.error('Error tracking robots.txt visit:', error));
 
     console.log('Fetching robots.txt content from AthenaHQ');
-    const response = await fetch("https://app.athenahq.ai/api/robots/content?websiteId=59d802af-c2f4-4f6a-adc0-395ca87c3450");
+    // Try the endpoint from the Express example
+    const response = await fetch('https://app.athenahq.ai/api/robots-txt/59d802af-c2f4-4f6a-adc0-395ca87c3450');
     
     console.log(`Response status: ${response.status}`);
     console.log(`Response content type: ${response.headers.get('content-type')}`);
