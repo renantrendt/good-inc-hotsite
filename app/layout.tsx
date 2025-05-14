@@ -68,6 +68,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           })(window,document,'script','dataLayer','GTM-TK9WMP62');`}
         </Script>
         {/* End Google Tag Manager */}
+        {/* Athena Telemetry */}
+        <Script id="athena-telemetry-secure" strategy="beforeInteractive">
+          {`(function() {
+            window.athenaTelemetryQueue = window.athenaTelemetryQueue || [];
+            
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://app.athenahq.ai/api/tracking/ce1c4aa5-66fe-4751-a9aa-62009716fd37';
+            
+            var firstScript = document.getElementsByTagName('script')[0];
+            if (firstScript && firstScript.parentNode) {
+              firstScript.parentNode.insertBefore(script, firstScript);
+            } else {
+              document.head.appendChild(script);
+            }
+          })();`}
+        </Script>
+        {/* End Athena Telemetry */}
       </head>
       <body className={inter.className}>
         {/* Google Tag Manager (noscript) */}
@@ -85,4 +103,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   )
 }
-
